@@ -1,0 +1,33 @@
+# Betriebssystem und Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Build- und Tooling-Artefakte
+build/
+out/
+.pio/
+
+# Lokale Umgebungs- und Secret-Dateien
+.env
+.env.local
+.env.*.local
+
+# Lokale Sicherheits- und Geraetedaten
+/security/local/*.local.*
+/security/local/*.key
+/security/local/*.pem
+/security/local/*.crt
+/security/local/*.cer
+/security/local/*.der
+/security/local/*.p12
+/security/local/*.pfx
+/security/local/*.bin
+/security/local/*.json
+/security/local/*.csv
+
+# Lokale Firmware-Konfigurationen
+/firmware/**/credentials.local.*
+/firmware/**/device_identity.local.*
+/firmware/**/peer_config.local.*
