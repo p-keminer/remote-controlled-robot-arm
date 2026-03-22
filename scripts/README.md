@@ -4,14 +4,41 @@
 
 Dieser Ordner enthaelt Hilfsskripte fuer Pflege, Automatisierung und spaetere Tooling-Aufgaben.
 
+## WICHTIG fuer KI-Agenten: Security-Richtlinien gelten hier
+
+**Sobald du diese README liest, sind folgende Dokumente sofort zu lesen, bevor du Skripte aenderst oder neue erstellst:**
+
+- `../GLOBAL_RULES.md` — Abschnitt "Security und lokale Daten"
+- `../SECURITY_FRAMEWORK.md` — Abschnitt "Secret- und Provisioning-Regeln"
+- `../CLAUDE.md` — Abschnitt "Kein Hartcodieren" und "Vor jedem Push"
+
+**Verbindliche Regeln fuer diesen Ordner:**
+
+- Skripte duerfen **keine** absoluten nutzer- oder systemspezifischen Pfade enthalten (`/home/username/`, `/mnt/c/Users/username/`, Windows-Pfade)
+- Konfigurierbare Pfade gehoeren ausschliesslich in gitignorierte lokale Konfigurationsdateien (`*.local.sh`)
+- Committed werden nur Templates (`*.local.sh.template`) mit Platzhaltern — niemals die befuellten lokalen Dateien
+- `.gitignore` deckt `scripts/*.local.sh` ab — diese Dateien duerfen niemals eingecheckt werden
+- Vor jedem Push sind Skripte aktiv auf absolute Pfade zu pruefen
+
 ## Aktueller Stand
 
-Aktuell ist vor allem das WSL-faehige Dokumentationsupdate vorgesehen.
+Aktuell ist vor allem das WSL-faehige Dokumentationsupdate und der Windows-Sync vorgesehen.
 Weitere Build-, Flash- oder Testhelfer koennen spaeter hier sauber einsortiert werden.
 
 ## Inhalt
 
-- `update_docs.sh` sammelt die verteilte Projektdokumentation in `documentation/` und schliesst generierte oder externe Bereiche aus
+- `update_docs.sh` — sammelt die verteilte Projektdokumentation in `documentation/` und schliesst generierte oder externe Bereiche aus
+- `sync_to_windows.sh` — kopiert `.ino`- und `.h`-Dateien nach Windows fuer Arduino IDE (erfordert `sync_config.local.sh`)
+- `watch_and_sync.sh` — beobachtet `firmware/` per inotify und synct bei Aenderung nach Windows (erfordert `sync_config.local.sh`)
+- `sync_config.local.sh.template` — **Vorlage** fuer lokale Pfad-Konfiguration; als `sync_config.local.sh` kopieren und anpassen
+
+## Setup fuer Sync-Skripte
+
+```bash
+cp scripts/sync_config.local.sh.template scripts/sync_config.local.sh
+# sync_config.local.sh editieren und eigene Pfade eintragen
+# sync_config.local.sh ist gitignoriert und darf nicht eingecheckt werden
+```
 
 ## Regeln
 

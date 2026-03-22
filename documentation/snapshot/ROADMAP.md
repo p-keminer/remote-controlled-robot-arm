@@ -38,7 +38,9 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 ### Arbeitspaket 2.2 - Security-Nachweisbasis
 
 - [x] `tests/security/` als eigenen Nachweisbereich einfuehren
+- [x] advisory-basierte `ESP-NOW`-Schwachstellen, bekannte Grenzen und erste Gegenmassnahmen dokumentieren
 - [ ] Security-Szenarien spaeter in konkrete Testfaelle herunterbrechen
+- [ ] konkrete `ESP-NOW`- bzw. `ESP-IDF`-Stack-Version vor Realbetrieb gegen bekannte Advisories freigeben
 
 ## Phase 3 - Vorbereitung und Toolchain
 
@@ -116,6 +118,7 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 
 - [x] Peer-Setup und Adressverwaltung definiert — Unicast ESP-NOW, MAC in gitignorierter `peer_config.local.h`, Template committed (bestaetigt 2026-03-22)
 - [x] Paketlayout mit Integritaets- und Frischeannahmen festgezogen — ImuPaket v1, XOR-Pruefsumme, Frame-Zaehler, `__attribute__((packed))`, 20Hz (bestaetigt 2026-03-22)
+- [ ] Kommunikationsrahmen von der aktuellen Bench-Variante auf die dokumentierte Security-Baseline mit `session_id`, applikationsseitigem Authentisierungstag und Advisory-gepruefter Stack-Basis anheben
 - [ ] UART-Frame zwischen Receiver und Arduino abstimmen
 
 ### Arbeitspaket 8.2 - Servoebene

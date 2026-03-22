@@ -31,3 +31,7 @@ out/
 /firmware/**/credentials.local.*
 /firmware/**/device_identity.local.*
 /firmware/**/peer_config.local.*
+
+# Lokale Skript-Konfigurationen (enthalten nutzerspezifische Pfade)
+scripts/sync_config.local.sh
+scripts/*.local.sh

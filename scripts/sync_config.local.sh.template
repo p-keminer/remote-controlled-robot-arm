@@ -1,0 +1,11 @@
+#!/bin/bash
+# sync_config.local.sh.template
+# Vorlage fuer lokale Sync-Konfiguration.
+# Kopiere diese Datei als sync_config.local.sh und trage deine lokalen Pfade ein.
+# sync_config.local.sh ist per .gitignore geblockt und darf NICHT eingecheckt werden.
+
+# Absoluter Quellpfad zum firmware/-Verzeichnis dieses Repos
+QUELLE="/PFAD/ZUM/REPO/firmware/"
+
+# Absoluter Zielpfad fuer Arduino IDE
+ZIEL="/PFAD/ZUM/ZIELVERZEICHNIS/firmware/"

@@ -13,6 +13,8 @@ Konkrete Security-Faelle folgen spaeter mit der Implementierung der Kommunikatio
 
 - Abweisung unbekannter Peers
 - Verhalten bei Replay-, Duplikat- oder ungueltigen Frames
+- Verhalten bei unverschluesseltem Unicast oder fehlender LMK
+- Verhalten bei verwundbarer oder nicht freigegebener Stack-Version
 - Validierung von UART-Frames und Servicezugriffen
 - Nachweise fuer Secret- und Provisioning-Disziplin
 

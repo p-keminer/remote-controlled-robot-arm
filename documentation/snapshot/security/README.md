@@ -9,6 +9,7 @@ Hier werden Angriffsmodell, Kommunikationshaertung, Schnittstellenregeln und Pro
 
 Die Security-Basis wird in dieser Ausbaustufe erstmals als eigener Projektbereich aufgebaut.
 Der Schwerpunkt liegt auf lokaler ESP-NOW- und UART-Sicherheit, nicht auf WLAN- oder Cloud-Infrastruktur.
+Bekannte ESP-NOW-Schwachstellen, Advisory-Lage und frueh mitzudenkende Haertungsmassnahmen werden jetzt als eigener Dokumentationsstrang nachgezogen.
 
 ## Inhalt
 

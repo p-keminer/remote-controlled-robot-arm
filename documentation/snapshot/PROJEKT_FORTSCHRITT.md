@@ -30,6 +30,7 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - [x] Root-Dokumente fuer Architektur, Regeln, Kommunikation, Kalibrierung und Safety angelegt
 - [x] `PROJEKT_ABLAUFPLAN.md` und `PROJEKT_FORTSCHRITT.md` als Managementschicht eingefuehrt
 - [x] `SECURITY_FRAMEWORK.md` und `security/` als eigener Bereich angelegt
+- [x] advisory-basierte `ESP-NOW`-Schwachstellen, Grenzen und fruehe Gegenmassnahmen in Security- und Kommunikationsdokumenten nachgezogen
 - [x] `preparation/` als eigener Vorbereitungsbereich angelegt
 - [x] `hardware/assembly/` und `hardware/bringup/` als neue Hardware-Unterbereiche eingefuehrt
 - [x] `hardware/electronics/` fuer ESP32-S3-Integration, Pinmapping, Debugsignale und Breadboard-/Lochrasterpfad eingefuehrt
@@ -47,6 +48,8 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - [x] reale Installations- und Readiness-Schritte fuer Arduino IDE, ESP32-Umgebung und Bench mit echtem Stand fuellen — **Arduino IDE 3.3.7, ESP32 Core 3.3.7, boards.local.txt, PlatformIO (bestätigt 2026-03-22)**
 - [x] echte Boardrevision der vorhandenen ESP32-S3-DevKits und die RGB-LED-Pins am Hardwarebestand pruefen — **v1.0, RGB auf GPIO48, GPIO35/36/37 intern belegt (bestätigt 2026-03-22)**
 - [ ] bevorzugten Pinplan fuer Sender und Receiver gegen echte BNO055-, Mux-, ADC- und UART-Tests absichern
+- [ ] konkrete `ESP-NOW`- und `ESP-IDF`-Version des spaeteren Stacks gegen bekannte Advisories freigeben
+- [ ] Bench-Protokoll von XOR-/Frische-Check auf die dokumentierte Security-Baseline mit `session_id` und Authentisierungstag anheben
 - [ ] reale Hardware-, Inventar- und Aufbauinformationen spaeter in die vorbereiteten Vorlagen ueberfuehren
 - [ ] Security-, Safety- und Kommunikationsfaelle spaeter in konkrete Test- und Messdokumente herunterbrechen
 

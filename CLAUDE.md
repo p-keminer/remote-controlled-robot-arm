@@ -25,17 +25,19 @@ Der Kern des Systems besteht aus mehreren grossen Saeulen:
 - Toolchain: Arduino IDE 3.3.7 + PlatformIO
 - BNO055 Einzel + Dual via PCA9548A-Mux validiert
 - Flex-Sensor ADC-Pfad ausgelesen und kalibriert
-- ESP-NOW Unicast mit ImuPaket v1 laeuft (Pruefsumme, Frische-Check)
+- ESP-NOW Unicast als Bench-Pfad laeuft; Security-Haertung mit `session_id`, Authentisierungstag und Advisory-gepruefter Stack-Basis ist dokumentiert, aber noch nicht umgesetzt
 
-## Kein Hartcodieren in Firmware
+## Kein Hartcodieren — gilt fuer Firmware UND Skripte
 
 MACs, Schluessel, Peer-Adressen und Geraete-IDs duerfen nicht direkt in `.ino`- oder `.cpp`-Dateien hartcodiert werden. Diese Werte gehoeren in gitignorierte lokale Konfigurationsdateien (`peer_config.local.h`, `credentials.local.h` o.ae.). Committed werden nur Templates oder Platzhalter-Header.
+
+Ebenso duerfen Skripte keine absoluten lokalen Pfade enthalten — egal ob Linux, WSL oder Windows. Konfigurierbare Pfade gehoeren in gitignorierte lokale Konfigurationsdateien (z.B. `sync_config.local.sh`). Committed werden nur Templates mit generischen Platzhaltern.
 
 ## Vor jedem Push: Vollstaendige Pre-Push-Pruefung
 
 Vor jedem `git push` sind drei Pruefungen Pflicht:
 
-1. **Secret-Pruefung**: Keine Secrets, MACs, Schluessel, IP-Adressen oder Passwoerter in getrackten Dateien, die nicht durch `.gitignore` geblockt sind.
+1. **Secret- und Pfad-Pruefung**: Keine Secrets, MACs, Schluessel, IPs, API-Schluessel, absolute lokale Pfade (Linux, WSL oder Windows — egal) oder Passwoerter in getrackten Dateien. Gilt ausdruecklich auch fuer Skripte, Konfigurationsdateien und Kommentare.
 2. **Dokumenten-Konsistenz**: Alle abgehakten Punkte `[x]` muessen ueber `ROADMAP.md`, `PROJEKT_FORTSCHRITT.md`, `PROJEKT_ABLAUFPLAN.md` und lokale Roadmaps konsistent und widerspruchsfrei sein.
 3. **README-Aktualitaet**: Die Abschnitte `Aktueller Fokus` und `Aktueller Entwicklungsstand` in `README.md` muessen den echten Projektstand widerspiegeln.
 

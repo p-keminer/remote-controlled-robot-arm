@@ -70,16 +70,19 @@ Firmware immer als `.ino`-Sketch in Arduino IDE auf Windows flashen. PlatformIO 
 
 ---
 
-### Kein Hartcodieren in Firmware
+### Kein Hartcodieren — gilt fuer Firmware UND Skripte
 
-MACs, Schluessel, Peer-Adressen und Geraete-IDs niemals direkt in `.ino`- oder `.cpp`-Dateien schreiben.
+MACs, Schluessel, Peer-Adressen und Geraete-IDs niemals direkt in `.ino`- oder `.cpp`-Dateien schreiben. Ebenso duerfen Skripte keine nutzer- oder systemspezifischen absoluten Pfade enthalten.
 
-**Warum:** Das Projekt ist oeffentlich auf GitHub. Hartcodierte MACs und IDs waeren sichtbar und verstossen gegen die Sicherheitsregeln.
+**Warum:** Das Projekt ist oeffentlich auf GitHub. Hartcodierte MACs, IDs und lokale Pfade (z.B. `/home/p-keminer/`, `/mnt/c/Users/pkemi/`) sind sichtbar, verstoessen gegen Sicherheitsregeln und machen das Projekt nicht uebertragbar.
 
 **Anwendung:**
 - Immer `#include "peer_config.local.h"` verwenden statt Rohwerte einzutragen
 - Committed werden nur `peer_config.template.h` mit Platzhaltern
 - `.gitignore` deckt `firmware/**/peer_config.local.*` ab
+- Konfigurierbare Pfade in Skripten gehoeren in gitignorierte `*.local.sh`-Dateien
+- Committed werden nur Templates (z.B. `sync_config.local.sh.template`) mit generischen Platzhaltern — kein Betriebssystem, kein Benutzername, keine Verzeichnisstruktur sichtbar
+- `.gitignore` deckt `scripts/*.local.sh` ab
 
 ---
 
@@ -87,10 +90,10 @@ MACs, Schluessel, Peer-Adressen und Geraete-IDs niemals direkt in `.ino`- oder `
 
 Vor jedem `git push` sind folgende Pruefungen Pflicht:
 
-1. **Secret-Pruefung**: Keine Secrets, MACs, Schluessel, IPs oder Passwoerter in getrackten Dateien ausserhalb von `.gitignore`.
+1. **Secret- und Pfad-Pruefung**: Keine Secrets, MACs, Schluessel, IPs, API-Schluessel, absolute lokale Pfade (Linux, WSL oder Windows — egal) oder Passwoerter in getrackten Dateien. Gilt ausdruecklich auch fuer Skripte, Konfigurationsdateien und Kommentare.
 2. **Dokumenten-Konsistenz**: Alle `[x]`-Punkte muessen ueber `ROADMAP.md`, `PROJEKT_FORTSCHRITT.md`, `PROJEKT_ABLAUFPLAN.md` und lokale Roadmaps konsistent und widerspruchsfrei sein.
 3. **README-Aktualitaet**: `README.md`-Abschnitte `Aktueller Fokus` und `Aktueller Entwicklungsstand` muessen den echten Projektstand widerspiegeln.
 
 Danach `bash ./scripts/update_docs.sh` ausfuehren.
 
-**Warum:** Dokumente liefen in der Vergangenheit auseinander — ROADMAP.md zeigte Phase 6 als offen, obwohl BNO055, Mux, Flex-Sensor und ESP-NOW laengst validiert waren.
+**Warum:** Lokale Pfade in Sync-Skripten sind auf GitHub gelandet. Dokumente liefen in der Vergangenheit auseinander.

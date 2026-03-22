@@ -55,7 +55,7 @@ Groessere Unterprojekte besitzen zusaetzlich eine eigene `ROADMAP.md`.
 Der Ordner `documentation/` ist ein automatisch erzeugter Snapshot und keine manuell gepflegte Quelldokumentation.
 Der Ordner `docs/` bleibt die manuell gepflegte Arbeits- und Nachweisdokumentation.
 Forschungs-, Konzept- und Entscheidungsdokumente muessen die verwendeten externen Quellen in einem eigenen Abschnitt `Recherchequellen` auffuehren.
-Nicht-repotaugliche lokale Werte wie Schluessel, Peer-Listen oder lokale Identitaetsdaten gehoeren nach `security/local/` und duerfen nicht eingecheckt werden.
+Nicht-repotaugliche lokale Werte wie Schluessel, Peer-Listen, lokale Identitaetsdaten, API-Schluessel und absolute Dateipfade (z.B. `/home/username/`, `/mnt/c/Users/username/`) gehoeren nach `security/local/` oder in gitignorierte `*.local.*`-Konfigurationsdateien und duerfen niemals eingecheckt werden.
 
 ## Aktueller Entwicklungsstand
 

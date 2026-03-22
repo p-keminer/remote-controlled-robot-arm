@@ -41,6 +41,28 @@ Die erste Projektversion wird als lokal betriebenes Embedded-System behandelt:
 - Frames muessen Integritaets-, Versions- und Frischeannahmen unterliegen
 - Replay- oder Duplikatverhalten muss als eigener Sicherheitsfall beschrieben werden
 
+## ESP-NOW-Risikobasis
+
+- `ESP-NOW` ist nicht automatisch sicher, nur weil es lokal und verbindungslos arbeitet.
+- Laut Espressif ist Verschluesselung nur aktiv, wenn fuer Peers passende LMKs gesetzt sind; ohne gesetzte LMK bleiben Unicast-Frames unverschluesselt.
+- Wenn die PMK nicht explizit gesetzt wird, verwendet die Plattform eine Default-PMK. Das ist fuer einen echten Steuerpfad nicht akzeptabel.
+- Broadcast- oder Multicast-Steuerung ist fuer v1 kein Sicherheitsmodell, weil verschluesselte Multicast-Frames laut Espressif nicht unterstuetzt werden.
+- MAC-seitiger Sendeerfolg ist nicht gleichbedeutend mit sicher akzeptierter Anwendungsnachricht; deshalb braucht der Projektpfad eigene ACK-, Session- und Frischelogik.
+
+## Sicherheitskritische Folgerungen fuer dieses Projekt
+
+- nur dedizierte Unicast-Beziehungen zwischen Controller und Receiver fuer Bewegungsdaten zulassen
+- vor Bewegungsfreigabe explizit PMK, LMK, Peer-Allowlist und Kanalannahmen festlegen
+- keine Sicherheitsentscheidung auf XOR, CRC oder reine Plausibilitaetspruefung stuetzen
+- fuer den Anwendungsrahmen eigenen Session-Identifier, monotone Zaehler und einen applikationsseitigen Authentisierungstag vorsehen
+- Empfangs- und Parsinglogik so planen, dass Laengen- und Strukturpruefungen vor jeder tieferen Verarbeitung greifen
+
+## Abhaengigkeiten und Patch-Disziplin
+
+- Vor der spaeteren Implementierung muss die konkrete `Arduino-ESP32`- bzw. `ESP-IDF`-Basis auf bekannte `ESP-NOW`-Advisories geprueft werden.
+- Falls das Projekt die eigenstaendige Komponente `espressif/esp-now` nutzt, gilt zusaetzlich deren Advisory-Lage.
+- Kein Bewegungsbetrieb auf einer bekannten verwundbaren `ESP-NOW`- oder `ESP-IDF`-Basis.
+
 ## Schnittstellensicherheit
 
 - UART darf nur klar definierte, validierbare Bewegungsframes akzeptieren
@@ -52,9 +74,19 @@ Die erste Projektversion wird als lokal betriebenes Embedded-System behandelt:
 - echte Produktionswerte, Peer-Listen oder Sicherheitsschluessel kommen nicht ins Repo
 - Beispielwerte muessen klar als Platzhalter markiert werden
 - Provisioning wird als kontrollierter manueller Prozess fuer lokale Entwicklungsgeraete behandelt
+- absolute lokale Pfade duerfen nicht in Skripten, Konfigurationsdateien oder Dokumenten eingecheckt werden — egal ob Linux, WSL oder Windows; diese gehoeren in gitignorierte lokale Konfigurationsdateien (z.B. `sync_config.local.sh`) mit generischen Platzhaltern im Template
+- API-Schluessel, Zugangsdaten und IP-Adressen unterliegen denselben Regeln wie Secrets und muessen ebenfalls per `.gitignore` geblockt werden
 
 ## Nachweis und Pflege
 
 - Detailregeln liegen unter `security/`
 - technische Auswirkungen muessen in Kommunikations-, Architektur- und Testdokumente gespiegelt werden
 - nach jedem groesseren Security-relevanten Schritt muessen Dokumente aktualisiert und `bash ./scripts/update_docs.sh` ausgefuehrt werden
+
+## Recherchequellen
+
+- [ESP-IDF ESP-NOW Documentation](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/network/esp_now.html) fuer CCMP, PMK/LMK, Broadcast-Grenzen und die Notwendigkeit von Anwendungs-ACKs und Sequenznummern.
+- [Security Overview for espressif/esp-now](https://github.com/espressif/esp-now/security) fuer die aktuelle Advisory-Lage der optionalen `espressif/esp-now`-Komponente.
+- [Replay Attacks Vulnerability In ESP-NOW](https://github.com/espressif/esp-now/security/advisories/GHSA-wf6q-c2xr-77xj) fuer die dokumentierte Replay-Problematik der Komponente bis `2.5.1`.
+- [OOB Vulnerability In ESP-NOW Group Type Message](https://github.com/espressif/esp-now/security/advisories/GHSA-q6f6-4qc5-vhx5) fuer Speicherkorruptionsrisiken in der Gruppen-Nachrichtenverarbeitung der Komponente bis `2.5.1`.
+- [ESP-NOW Integer Underflow Vulnerability Advisory](https://github.com/espressif/esp-idf/security/advisories/GHSA-hqhh-cp47-fv5g) fuer die Advisory-Lage im `ESP-IDF`-WLAN-/ESP-NOW-Stack.

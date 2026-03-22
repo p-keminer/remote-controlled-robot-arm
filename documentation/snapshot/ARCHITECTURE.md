@@ -33,6 +33,7 @@ Die Gesamtarchitektur wird in klar getrennte Ebenen zerlegt:
 - die drahtlose Strecke transportiert kompakte Zielwerte und Integritaetsinformationen
 - `ESP-NOW` ist der vorgesehene lokale Funkpfad fuer v1
 - WLAN, Internet und Cloud sind nicht Teil der v1-Architektur
+- Bewegungsframes sollen zusaetzlich Session-, Replay- und applikationsseitige Authentisierung beruecksichtigen
 
 ### Roboterseite
 
@@ -44,7 +45,7 @@ Die Gesamtarchitektur wird in klar getrennte Ebenen zerlegt:
 
 1. IMUs und Flex-Sensor liefern Rohdaten an den Controller-ESP32.
 2. Der Controller berechnet segmentbezogene oder relative Winkel.
-3. Das Ergebnis wird in ein `ESP-NOW`-Frame mit Integritaets- und Frischeannahmen ueberfuehrt.
+3. Das Ergebnis wird in ein `ESP-NOW`-Frame mit Integritaets-, Session- und Frischeannahmen ueberfuehrt.
 4. Der Receiver-ESP32 validiert das Frame und erstellt daraus ein serielles Uebergabeformat.
 5. Der Arduino setzt die Zielwerte unter Beruecksichtigung von Limits, Rampen und Neutralverhalten um.
 
