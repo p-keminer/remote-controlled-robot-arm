@@ -13,12 +13,13 @@ Die Architektur trennt Vorbereitung, Security, Hardware, Kalibrierung, Firmware 
 
 ## Aktuelle Projektphase
 
-Aktuell befindet sich das Projekt in einer dokumentationsgetriebenen Vorbereitungsphase:
+Aktuell befindet sich das Projekt in Phase 6/8 — Sensorvalidierung abgeschlossen, Kommunikationskette steht, naechster Schritt Hardware-Aufbau:
 
-- Struktur und Regeln festziehen
-- Security- und Vorbereitungsschicht aufbauen
-- hardwareseitige Dokumentation und Vorlagen vorbereiten
-- Teilbereiche fuer spaetere Firmware- und Inbetriebnahmephasen sauber vorbereiten
+- Toolchain steht: Arduino IDE 3.3.7 + PlatformIO (bestaetigt 2026-03-22)
+- BNO055 Einzel + Dual via PCA9548A-Mux validiert (bestaetigt 2026-03-22)
+- Flex-Sensor ADC-Pfad ausgelesen und kalibriert (bestaetigt 2026-03-22)
+- ESP-NOW Unicast mit ImuPaket v1 laeuft (bestaetigt 2026-03-22)
+- Naechste Schritte: LED-Debugging, Buzzer, Roboterarm-Aufbau, UART zu Arduino
 
 ## Pflicht nach Kontextkomprimierung
 
@@ -42,6 +43,8 @@ Nach jeder Kontextkomprimierung oder beim Sitzungsstart ohne vollstaendigen Verl
 - Kommunikation, Servoausfuehrung, Kalibrierung, Security, Hardware und Testnachweise strikt getrennt halten.
 - In Firmware-Dateien nichts hartcodieren was nicht zwingend hartcodiert sein muss. MACs, Schluessel und Peer-Adressen gehoeren in gitignorierte lokale Header (`peer_config.local.h` o.ae.).
 - Vor jedem `git push` pruefen, ob in getrackte Dateien Secrets, Schluessel, MACs, IP-Adressen oder andere sensible Werte eingeflossen sind, die nicht durch `.gitignore` geblockt werden. Push nur nach abgeschlossener Pruefung.
+- Vor jedem `git push` pruefen, ob alle abgehakten Punkte `[x]` konsistent ueber alle Dokumente stimmen — `ROADMAP.md`, `PROJEKT_FORTSCHRITT.md`, `PROJEKT_ABLAUFPLAN.md` und lokale Roadmaps duerfen sich nicht widersprechen.
+- Vor jedem `git push` die `README.md`-Abschnitte `Aktueller Fokus` und `Aktueller Entwicklungsstand` auf echten Projektstand pruefen und bei Bedarf aktualisieren.
 
 ## Verbindliche Designentscheidungen
 

@@ -17,17 +17,29 @@ Der Kern des Systems besteht aus mehreren grossen Saeulen:
 ## Was dieses Projekt noch nicht ist
 
 - noch kein zusammengebauter Endaufbau
-- noch kein fertig eingerichteter ESP32-Workflow
-- noch keine implementierte Firmwarekette
+- noch keine vollstaendige Firmwarekette bis zum Servo
 - kein WLAN-, Cloud- oder Web-Interface-Projekt
+
+## Was bereits steht (Stand 2026-03-22)
+
+- Toolchain: Arduino IDE 3.3.7 + PlatformIO
+- BNO055 Einzel + Dual via PCA9548A-Mux validiert
+- Flex-Sensor ADC-Pfad ausgelesen und kalibriert
+- ESP-NOW Unicast mit ImuPaket v1 laeuft (Pruefsumme, Frische-Check)
 
 ## Kein Hartcodieren in Firmware
 
 MACs, Schluessel, Peer-Adressen und Geraete-IDs duerfen nicht direkt in `.ino`- oder `.cpp`-Dateien hartcodiert werden. Diese Werte gehoeren in gitignorierte lokale Konfigurationsdateien (`peer_config.local.h`, `credentials.local.h` o.ae.). Committed werden nur Templates oder Platzhalter-Header.
 
-## Vor jedem Push: Secret-Pruefung
+## Vor jedem Push: Vollstaendige Pre-Push-Pruefung
 
-Vor jedem `git push` muss geprueft werden, ob in getrackte Dateien Secrets, Schluessel, MACs, IP-Adressen, Passwoerter oder andere sensible Werte eingeflossen sind, die nicht durch `.gitignore` geblockt werden. Der Push darf erst nach abgeschlossener Pruefung erfolgen.
+Vor jedem `git push` sind drei Pruefungen Pflicht:
+
+1. **Secret-Pruefung**: Keine Secrets, MACs, Schluessel, IP-Adressen oder Passwoerter in getrackten Dateien, die nicht durch `.gitignore` geblockt sind.
+2. **Dokumenten-Konsistenz**: Alle abgehakten Punkte `[x]` muessen ueber `ROADMAP.md`, `PROJEKT_FORTSCHRITT.md`, `PROJEKT_ABLAUFPLAN.md` und lokale Roadmaps konsistent und widerspruchsfrei sein.
+3. **README-Aktualitaet**: Die Abschnitte `Aktueller Fokus` und `Aktueller Entwicklungsstand` in `README.md` muessen den echten Projektstand widerspiegeln.
+
+Ein Push darf erst erfolgen, wenn alle drei Pruefungen abgeschlossen sind.
 
 ## Aktuell verbindliche Grundentscheidungen
 

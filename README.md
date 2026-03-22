@@ -12,11 +12,16 @@ Die erste Version wird als lokal betriebenes Embedded-System vorbereitet: `ESP-N
 
 Die aktuelle Phase konzentriert sich auf:
 
-- verbindliche Projektstruktur und Dokumentationsregeln
-- Security als eigenen Projektbereich
-- Vorbereitung fuer Arduino IDE, ESP32-Umgebung, Bench und Inbetriebnahme
-- hardwareseitige Dokumentation fuer Inventar, Aufbauablauf und Bringup
-- einen reproduzierbaren Dokumentationssnapshot fuer verteilte Markdown-Dokumente
+- LED-Debugging am Controller (GPIO4/5/6 IMU-Status, GPIO7 COMMS, GPIO10 FAULT) und Receiver (GPIO4/5/6)
+- Buzzer-Pfad GPIO21 mit sicherem Default-Off pruefen
+- Roboterarm aufbauen und UART-Pfad Receiver → Arduino in Betrieb nehmen
+
+Abgeschlossen (Stand 2026-03-22):
+
+- Toolchain vollstaendig eingerichtet: Arduino IDE 3.3.7 + PlatformIO
+- BNO055 Einzelsensor, PCA9548A-Mux und zwei simultane Sensoren validiert
+- Flex-Sensor ADC-Pfad ausgelesen und Rohwerte dokumentiert
+- IMU-Daten per ESP-NOW Unicast uebertragen: ImuPaket v1 mit Pruefsumme und Frische-Check
 
 ## Leitdokumente
 
@@ -54,6 +59,7 @@ Nicht-repotaugliche lokale Werte wie Schluessel, Peer-Listen oder lokale Identit
 
 ## Aktueller Entwicklungsstand
 
-Die Konzeptphase ist beschrieben, die strukturierte Dokumentations- und Prozessbasis ist angelegt.
-Aktuell werden Security, Vorbereitung, Hardware-Readiness und Vorlagenbasis ausgebaut, bevor die ersten groesseren Firmware- und Integrationsschritte folgen.
+Dokumentations- und Prozessbasis ist angelegt.
+Toolchain steht (Arduino IDE 3.3.7 + PlatformIO), Sensorpfad vollstaendig validiert: BNO055 (Einzel und Dual ueber PCA9548A-Mux), Flex-Sensor, ESP-NOW Unicast mit ImuPaket v1.
+Naechster Schritt: LED-Debugging, Buzzer-Pfad und Roboterarm-Aufbau fuer den UART-Pfad zum Arduino.
 Zusaetzliche Post-v1-Ausbaurichtungen werden gesammelt unter `future/FUTURE_WORK.md`.

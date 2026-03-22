@@ -47,13 +47,13 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 - [x] `preparation/` als eigenen Bereich fuer Vorbedingungen und Setup anlegen
 - [x] Arduino IDE als ersten dokumentierten Toolchainpfad festhalten
 - [x] ESP32-Umgebung, Bench und Readiness als Checklistenbereiche strukturieren
-- [ ] reale Installations- und Verifikationsschritte spaeter nachziehen
+- [x] reale Installations- und Verifikationsschritte nachgezogen — Arduino IDE 3.3.7, ESP32 Core 3.3.7, boards.local.txt fuer N16R8, PlatformIO als Fallback (bestaetigt 2026-03-22)
 
 ### Arbeitspaket 3.2 - Vorbereitungsfreigabe
 
-- [ ] Toolchain-Bereitschaft gegen Dokumentation pruefen
+- [x] Toolchain-Bereitschaft gegen Dokumentation geprueft — Arduino IDE 3.3.7 + PlatformIO einsatzbereit (bestaetigt 2026-03-22)
 - [ ] Bench-Vorbedingungen und Sicherheitsfreigaben konkretisieren
-- [ ] Readiness vor erster Hardware- oder Firmwarearbeit dokumentieren
+- [x] Readiness vor erster Hardware- oder Firmwarearbeit dokumentiert und erreicht (bestaetigt 2026-03-22)
 
 ## Phase 4 - Hardware-Readiness und Dokumentationsvorlagen
 
@@ -69,7 +69,7 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 - [ ] Hardware-Inventar gegen realen Materialstand dokumentieren
 - [ ] Aufbauablauf und Bringup-Reihenfolge mit echten Nachweisen fuellen
 - [ ] Sensormontage und erste Stromtests sauber protokollieren
-- [ ] Boardrevision, Pinmapping und Debugkonzept auf echter Bench-Hardware validieren
+- [x] Boardrevision, Pinmapping und Debugkonzept auf echter Bench-Hardware validiert — v1.0, RGB auf GPIO48, GPIO35/36/37 intern belegt, GPIO8/9 I2C bestaetigt, GPIO1 ADC1 bestaetigt (bestaetigt 2026-03-22)
 
 ## Phase 5 - Architektur und Portabilitaetsfundament
 
@@ -83,16 +83,16 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 
 ### Arbeitspaket 6.1 - IMU-Basis
 
-- [ ] einzelne BNO055 am Controller lesen
-- [ ] PCA9548A-Kanalumschaltung fuer mehrere IMUs testen
-- [ ] gleichzeitiges Auslesen aller benoetigten IMUs validieren
-- [ ] Rohdaten fuer Referenzbewegungen dokumentieren
+- [x] einzelne BNO055 am Controller lesen — I2C-Scan, Adresse 0x29 (ADR=3V3), SDA GPIO8 / SCL GPIO9, Euler-Winkel stabil, Gyro-Kalibrierung 3/3 (bestaetigt 2026-03-22)
+- [x] PCA9548A-Kanalumschaltung fuer mehrere IMUs testen — Mux 0x70, Kanal 0 und 1 einzeln und sequenziell umschalten (bestaetigt 2026-03-22)
+- [x] gleichzeitiges Auslesen aller benoetigten IMUs validieren — zwei BNO055 ueber Kanal 0 und 1, beide stabil, Sys/Gyro/Accel 3/3 (bestaetigt 2026-03-22)
+- [ ] Rohdaten fuer definierte Referenzbewegungen systematisch dokumentieren
 
 ### Arbeitspaket 6.2 - Flex-Sensor-Basis
 
-- [ ] ADC-Pfad fuer den Flex-Sensor auslesen
-- [ ] Rohwerte fuer gestreckte und gebeugte Fingerhaltung erfassen
-- [ ] Messnotizen und erste Kalibrierfenster dokumentieren
+- [x] ADC-Pfad fuer den Flex-Sensor auslesen — GPIO1 ADC1, Spannungsteiler 10kOhm Pull-Down (bestaetigt 2026-03-22)
+- [x] Rohwerte fuer gestreckte und gebeugte Fingerhaltung erfassen — gerade=1108, maximal gebogen=940, Bereich 168 Counts (bestaetigt 2026-03-22)
+- [x] Messnotizen und erste Kalibrierfenster dokumentiert — `calibration/flex_sensor/MESSWERTE.md`, Formel biegung_prozent hinterlegt (bestaetigt 2026-03-22)
 
 ## Phase 7 - Kalibrierung und Mapping
 
@@ -114,8 +114,8 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 
 ### Arbeitspaket 8.1 - Kommunikationskette
 
-- [ ] Peer-Setup und Adressverwaltung definieren
-- [ ] Paketlayout mit Integritaets- und Frischeannahmen festziehen
+- [x] Peer-Setup und Adressverwaltung definiert — Unicast ESP-NOW, MAC in gitignorierter `peer_config.local.h`, Template committed (bestaetigt 2026-03-22)
+- [x] Paketlayout mit Integritaets- und Frischeannahmen festgezogen — ImuPaket v1, XOR-Pruefsumme, Frame-Zaehler, `__attribute__((packed))`, 20Hz (bestaetigt 2026-03-22)
 - [ ] UART-Frame zwischen Receiver und Arduino abstimmen
 
 ### Arbeitspaket 8.2 - Servoebene

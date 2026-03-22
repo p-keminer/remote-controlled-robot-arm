@@ -47,6 +47,8 @@ Dieses Dokument ist fuer Menschen und KI gleichermassen verbindlich.
 - Debug- und Servicezugaenge muessen als lokale Entwicklungswege behandelt und klar vom Zielbetrieb getrennt werden.
 - In Firmware-Dateien darf nichts hartcodiert werden, was nicht zwingend eine Compile-Zeitkonstante sein muss. MACs, Schluessel, Peer-Adressen und Geraete-IDs gehoeren in gitignorierte lokale Konfigurationsdateien (z.B. `peer_config.local.h`). Die `.gitignore`-Muster fuer Firmware-Konfigurationen decken `firmware/**/peer_config.local.*`, `firmware/**/credentials.local.*` und `firmware/**/device_identity.local.*` ab.
 - Vor jedem `git push` muss geprueft werden, ob in getrackte Dateien Secrets, Schluessel, MACs, IP-Adressen, Passwoerter oder sonstige sensible Werte eingeflossen sind, die nicht durch `.gitignore` geblockt werden. Ein Push darf erst erfolgen, wenn diese Pruefung abgeschlossen ist.
+- Vor jedem `git push` muss geprueft werden, ob alle abgehakten Punkte `[x]` konsistent ueber alle Dokumente stimmen. `ROADMAP.md`, `PROJEKT_FORTSCHRITT.md`, `PROJEKT_ABLAUFPLAN.md` und lokale Roadmaps duerfen sich nicht widersprechen.
+- Vor jedem `git push` muessen `README.md`-Abschnitte `Aktueller Fokus` und `Aktueller Entwicklungsstand` den echten Projektstand widerspiegeln.
 
 ## Kalibrierung und Daten
 
