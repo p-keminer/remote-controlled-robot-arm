@@ -6,7 +6,8 @@ Dieser Ordner ist fuer kleine, fokussierte Teilpruefungen einzelner Komponenten 
 
 ## Aktueller Stand
 
-Die Struktur ist vorbereitet, konkrete Bench-Checks folgen spaeter.
+Die Struktur ist vorbereitet, waehrend erste Bench-Ergebnisse bereits in Fach- und Messdokumenten vorliegen.
+Diese Ergebnisse muessen noch in klar abgegrenzte Bench-Testfaelle ueberfuehrt werden.
 
 ## Inhalt
 

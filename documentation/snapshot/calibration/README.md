@@ -6,7 +6,8 @@ Dieser Ordner enthaelt alle Kalibrierregeln, Referenzdaten und dokumentierten Gr
 
 ## Aktueller Stand
 
-Die Kalibrierstruktur ist angelegt, konkrete Mess- und Referenzdaten folgen in spaeteren Arbeitsschritten.
+Die Kalibrierstruktur ist angelegt und fuer den Flex-Sensor bereits mit ersten Rohmessungen befuellt.
+IMU-Nullpunkt, Referenzposen und Servo-Limits folgen mit Arm-Aufbau und Mapping-Arbeit.
 
 ## Inhalt
 

@@ -22,15 +22,24 @@ Dieses Dokument beschreibt den kontrollierten Umgang mit Pairing-, Service- und 
 - PMK wird nie implizit oder per Default belassen, sondern explizit gesetzt
 - pro Controller-/Receiver-Paar wird eine eigene LMK verwaltet
 - die tatsaechlich verwendete `Arduino-ESP32`-, `ESP-IDF`- und gegebenenfalls `espressif/esp-now`-Version muss dokumentiert werden
+- die committed Zielbasis wird in `../preparation/esp32_environment/README.md` gepflegt
+- lokal geflashte Ist-Versionen gehoeren nach `./local/stack_versions.local.md` oder in eine gleichwertige gitignorierte Datei
 - vor erstem Realbetrieb ist die konkrete Stack-Version gegen bekannte `ESP-NOW`-Advisories zu pruefen
 - bei Boardtausch, Neupairing oder Verdacht auf Leckage sind Paarungsdaten und Schluessel neu zu setzen
+
+## Applikationsschluessel fuer `auth_tag64`
+
+- das Schluesselmaterial fuer den applikationsseitigen Authentisierungstag gehoert nie in normale Firmwaredateien oder Dokumente
+- bevorzugte lokale Ablage ist `./local/app_auth_keys.local.env`; alternativ sind firmware-nahe gitignorierte Header wie `packet_auth.local.h` zulaessig
+- committed werden nur Templates oder Platzhalterbeschreibungen, niemals echte Authentisierungsschluessel
+- Sender und Receiver muessen dieselbe Schluesselversion und denselben Rotationsstand dokumentiert verwenden
 
 ## Kein Hartcodieren in Firmware
 
 - MACs, Peer-Adressen, Schluessel und Geraete-IDs duerfen nicht direkt in `.ino`- oder `.cpp`-Dateien hartcodiert werden.
-- Diese Werte gehoeren in gitignorierte lokale Konfigurationsdateien im Firmware-Verzeichnis (z.B. `peer_config.local.h`).
+- Diese Werte gehoeren in gitignorierte lokale Konfigurationsdateien im Firmware-Verzeichnis (z.B. `peer_config.local.h`, `packet_auth.local.h`).
 - Committed werden nur Template-Header mit Platzhaltern, niemals Echtwerte.
-- Die `.gitignore`-Muster `firmware/**/peer_config.local.*`, `firmware/**/credentials.local.*` und `firmware/**/device_identity.local.*` decken diese Dateien ab.
+- Die `.gitignore`-Muster `firmware/**/peer_config.local.*`, `firmware/**/credentials.local.*`, `firmware/**/device_identity.local.*` und `firmware/**/packet_auth.local.*` decken diese Dateien ab.
 - Vor dem ersten Commit eines Firmware-Ordners muss geprueft werden, dass keine Echtwerte in getrackte Dateien eingeflossen sind.
 
 ## Pre-Push Secret-Pruefung

@@ -6,8 +6,8 @@ Dieser Ordner ist fuer nachvollziehbare Test- und Verifizierungsarbeit reservier
 
 ## Aktueller Stand
 
-Die Teststruktur ist vorbereitet.
-Konkrete Bench-, Security-, Integrations-, Latenz- und Safety-Nachweise folgen mit der Implementierung.
+Die Teststruktur ist vorbereitet und erste Bench-Ergebnisse liegen bereits in Firmware-, Hardware- und Kalibrierdokumenten vor.
+Diese Nachweise muessen noch systematisch in eigene Testfaelle fuer Bench, Security, Integration, Latenz und Safety ueberfuehrt werden.
 
 ## Inhalt
 

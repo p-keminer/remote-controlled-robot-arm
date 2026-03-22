@@ -6,7 +6,8 @@ Dieser Ordner ist fuer Ende-zu-Ende-Tests ueber mehrere Teilbereiche reserviert.
 
 ## Aktueller Stand
 
-Die Struktur steht, konkrete Integrationsszenarien werden mit den ersten lauffaehigen Komponenten ergaenzt.
+Die Struktur steht, und ein erster Teilpfad Controller -> Receiver ist ueber `ESP-NOW` bench-validiert.
+Die eigentliche Gesamtkette bis zum Arduino und zu den Servos ist noch offen.
 
 ## Inhalt
 

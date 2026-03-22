@@ -6,14 +6,17 @@ Dieser Ordner ist fuer sicherheitsbezogene Test- und Nachweisfaelle reserviert, 
 
 ## Aktueller Stand
 
-Die Struktur ist vorbereitet.
-Konkrete Security-Faelle folgen spaeter mit der Implementierung der Kommunikations- und Servicepfade.
+Die Struktur und die Security-Baseline sind dokumentiert.
+Konkrete formale Testfaelle muessen noch aus dem aktuellen Bench-Pfad und dem geplanten Security-Uplift abgeleitet werden.
 
 ## Inhalt
 
 - Abweisung unbekannter Peers
 - Verhalten bei Replay-, Duplikat- oder ungueltigen Frames
 - Verhalten bei unverschluesseltem Unicast oder fehlender LMK
+- Verhalten bei Default-PMK oder fehlender expliziter PMK
+- Verhalten bei alter `session_id` oder ruecklaeufigem Zaehler
+- Verhalten bei ungueltigem oder fehlendem `auth_tag64`
 - Verhalten bei verwundbarer oder nicht freigegebener Stack-Version
 - Validierung von UART-Frames und Servicezugriffen
 - Nachweise fuer Secret- und Provisioning-Disziplin
@@ -21,6 +24,7 @@ Konkrete Security-Faelle folgen spaeter mit der Implementierung der Kommunikatio
 ## Regeln
 
 - Security-Testfaelle muessen klar zwischen Angriff, Fehlverhalten und erwarteter Abwehrreaktion unterscheiden
+- jeder Testfall muss den verwendeten Stack-Stand und die Freigabebasis mit angeben
 - physische Bewegungssicherheit bleibt primaer in `tests/safety/`
 
 ## Schnittstellen/Abhaengigkeiten

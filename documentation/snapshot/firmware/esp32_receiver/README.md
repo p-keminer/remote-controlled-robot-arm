@@ -6,13 +6,13 @@ Dieser Ordner ist fuer die Receiver-Firmware des zweiten ESP32 reserviert.
 
 ## Aktueller Stand
 
-Der Bereich ist strukturell vorbereitet.
-Der Receiver ist als validierende Bruecke zwischen Funkstrecke und Arduino definiert.
+Der Bereich ist als Bench-Firmware vorhanden.
+`esp32_receiver.ino` empfaengt `ESP-NOW`-Pakete, prueft Paketgroesse, Protokollversion, XOR-Pruefsumme und Frische; UART, Safety-Reaktionen und Security-Uplift sind noch offen.
 
 ## Inhalt
 
-- spaetere ESP-NOW-Empfangslogik
-- Paketvalidierung und Zeitueberwachung
+- ESP-NOW-Empfangslogik fuer den Bench-Pfad
+- Paketvalidierung und erste Frischepruefung
 - UART-Weitergabe an das Adeept-Arduino-Board
 - Fehlerreaktion bei ungueltigen oder fehlenden Daten
 

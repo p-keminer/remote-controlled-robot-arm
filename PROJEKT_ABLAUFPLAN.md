@@ -5,19 +5,25 @@ Es verknuepft Phasen, Arbeitspakete, Leitdokumente und Pflegepflichten in einer 
 
 ## Ziel des Ablaufplans
 
-- einen klaren Startpunkt fuer das Projekt festlegen
+- den historischen Projektstartpunkt und den aktuellen Arbeitsstand klar trennen
 - Security, Vorbereitung und Hardwarefokus sichtbar vor die eigentliche Firmwarearbeit setzen
 - sicherstellen, dass Dokumentation, Architektur, Aufbau, Tests und spaetere Implementierung konsistent wachsen
 - verhindern, dass Hardwarewissen, Security-Annahmen oder lokale Secret-Daten ungeordnet im Projekt verstreut werden
 
-## Projektstartpunkt
+## Historischer Projektstartpunkt und aktueller Arbeitsstand
 
-Der aktuelle und verbindliche Startpunkt ist:
+Der historische und weiterhin verbindliche Startpunkt des Projekts war:
 
 ### Phase 1 - Dokumente ausarbeiten und Projektfuehrung festziehen
 
 Das erste aktive Arbeitspaket bleibt die tiefe Ausarbeitung der Dokumentation.
 Vor groesseren Firmware- oder Hardwarearbeiten muessen Root-Dokumente, Security-Regeln, Vorbereitungsbereiche, Hardware-Readiness und Vorlagenbasis stehen.
+
+Der aktuelle operative Arbeitsstand liegt jedoch bereits spaeter im Ablauf:
+
+- Sensorpfad, Flex-Sensor und `ESP-NOW`-Bench zwischen Controller und Receiver sind validiert
+- aktive Folgearbeit liegt derzeit in Phase 6 und Phase 8
+- parallel muessen Phase 1 bis 4 weiter synchron gehalten werden, damit Management- und Fachdokumente nicht auseinanderlaufen
 
 ## Phasenmodell
 
@@ -62,11 +68,11 @@ Das Projekt fuer lokalen, sicheren `ESP-NOW`- und `UART`-Betrieb dokumentieren, 
 
 ### Ziel
 
-Vorbedingungen fuer Arduino IDE, ESP32-Umgebung, Bench und spaetere Inbetriebnahme dokumentieren, bevor echte Implementierung oder Aufbau startet.
+Vorbedingungen fuer Toolchain, ESP32-Umgebung, Bench und spaetere Inbetriebnahme dokumentieren und waehrend echter Bench-Arbeit konsistent halten.
 
 ### Typische Arbeitspakete
 
-- Toolchainpfad fuer Arduino IDE beschreiben
+- Arduino IDE als Hauptumgebung und PlatformIO als Fallback beschreiben
 - ESP32-Voraussetzungen und Bibliotheksbasis strukturieren
 - Bench- und Readiness-Checklisten anlegen
 - Vorbedingungen fuer Aufbau und erste Stromtests festschreiben
@@ -113,9 +119,9 @@ Die Sensorseite des Systems technisch sicher in Betrieb nehmen und Rohdaten nach
 
 ### Typische Arbeitspakete
 
-- BNO055 Einzelsensor und Mux-Pfad validieren (bestätigt 2026-03-22)
-- Flex-Sensor ADC-Pfad validieren und Rohwerte dokumentieren (bestätigt 2026-03-22)
-- IMU-Daten per ESP-NOW uebertragen, Paketformat und Integritaet pruefen (bestätigt 2026-03-22)
+- BNO055 Einzelsensor und Mux-Pfad validieren (bestaetigt 2026-03-22)
+- Flex-Sensor ADC-Pfad validieren und Rohwerte dokumentieren (bestaetigt 2026-03-22)
+- IMU-Daten per ESP-NOW uebertragen, Bench-Paketformat und Integritaet pruefen (bestaetigt 2026-03-22)
 - LED-Debugging einbauen: Sender GPIO4/5/6 (IMU-Status), GPIO7 (COMMS), GPIO10 (FAULT)
 - Buzzer-Pfad GPIO21 mit sicherem Default-Off pruefen
 - Receiver-LEDs GPIO4/5/6 einbauen
@@ -150,6 +156,7 @@ Den Datenpfad vom Wearable bis zur Servoausfuehrung konsistent, ueberpruefbar un
 
 ### Typische Arbeitspakete
 
+- Bench-Funkpfad von `ImuPaket v1` auf die dokumentierte Security-Baseline anheben
 - UART-Pfad Receiver → Arduino in Betrieb nehmen (GPIO15/GPIO16)
 - Arduino-Firmware fuer Servo-Ausfuehrung mit Limits und Rampen schreiben
 - Watchdog, Timeout und Neutralverhalten implementieren

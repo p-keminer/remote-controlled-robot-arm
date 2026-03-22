@@ -6,13 +6,15 @@ Dieser Ordner ist fuer die Kalibrierung und das Mapping des Flex-Sensors vorgese
 
 ## Aktueller Stand
 
-Der Bereich ist vorbereitet, Messwerte und Greifermapping werden spaeter hier dokumentiert.
+Der Bereich enthaelt bereits reale Rohmessungen unter `MESSWERTE.md`.
+Das Greifermapping bleibt vorlaeufig und muss nach Montage am Handschuh bzw. Wearable neu kalibriert werden.
 
 ## Inhalt
 
 - ADC-Referenzbereiche fuer gestreckten und gebeugten Finger
 - Totzonen, Glattungsannahmen und Mappingbereiche
 - Hinweise auf Abhaengigkeit von Handschuh, Montage und Sensoralterung
+- reale Rohmessungen und abgeleitete Prozentformel
 
 ## Regeln
 

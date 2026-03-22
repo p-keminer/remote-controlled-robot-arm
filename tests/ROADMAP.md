@@ -7,7 +7,7 @@ Eine kleine, aber belastbare Verifizierungsschicht fuer Sensorik, Kommunikation,
 ## Arbeitspakete
 
 - [x] Testbereiche und Nachweisarten strukturieren
-- [ ] Bench-Pruefungen fuer Sensorzugriff und Multiplexer vorbereiten
+- [ ] Bench-Pruefungen fuer Sensorzugriff, Multiplexer, Flex-Sensor und Bench-Funkpfad in eigene Testdokumente ueberfuehren
 - [ ] Security-Faelle fuer unbekannte Peers, ungueltige Frames und lokale Servicepfade beschreiben
 - [ ] Integrationsablaeufe fuer Controller -> Receiver -> Arduino beschreiben
 - [ ] Latenzmessung fuer End-to-End-Pfad definieren

@@ -47,13 +47,13 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 ### Arbeitspaket 3.1 - Entwicklungsbasis
 
 - [x] `preparation/` als eigenen Bereich fuer Vorbedingungen und Setup anlegen
-- [x] Arduino IDE als ersten dokumentierten Toolchainpfad festhalten
+- [x] Arduino IDE als Hauptumgebung und PlatformIO als lokalen Fallback dokumentieren
 - [x] ESP32-Umgebung, Bench und Readiness als Checklistenbereiche strukturieren
-- [x] reale Installations- und Verifikationsschritte nachgezogen — Arduino IDE 3.3.7, ESP32 Core 3.3.7, boards.local.txt fuer N16R8, PlatformIO als Fallback (bestaetigt 2026-03-22)
+- [x] reale Installations- und Verifikationsschritte nachgezogen — Arduino IDE 3.3.7, ESP32 Core 3.3.7, boards.local.txt fuer N16R8 und PlatformIO als Gegencheck dokumentiert und bench-validiert (bestaetigt 2026-03-22)
 
 ### Arbeitspaket 3.2 - Vorbereitungsfreigabe
 
-- [x] Toolchain-Bereitschaft gegen Dokumentation geprueft — Arduino IDE 3.3.7 + PlatformIO einsatzbereit (bestaetigt 2026-03-22)
+- [x] Toolchain-Bereitschaft gegen Dokumentation geprueft — Arduino IDE 3.3.7 als Hauptumgebung und PlatformIO als Fallback einsatzbereit (bestaetigt 2026-03-22)
 - [ ] Bench-Vorbedingungen und Sicherheitsfreigaben konkretisieren
 - [x] Readiness vor erster Hardware- oder Firmwarearbeit dokumentiert und erreicht (bestaetigt 2026-03-22)
 
@@ -117,7 +117,7 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 ### Arbeitspaket 8.1 - Kommunikationskette
 
 - [x] Peer-Setup und Adressverwaltung definiert — Unicast ESP-NOW, MAC in gitignorierter `peer_config.local.h`, Template committed (bestaetigt 2026-03-22)
-- [x] Paketlayout mit Integritaets- und Frischeannahmen festgezogen — ImuPaket v1, XOR-Pruefsumme, Frame-Zaehler, `__attribute__((packed))`, 20Hz (bestaetigt 2026-03-22)
+- [x] Bench-Paketlayout mit Integritaets- und Frischeannahmen festgezogen — `ImuPaket v1`, XOR-Pruefsumme, Frame-Zaehler, `__attribute__((packed))`, 20Hz (bestaetigt 2026-03-22)
 - [ ] Kommunikationsrahmen von der aktuellen Bench-Variante auf die dokumentierte Security-Baseline mit `session_id`, applikationsseitigem Authentisierungstag und Advisory-gepruefter Stack-Basis anheben
 - [ ] UART-Frame zwischen Receiver und Arduino abstimmen
 

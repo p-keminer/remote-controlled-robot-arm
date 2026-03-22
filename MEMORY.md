@@ -8,13 +8,13 @@ Beim Sitzungsstart oder nach Kontextkomprimierung ist dieses Dokument zu lesen.
 
 ## Projektstand (Stand 2026-03-22)
 
-- Toolchain vollstaendig eingerichtet: Arduino IDE 3.3.7 + boards.local.txt fuer N16R8, PlatformIO als Fallback
+- Toolchain vollstaendig eingerichtet: Arduino IDE 3.3.7 + boards.local.txt als Hauptumgebung, PlatformIO als lokaler Fallback und Gegencheck
 - ESP-NOW Unicast laeuft: Controller → Receiver per MAC, ImuPaket v1 mit XOR-Pruefsumme und Frame-Zaehler
 - BNO055 validiert: I2C-Scan (0x29, ADR=3V3), Rohwerte stabil, Gyro-Kalibrierung 3/3
 - PCA9548A-Mux validiert: Kanal 0 und 1 einzeln umschaltbar, zwei BNO055 gleichzeitig ausgelesen
 - Flex-Sensor validiert: GPIO1 ADC1, Spannungsteiler 10kOhm Pull-Down, gerade=1108, maximal gebogen=940, Bereich 168 Counts
 - MACs dokumentiert in `security/local/device_identities.local.txt` (gitignoriert)
-- Naechste Schritte: LED-Debugging (GPIO4/5/6/7/10), Buzzer GPIO21, Roboterarm aufbauen, UART zu Arduino
+- Naechste Schritte: LED-Debugging (GPIO4/5/6/7/10), Buzzer GPIO21, Funkpfad auf Security-Baseline anheben, Roboterarm aufbauen, UART zu Arduino
 
 ---
 
@@ -56,17 +56,18 @@ Variablennamen, Struct-Felder, Enums, Konstanten und Kommentare auf **Deutsch** 
 
 ---
 
-### Flashen ueber Arduino IDE auf Windows
+### Primarer Entwicklungsweg: Arduino IDE, PlatformIO als Fallback
 
-Firmware immer als `.ino`-Sketch in Arduino IDE auf Windows flashen. PlatformIO nur als Notfall-Fallback.
+Firmware wird primaer ueber Arduino IDE auf Windows entwickelt und geflasht. PlatformIO bleibt als lokaler Fallback, Build-Gegencheck und zusaetzlicher Referenzpfad nutzbar.
 
-**Warum:** Arduino IDE reicht fuer dieses Projekt vollstaendig aus. PlatformIO ist als Lernziel nebenbei, nicht als Hauptweg.
+**Warum:** Arduino IDE ist der reale Hauptarbeitsweg dieses Projekts. `platformio.ini` bleibt trotzdem wertvoll als versionierte Zusatzreferenz fuer Board-, Flash- und PSRAM-Konfiguration.
 
 **Anwendung:**
 - Sketches als `.ino` bereitstellen — kein `#include <Arduino.h>` noetig in `.ino`-Dateien
-- Arduino IDE oeffnet `.ino`-Dateien direkt aus WSL via `\\wsl$\Ubuntu\...` Pfad
+- Arduino IDE oeffnet `.ino`-Dateien bei Bedarf direkt aus WSL via `\\wsl$\Ubuntu\...` Pfad
 - Lokale Header (`peer_config.local.h`) liegen im selben WSL-Verzeichnis wie die `.ino` und werden automatisch gefunden
-- Upload-Anweisungen immer zuerst fuer Arduino IDE beschreiben
+- `platformio.ini` bleibt als versionierte Zusatzreferenz fuer Board- und Build-Einstellungen erhalten
+- Upload-Anweisungen muessen klar kenntlich machen, ob Arduino IDE oder ausnahmsweise PlatformIO gerade der benutzte lokale Pfad ist
 
 ---
 
@@ -74,7 +75,7 @@ Firmware immer als `.ino`-Sketch in Arduino IDE auf Windows flashen. PlatformIO 
 
 MACs, Schluessel, Peer-Adressen und Geraete-IDs niemals direkt in `.ino`- oder `.cpp`-Dateien schreiben. Ebenso duerfen Skripte keine nutzer- oder systemspezifischen absoluten Pfade enthalten.
 
-**Warum:** Das Projekt ist oeffentlich auf GitHub. Hartcodierte MACs, IDs und lokale Pfade (z.B. `/home/p-keminer/`, `/mnt/c/Users/pkemi/`) sind sichtbar, verstoessen gegen Sicherheitsregeln und machen das Projekt nicht uebertragbar.
+**Warum:** Das Projekt ist oeffentlich auf GitHub. Hartcodierte MACs, IDs und lokale Pfade (z.B. `/home/username/`, `/mnt/c/Users/username/`) sind sichtbar, verstoessen gegen Sicherheitsregeln und machen das Projekt nicht uebertragbar.
 
 **Anwendung:**
 - Immer `#include "peer_config.local.h"` verwenden statt Rohwerte einzutragen

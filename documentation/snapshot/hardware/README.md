@@ -6,8 +6,8 @@ Dieser Ordner enthaelt alle nicht-firmwarebezogenen Hardwareunterlagen des Proje
 
 ## Aktueller Stand
 
-Die Hardwarestruktur ist dokumentiert und wurde um Aufbauablauf und Bringup erweitert.
-Schaltplanstand, Verkabelung, Mechanik, Elektronik, Aufbau, Bringup und Stueckliste sind bewusst getrennt.
+Die Hardwarestruktur ist dokumentiert und wurde um Aufbauablauf, Bringup, Wearable-Konzept und Elektronikbench erweitert.
+Schaltplanstand, Verkabelung, Mechanik, Elektronik, Aufbau, Bringup und Stueckliste sind bewusst getrennt; reale Inventar- und Aufbau-Nachweise fehlen noch.
 
 ## Inhalt
 

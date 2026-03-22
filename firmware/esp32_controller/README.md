@@ -6,15 +6,15 @@ Dieser Ordner ist fuer die Wearable-Firmware des Controller-ESP32 reserviert.
 
 ## Aktueller Stand
 
-Der Teilbereich ist dokumentiert, aber noch nicht implementiert.
-Die Controller-Seite ist als Sensor- und Mappinginstanz eingegrenzt.
+Der Teilbereich ist als Bench-Firmware vorhanden.
+`esp32_controller.ino` liest BNO055 ueber PCA9548A, erfasst den Flex-Sensor und sendet `ImuPaket v1` per `ESP-NOW`; Mapping, Session-/Auth-Haertung und Debugsignale sind noch offen.
 
 ## Inhalt
 
-- spaetere Sensorinitialisierung fuer IMUs und Multiplexer
+- Sensorinitialisierung fuer IMUs und Multiplexer
 - ADC-Erfassung fuer den Flex-Sensor
-- Vorverarbeitung, Referenzbezug und Zielwerterzeugung
-- Funkuebergabe an den Receiver
+- Bench-Vorverarbeitung und Funkuebergabe an den Receiver
+- spaetere Referenz-, Mapping- und Security-Erweiterung
 
 ## Regeln
 
@@ -27,3 +27,4 @@ Die Controller-Seite ist als Sensor- und Mappinginstanz eingegrenzt.
 - liest Regeln aus `../../CALIBRATION_FRAMEWORK.md`
 - nutzt die Funkvorgaben aus `../../COMMUNICATION_FRAMEWORK.md`
 - liefert Zielwerte an `../esp32_receiver/`
+- bezieht lokale Peer- und spaetere Auth-Konfiguration aus gitignorierten Headern

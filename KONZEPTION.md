@@ -3,6 +3,8 @@
 **Stand:** 2026-03-07
 **Status:** Konzeptphase
 
+> Hinweis: Dieses Dokument bleibt der historische Konzeptursprung des Projekts. Der aktuelle Bench-Stand, die verbindlichen Regeln und die operative Phasenlage werden in `README.md`, `ROADMAP.md`, `PROJEKT_ABLAUFPLAN.md` und `PROJEKT_FORTSCHRITT.md` fortgefuehrt.
+
 ---
 
 ## 1. Projektziel

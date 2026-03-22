@@ -15,13 +15,14 @@ Die aktuelle Phase konzentriert sich auf:
 - LED-Debugging am Controller (GPIO4/5/6 IMU-Status, GPIO7 COMMS, GPIO10 FAULT) und Receiver (GPIO4/5/6)
 - Buzzer-Pfad GPIO21 mit sicherem Default-Off pruefen
 - Roboterarm aufbauen und UART-Pfad Receiver → Arduino in Betrieb nehmen
+- Bench-Kommunikation von `ImuPaket v1` auf die dokumentierte Security-Baseline mit Session- und Authentisierungsschicht anheben
 
 Abgeschlossen (Stand 2026-03-22):
 
-- Toolchain vollstaendig eingerichtet: Arduino IDE 3.3.7 + PlatformIO
+- Toolchain vollstaendig eingerichtet: Arduino IDE 3.3.7 als Hauptumgebung, PlatformIO als lokaler Fallback- und Gegencheckpfad
 - BNO055 Einzelsensor, PCA9548A-Mux und zwei simultane Sensoren validiert
 - Flex-Sensor ADC-Pfad ausgelesen und Rohwerte dokumentiert
-- IMU-Daten per ESP-NOW Unicast uebertragen: ImuPaket v1 mit Pruefsumme und Frische-Check
+- IMU-Daten per ESP-NOW Unicast uebertragen: `ImuPaket v1` als Bench-Paket mit XOR-Pruefsumme und Frische-Check
 
 ## Leitdokumente
 
@@ -60,6 +61,8 @@ Nicht-repotaugliche lokale Werte wie Schluessel, Peer-Listen, lokale Identitaets
 ## Aktueller Entwicklungsstand
 
 Dokumentations- und Prozessbasis ist angelegt.
-Toolchain steht (Arduino IDE 3.3.7 + PlatformIO), Sensorpfad vollstaendig validiert: BNO055 (Einzel und Dual ueber PCA9548A-Mux), Flex-Sensor, ESP-NOW Unicast mit ImuPaket v1.
-Naechster Schritt: LED-Debugging, Buzzer-Pfad und Roboterarm-Aufbau fuer den UART-Pfad zum Arduino.
+Toolchain steht: Arduino IDE 3.3.7 ist die Hauptumgebung, PlatformIO bleibt als lokaler Fallback und Gegencheck erhalten.
+Sensorpfad ist bench-validiert: BNO055 (Einzel und Dual ueber PCA9548A-Mux), Flex-Sensor und `ESP-NOW` Unicast mit `ImuPaket v1` als Bench-Zwischenstand.
+Die dokumentierte Security-Baseline mit `session_id`, applikationsseitigem Authentisierungstag und Advisory-gepruefter Stack-Basis ist vorbereitet, aber noch nicht in die Firmware uebernommen.
+Naechster Schritt: LED-Debugging, Buzzer-Pfad, Roboterarm-Aufbau und UART-Inbetriebnahme zum Arduino.
 Zusaetzliche Post-v1-Ausbaurichtungen werden gesammelt unter `future/FUTURE_WORK.md`.

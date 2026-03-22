@@ -6,13 +6,13 @@ Dieser Ordner enthaelt die vorbereitende Dokumentation fuer Toolchain, Bench, En
 
 ## Aktueller Stand
 
-Die Vorbereitung wird hier erstmals als eigener Bereich beschrieben.
-Der Fokus liegt auf nachvollziehbaren Checklisten und nicht auf automatischer Installation.
+Die Vorbereitungsbasis ist angelegt und teilweise bereits gegen echte Bench-Hardware verifiziert.
+Toolchain, Boardfakten und erste Bench-Pfade sind dokumentiert; Aufbau-, Freigabe- und Gegencheckschritte werden hier weiter konsistent gehalten.
 
 ## Inhalt
 
-- `esp32_environment/` — **primaerer Toolchain-Pfad**: PlatformIO auf Windows, bestaetigter Boardstand, Bibliotheksbasis und Readiness-Checkliste
-- `arduino_ide_setup/` — Fallback-Pfad fuer Arduino IDE; nicht der primaere Entwicklungsweg
+- `arduino_ide_setup/` — Hauptumgebung fuer Arduino IDE, Upload, Boardeinstellungen und Alltagsworkflow
+- `esp32_environment/` — allgemeiner ESP32-Umgebungsbereich mit bestaetigtem Boardstand, Bibliotheksbasis, Stack-Stand und PlatformIO als Fallback/Gegencheck
 - `bench_setup/` fuer Arbeitsplatz, Strom, Verkabelungsdisziplin und Testreihenfolge
 - `robot_arm_readiness/` fuer Voraussetzungen vor Aufbau und erster Inbetriebnahme
 

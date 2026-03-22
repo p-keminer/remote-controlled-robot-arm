@@ -61,6 +61,8 @@ Die erste Projektversion wird als lokal betriebenes Embedded-System behandelt:
 
 - Vor der spaeteren Implementierung muss die konkrete `Arduino-ESP32`- bzw. `ESP-IDF`-Basis auf bekannte `ESP-NOW`-Advisories geprueft werden.
 - Falls das Projekt die eigenstaendige Komponente `espressif/esp-now` nutzt, gilt zusaetzlich deren Advisory-Lage.
+- Die committed Zielbasis fuer Bench und spaeteren Realbetrieb wird in `preparation/esp32_environment/README.md` gepflegt.
+- Lokal geflashte Ist-Versionen und Freigabenotizen gehoeren zusaetzlich nach `security/local/stack_versions.local.md` oder in gleichwertige gitignorierte Dateien.
 - Kein Bewegungsbetrieb auf einer bekannten verwundbaren `ESP-NOW`- oder `ESP-IDF`-Basis.
 
 ## Schnittstellensicherheit

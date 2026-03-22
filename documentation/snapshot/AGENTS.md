@@ -13,13 +13,13 @@ Die Architektur trennt Vorbereitung, Security, Hardware, Kalibrierung, Firmware 
 
 ## Aktuelle Projektphase
 
-Aktuell befindet sich das Projekt in Phase 6/8 — Sensorvalidierung abgeschlossen, Kommunikationskette steht, naechster Schritt Hardware-Aufbau:
+Aktuell befindet sich das Projekt in Phase 6/8 — Sensor- und Kommunikations-Bench ist validiert, Hardware-Aufbau, UART-Kette und Security-Haertung sind noch offen:
 
-- Toolchain steht: Arduino IDE 3.3.7 + PlatformIO (bestaetigt 2026-03-22)
+- Toolchain steht: Arduino IDE 3.3.7 als Hauptumgebung, PlatformIO als Fallback und Gegencheck (bestaetigt 2026-03-22)
 - BNO055 Einzel + Dual via PCA9548A-Mux validiert (bestaetigt 2026-03-22)
 - Flex-Sensor ADC-Pfad ausgelesen und kalibriert (bestaetigt 2026-03-22)
-- ESP-NOW Unicast mit ImuPaket v1 laeuft (bestaetigt 2026-03-22)
-- Naechste Schritte: LED-Debugging, Buzzer, Roboterarm-Aufbau, UART zu Arduino
+- ESP-NOW Unicast mit `ImuPaket v1` als Bench-Pfad laeuft (bestaetigt 2026-03-22)
+- Naechste Schritte: LED-Debugging, Buzzer, Security-Uplift fuer den Funkpfad, Roboterarm-Aufbau und UART zu Arduino
 
 ## Pflicht nach Kontextkomprimierung oder Sitzungsstart
 

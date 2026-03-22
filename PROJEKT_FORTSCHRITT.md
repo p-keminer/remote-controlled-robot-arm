@@ -5,24 +5,24 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 
 ## Gesamtstatus
 
-- Projektmodus: Dokumentations-, Security-, Vorbereitungs- und Hardware-Readiness-Aufbau
-- Aktive Hauptphase: Phase 1 - Dokumentationsfundament
-- Parallel ausgebaut: Phase 2 - Security-Grundlage, Phase 3 - Vorbereitung, Phase 4 - Hardware-Readiness
-- Entwicklungsrealitaet: Toolchain steht (Arduino IDE 3.3.7 + PlatformIO), ESP-NOW Hello-World zwischen beiden Boards erfolgreich getestet (2026-03-22)
+- Projektmodus: bench-validierte Sensor-, Kommunikations- und Elektronikbasis mit laufender Dokumentationssynchronisierung
+- Aktive Hauptphasen: Phase 6 - Sensorvalidierung und Phase 8 - Kommunikation, Servoausfuehrung und Safety-Vorbereitung
+- Parallel gepflegt: Phase 1 - Dokumentationsfundament, Phase 2 - Security-Grundlage, Phase 3 - Vorbereitung und Toolchain, Phase 4 - Hardware-Readiness
+- Entwicklungsrealitaet: Arduino IDE 3.3.7 als Hauptumgebung und PlatformIO als Fallback stehen; Controller -> Receiver laeuft per `ESP-NOW` mit `ImuPaket v1` als Bench-Zwischenstand, waehrend UART, Arduino-Servoebene, Security-Uplift und realer Arm-Aufbau noch offen sind
 
 ## Aktuelle Phasenampel
 
 | Phase | Status | Einordnung |
 | --- | --- | --- |
-| Phase 1 - Dokumentationsfundament | in Arbeit | Basis steht und wird weiter synchronisiert |
-| Phase 2 - Security-Grundlage | in Arbeit | eigener Bereich ist angelegt |
-| Phase 3 - Vorbereitung und Toolchain | in Arbeit | Dokumentationsstruktur steht, reale Setups fehlen |
-| Phase 4 - Hardware-Readiness und Nachweisstruktur | in Arbeit | Vorlagen und Hardwareablauf sind im Aufbau |
-| Phase 5 - Architektur und Portabilitaetsfundament | vorbereitet | fachlich beschrieben, aber noch nicht technisch heruntergebrochen |
-| Phase 6 - Sensorvalidierung | vorbereitet | wartet auf Toolchain, Hardware und Bench-Bereitschaft |
-| Phase 7 - Kalibrierung und Mapping | vorbereitet | haengt von realen Sensordaten ab |
-| Phase 8 - Kommunikation, Servoausfuehrung und Safety | vorbereitet | Kommunikations- und Safety-Basis ist dokumentiert |
-| Phase 9 - Integration und Hardware-Verstetigung | nicht gestartet | folgt erst nach ersten lauffaehigen Teilketten |
+| Phase 1 - Dokumentationsfundament | in Arbeit | Basis steht und wird nach jedem Bench-Schritt nachgezogen |
+| Phase 2 - Security-Grundlage | in Arbeit | Advisory-Lage, Provisioning und Security-Baseline sind dokumentiert; Stack-Freigabe und formale Testfaelle sind offen |
+| Phase 3 - Vorbereitung und Toolchain | weit fortgeschritten | Toolchain, Boardfakten und Bench-Readiness sind real bestaetigt; lokale Gegencheck- und Freigabeprozesse werden weiter geschaerft |
+| Phase 4 - Hardware-Readiness und Nachweisstruktur | in Arbeit | Wearable-, Elektronik- und Bringup-Doku stehen; Inventar, Aufbau und reale Verkabelung fehlen noch |
+| Phase 5 - Architektur und Portabilitaetsfundament | vorbereitet | fachlich beschrieben, aber noch nicht als echte Adapter- und Abstraktionsschicht umgesetzt |
+| Phase 6 - Sensorvalidierung | in Arbeit | BNO055, PCA9548A, Flex-Sensor und Funk-Bench sind validiert; Referenzbewegungen und formale Bench-Nachweise fehlen noch |
+| Phase 7 - Kalibrierung und Mapping | vorbereitet | startet nach Arm-Aufbau, Referenzpose und erster Servo-Grundfunktion |
+| Phase 8 - Kommunikation, Servoausfuehrung und Safety | in Arbeit | `ESP-NOW`-Benchpfad ist validiert; Security-Uplift, UART und Arduino-Safety-Logik sind offen |
+| Phase 9 - Integration und Hardware-Verstetigung | nicht gestartet | folgt nach erster lauffaehiger Gesamtkette bis zur Servoebene |
 | Phase 10 - Zukunftsausbau und Systemerweiterung | vorbereitet | als Post-v1-Ausblick dokumentiert, aber nicht aktiv |
 
 ## Bereits erledigt
@@ -40,39 +40,35 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - [x] `.gitignore` und `security/local/` fuer lokale, nicht-repotaugliche Daten vorbereitet
 - [x] `CLAUDE.md` als kompakter KI-Brief eingefuehrt
 - [x] Quellenpflicht fuer forschungs- und entscheidungsgetriebene Dokumente in Regeln und Hardware-Doku verankert
+- [x] Toolchain vollstaendig eingerichtet: Arduino IDE 3.3.7, ESP32 Core 3.3.7, boards.local.txt fuer N16R8 und PlatformIO als Gegencheck dokumentiert und einsatzbereit
+- [x] echte Boardrevision der vorhandenen ESP32-S3-DevKits und die RGB-LED-Pins am Hardwarebestand geprueft — v1.0, RGB auf GPIO48, GPIO35/36/37 intern belegt
+- [x] ESP-NOW Hello-World erfolgreich zwischen Controller und Receiver getestet
+- [x] Beide Board-MACs dokumentiert in `security/local/device_identities.local.txt`
+- [x] ESP-NOW Unicast erfolgreich getestet (Controller -> Receiver per MAC, bestaetigt 2026-03-22)
+- [x] BNO055 I2C-Scan erfolgreich: Adresse 0x29 (ADR=3V3), SDA GPIO8 / SCL GPIO9
+- [x] BNO055 Rohwerte erfolgreich ausgelesen: Euler-Winkel stabil, Gyro-Kalibrierung 3/3
+- [x] PCA9548A Mux erfolgreich: BNO055 ueber Kanal 0 angesprochen, Sys/Gyro/Accel 3/3, Mux-Adresse 0x70
+- [x] Zwei BNO055 gleichzeitig ueber Mux-Kanaele 0 und 1 ausgelesen, beide Sensoren stabil
+- [x] IMU-Daten per ESP-NOW Unicast uebertragen: `ImuPaket v1` mit XOR-Pruefsumme und Frische-Check, alle Bench-Pakete valide
+- [x] Flex-Sensor Rohmessung: gerade=1108, maximal gebogen=940, Bereich 168 Counts, GPIO1
+- [x] No-Hardcoding-Regel eingefuehrt: MACs in `peer_config.local.h` ausgelagert, gitignoriert
 
 ## Noch offen im aktuellen Schwerpunkt
 
-- [ ] Root-Dokumente, lokale Bereichsdokumente und neue Security-/Preparation-Bereiche vollstaendig gegeneinander synchron halten
-- [ ] Quellenkonvention kuenftig in allen neuen Fach- und Entscheidungsdokumenten konsequent mitfuehren
-- [x] reale Installations- und Readiness-Schritte fuer Arduino IDE, ESP32-Umgebung und Bench mit echtem Stand fuellen — **Arduino IDE 3.3.7, ESP32 Core 3.3.7, boards.local.txt, PlatformIO (bestätigt 2026-03-22)**
-- [x] echte Boardrevision der vorhandenen ESP32-S3-DevKits und die RGB-LED-Pins am Hardwarebestand pruefen — **v1.0, RGB auf GPIO48, GPIO35/36/37 intern belegt (bestätigt 2026-03-22)**
-- [ ] bevorzugten Pinplan fuer Sender und Receiver gegen echte BNO055-, Mux-, ADC- und UART-Tests absichern
-- [ ] konkrete `ESP-NOW`- und `ESP-IDF`-Version des spaeteren Stacks gegen bekannte Advisories freigeben
+- [ ] Root-Dokumente, lokale Bereichsdokumente und neue Security-/Preparation-Bereiche dauerhaft synchron halten
+- [ ] bevorzugten Pinplan fuer Sender-LEDs, Receiver-LEDs, Buzzer und UART gegen echte Bench-Tests absichern
+- [ ] konkrete `ESP-NOW`-/`ESP-IDF`-Zielbasis fuer Realbetrieb freigeben und in `preparation/esp32_environment/README.md` plus lokalem Stack-Log dokumentieren
 - [ ] Bench-Protokoll von XOR-/Frische-Check auf die dokumentierte Security-Baseline mit `session_id` und Authentisierungstag anheben
-- [ ] reale Hardware-, Inventar- und Aufbauinformationen spaeter in die vorbereiteten Vorlagen ueberfuehren
-- [ ] Security-, Safety- und Kommunikationsfaelle spaeter in konkrete Test- und Messdokumente herunterbrechen
-
-## Bereits erledigt (Ergaenzung 2026-03-22)
-
-- [x] Toolchain vollstaendig eingerichtet: Arduino IDE 3.3.7 + boards.local.txt fuer N16R8, PlatformIO in WSL als Fallback
-- [x] ESP-NOW Hello-World erfolgreich zwischen Controller und Receiver getestet
-- [x] Beide Board-MACs dokumentiert in `security/local/device_identities.local.txt`
-- [x] ESP-NOW Unicast erfolgreich getestet (Controller -> Receiver per MAC, bestätigt 2026-03-22)
-- [x] BNO055 I2C-Scan erfolgreich: Adresse 0x29 (ADR=3V3), SDA GPIO8 / SCL GPIO9 (bestätigt 2026-03-22)
-- [x] BNO055 Rohwerte erfolgreich ausgelesen: Euler-Winkel stabil, Gyro-Kalibrierung 3/3 (bestätigt 2026-03-22)
-- [x] PCA9548A Mux erfolgreich: BNO055 über Kanal 0 angesprochen, Sys/Gyro/Accel 3/3, Mux-Adresse 0x70 (bestätigt 2026-03-22)
-- [x] Zwei BNO055 gleichzeitig über Mux-Kanäle 0 und 1 ausgelesen, beide Sensoren stabil (bestätigt 2026-03-22)
-- [x] IMU-Daten per ESP-NOW Unicast übertragen: ImuPaket v1 mit Prüfsumme und Frische-Check, alle Pakete valide (bestätigt 2026-03-22)
-- [x] Flex-Sensor Rohmessung: gerade=1108, maximal gebogen=940, Bereich 168 Counts, GPIO1 (bestätigt 2026-03-22)
-- [x] No-Hardcoding-Regel eingeführt: MACs in `peer_config.local.h` ausgelagert, gitignoriert
+- [ ] UART-Frame zwischen Receiver und Arduino festziehen und bench-validieren
+- [ ] reale Hardware-, Inventar- und Aufbauinformationen in die vorbereiteten Vorlagen ueberfuehren
+- [ ] Security-, Safety- und Kommunikationsfaelle in konkrete Test- und Messdokumente herunterbrechen
 
 ## Naechste sinnvolle Arbeitspakete
 
-1. LED-Debugging einbauen: Sender GPIO4/5/6 (IMU-Status), GPIO7 (COMMS), GPIO10 (FAULT) — siehe `hardware/electronics/DEBUG_SIGNALS_AND_BUZZER.md`
+1. LED-Debugging einbauen: Sender GPIO4/5/6 (IMU-Status), GPIO7 (COMMS), GPIO10 (FAULT) und Receiver GPIO4/5/6
 2. Buzzer-Pfad GPIO21 mit sicherem Default-Off pruefen
-3. Receiver-LEDs GPIO4/5/6 einbauen
-4. Dann: Roboterarm aufbauen und UART-Pfad Receiver → Arduino in Betrieb nehmen
+3. Bench-Funkpfad auf Session-/Authentisierungsschicht anheben
+4. Roboterarm aufbauen und UART-Pfad Receiver → Arduino in Betrieb nehmen
 
 ## Leitende Dokumente fuer den aktuellen Stand
 
@@ -81,13 +77,14 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - `ROADMAP.md` als globale Phasenplanung
 - `PROJEKT_ABLAUFPLAN.md` als Management-Reihenfolge
 - `SECURITY_FRAMEWORK.md`, `COMMUNICATION_FRAMEWORK.md`, `SAFETY_FRAMEWORK.md` und `CALIBRATION_FRAMEWORK.md` als Systemrahmen
-- `preparation/README.md`, `security/README.md`, `hardware/README.md`, `docs/templates/README.md` und `future/README.md` als neue Schwerpunktbereiche
+- `preparation/README.md`, `security/README.md`, `hardware/README.md`, `docs/templates/README.md` und `future/README.md` als Schwerpunktbereiche
 
 ## Offene Management-Risiken
 
-- Die Dokumentbasis ist jetzt breiter, aber reale Toolchain- und Hardware-Nachweise fehlen noch.
-- Ohne konsequente Nutzung der neuen Vorlagen droht der Hardwareteil wieder hinter dem Softwareteil zurueckzufallen.
-- Lokale Secret- oder Pairingdaten muessen strikt aus der normalen Dokumentation herausgehalten werden.
+- Ohne konsequente Synchronisierung koennen Root-Dokumente, lokale Readmes und Roadmaps erneut auseinanderlaufen.
+- Die aktuelle `ESP-NOW`-Bench-Variante ist fuer Sensor- und Transporttests geeignet, aber noch kein freigegebener Security-Produktivpfad.
+- Roboterarm-Aufbau, UART-Kette, Servo-Limits und reale Safety-Fallbacks sind noch nicht bench-validiert und bleiben damit der groesste Integrationsblocker.
+- Toolchain- und Security-Freigaben muessen sauber zwischen committed Zielbasis und lokal geflashtem Ist-Stand getrennt dokumentiert bleiben.
 
 ## Pflegepflicht fuer dieses Dokument
 

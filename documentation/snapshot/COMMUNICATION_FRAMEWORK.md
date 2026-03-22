@@ -27,8 +27,8 @@ Dieses Dokument ist die kanonische Quelle fuer alle Kommunikationsregeln zwische
 
 - Standardpfad ist lokales `ESP-NOW`.
 - Der Steuerpfad soll nicht als offener Broadcast-Standardpfad behandelt werden.
-- Frames muessen Protokollversion, Integritaet und Frischeannahmen beruecksichtigen.
-- Frames muessen zusaetzlich einen Session-Bezug und einen applikationsseitigen Authentisierungstag tragen.
+- Der aktuelle Bench-Pfad beruecksichtigt bereits Protokollversion, Integritaet und Frischeannahmen.
+- Der Produktivpfad fuer Realbetrieb muss zusaetzlich einen Session-Bezug und einen applikationsseitigen Authentisierungstag tragen.
 - Unbekannte, veraltete oder ungueltige Frames duerfen nicht in Bewegung uebergehen.
 - MAC-seitiger Sendeerfolg reicht nicht; der Projektpfad braucht Anwendungs-ACK und definierte Duplicate-Logik.
 - Aenderungen an Paketgroesse, Wertebereichen oder Integritaetslogik muessen hier und in `security/COMMUNICATION_SECURITY.md` gespiegelt werden.
@@ -40,9 +40,33 @@ Dieses Dokument ist die kanonische Quelle fuer alle Kommunikationsregeln zwische
 - Der Receiver darf dem Arduino keine unvalidierten oder unvollstaendigen Bewegungsdaten uebergeben.
 - Timeout und Neutralverhalten muessen auf beiden Seiten abgestimmt sein.
 
-## ImuPaket v1 — Secure Draft fuer ESP-NOW (Stand 2026-03-22)
+## ImuPaket v1 - aktueller Bench-Stand fuer ESP-NOW (Stand 2026-03-22)
 
+```c
+typedef struct {
+    float heading;
+    float roll;
+    float pitch;
+} SensorDaten;
+
+typedef struct __attribute__((packed)) {
+    uint32_t    zaehler;
+    SensorDaten sensoren[2];
+    float       flex_prozent;
+    uint8_t     protokoll_version;
+    uint8_t     pruefsumme;
+} ImuPaketV1Bench;
 ```
+
+- Paketgroesse: `sizeof(ImuPaketV1Bench)` — Receiver verwirft Pakete anderer Groesse
+- Integritaet im Bench-Pfad: XOR-Pruefsumme ueber alle Bytes bis auf das Pruefsummenfeld
+- Frische: Pakete mit `zaehler <= letzter_zaehler` werden verworfen
+- Sendeintervall: 50ms (20Hz)
+- Dieser Stand ist als Bench-Zwischenstufe fuer Sensor- und Funkvalidierung zulaessig, aber nicht als fertige Security-Baseline fuer Realbetrieb
+
+## ImuPaket v2 - Security-Zielbild vor Realbetrieb
+
+```c
 typedef struct {
     float heading;
     float roll;
@@ -50,7 +74,7 @@ typedef struct {
 } SensorDaten;
 
 typedef struct {
-    uint8_t     protokoll_version;   // aktuell: 1
+    uint8_t     protokoll_version;   // fuer den Security-Uplift als neue Version einplanen, z.B. 2
     uint8_t     msg_typ;             // motion, ack, arm, disarm, error
     uint16_t    flags;               // armed, degraded, calibrating, estop
     uint32_t    session_id;          // zufaellig pro Boot / Bind-Vorgang
@@ -59,19 +83,21 @@ typedef struct {
     uint16_t    flex_raw;            // Rohwert oder normalisierter Griffwert
     uint16_t    reserved;
     uint64_t    auth_tag64;          // gekuerzter MAC ueber alle vorherigen Bytes
-} ImuPaketV1;
+} ImuPaketV2Secure;
 ```
 
-- Paketgroesse: `sizeof(ImuPaketV1)` — Receiver verwirft Pakete anderer Groesse
+- Paketgroesse: `sizeof(ImuPaketV2Secure)` — Receiver verwirft Pakete anderer Groesse
 - Sessionbindung: `session_id` muss zur aktuellen bewaffneten Sitzung passen
 - Frische: Pakete mit `zaehler <= letzter_zaehler` werden verworfen
 - Authentisierung: `auth_tag64` wird applikationsseitig aus lokalem Schluesselmaterial berechnet
 - Nur gueltige `msg_typ`- und `flags`-Kombinationen duerfen in Bewegungslogik uebergehen
 - Sendeintervall: 50ms (20Hz)
+- Dieser Stand ist das dokumentierte Zielbild fuer Bewegungsfreigabe ausserhalb des reinen Bench-Betriebs
 
 Hinweis:
 
 - Einfache XOR- oder CRC-Felder koennen zusaetzlich fuer Debug oder Korruptionserkennung existieren, ersetzen aber nicht den applikationsseitigen Authentisierungstag.
+- Das aktuell implementierte `ImuPaket v1` bleibt bis zum Security-Uplift ein Bench-Artefakt und ist kein Produktivfreigabekriterium.
 
 ## Fehlerfaelle
 

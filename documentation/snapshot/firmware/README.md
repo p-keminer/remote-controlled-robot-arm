@@ -6,8 +6,8 @@ Dieser Ordner enthaelt die gesamte Laufzeitlogik fuer Controller, Receiver und S
 
 ## Aktueller Stand
 
-Die Firmwarestruktur ist dokumentiert, die eigentliche Implementierung steht noch am Anfang.
-Die Verantwortungsgrenzen zwischen Sensorik, Funkbruecke und Servoebene sind bereits festgelegt.
+Die Firmwarestruktur ist dokumentiert und auf Controller- und Receiver-Seite bereits als Bench-Firmware vorhanden.
+Controller und Receiver koennen Sensor- bzw. Funkpfad bench-validieren; Arduino-Servoebene, Security-Uplift und finale Trennung der Laufzeitpfade sind noch offen.
 
 ## Inhalt
 

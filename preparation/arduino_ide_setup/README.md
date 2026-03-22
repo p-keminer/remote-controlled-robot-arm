@@ -2,24 +2,23 @@
 
 ## Zweck
 
-Dieser Ordner dokumentiert die Arduino IDE als **primaeren Flash- und Entwicklungspfad**.
+Dieser Ordner dokumentiert die Arduino IDE als Hauptumgebung fuer Upload, lokale Entwicklung und schnelle Hardwaretests.
 
-PlatformIO (WSL) bleibt als Fallback fuer Build-Validierung erhalten, wird aber nicht als regulaerer Arbeitsweg genutzt.
+PlatformIO bleibt als Fallback- und Gegencheckpfad dokumentiert.
+Arduino IDE ist der bevorzugte Arbeitsweg fuer folgende Szenarien:
 
-Arduino IDE bleibt als dokumentierter Fallback fuer folgende Szenarien:
-
-- schnelle Einzeltests ohne PlatformIO-Projekt
-- Referenz fuer Bibliotheken, die zuerst ueber den Arduino Library Manager geprueft wurden
-- Rueckfalloption falls PlatformIO-Build-Probleme auftreten
+- regulaere Sketch-Arbeit und Uploads
+- schnelle Einzeltests direkt am Board
+- Bibliotheks- und Boardmanager-Workflow fuer den Projektalltag
 
 ## Aktueller Stand
 
-- Arduino IDE ist auf Windows installiert
-- ESP32 Board Manager (Espressif Core): Stand noch nicht geprueft
-- Bisher: Standard-Blink-Test geflasht, aktueller Zustand der Boards unbekannt
-- Kein vollstaendiger Bench-Test ueber Arduino IDE durchgefuehrt
+- Arduino IDE 3.3.7 ist auf Windows installiert
+- ESP32 Board Manager / Arduino-ESP32-Core 3.3.7 ist als Hauptumgebungsstand dokumentiert
+- Boardeinstellungen fuer `ESP32S3 Dev Module` und N16R8 sind festgehalten
+- Relevante Bench-Ergebnisse koennen ueber Arduino IDE und alternativ ueber PlatformIO gegengeprueft werden
 
-## Board Manager URL fuer Espressif ESP32 (Fallback-Referenz)
+## Board Manager URL fuer Espressif ESP32
 
 ```
 https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
@@ -28,19 +27,20 @@ https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32
 Nach dem Eintragen im Board Manager: Espressif ESP32-Core installieren.
 Fuer den `ESP32-S3-WROOM-1-N16R8` das Board `ESP32S3 Dev Module` waehlen.
 
-## Inhalt (Fallback-Pfad)
+## Inhalt
 
 - Board Manager URL und Grundkonfiguration fuer ESP32-S3
-- Bibliotheksreferenz (dieselben Bibliotheken wie PlatformIO, nur anderer Installationsweg)
-- Einfache Pruefpunkte fuer Einsatzbereitschaft als Fallback
+- Bibliotheksreferenz fuer den Alltagsworkflow
+- Einfache Pruefpunkte fuer Einsatzbereitschaft
 
 ## Regeln
 
 - keine Versionsannahmen ohne Nachweis festschreiben
 - reale Installationsstaende nur dokumentieren wenn durchgefuehrt
-- Arduino IDE nicht als primaeren Entwicklungsweg behandeln
+- Board- und Bibliothekseinstellungen muessen mit `../esp32_environment/README.md` konsistent bleiben
+- PlatformIO nur als zusaetzlichen Fallback- und Gegencheckpfad behandeln
 
 ## Schnittstellen/Abhaengigkeiten
 
 - bezieht sich auf `../../firmware/` und `../../docs/templates/`
-- Primaerpfad: `../esp32_environment/README.md`
+- ergaenzt `../esp32_environment/README.md`

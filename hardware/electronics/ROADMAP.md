@@ -12,9 +12,11 @@ Eine belastbare Elektronikdokumentation fuer Sender- und Receiver-ESP32 aufbauen
 - [x] Lochraster- und Gehaeusepfad fuer den spaeteren Dauerbetrieb dokumentieren
 - [x] erste GPIO-Strategie fuer I2C, ADC, UART, LEDs und Buzzer beschreiben
 - [x] Debug- und Warnausgabe ueber LEDs, RGB und Buzzer als Konzept beschreiben
-- [ ] echte Boardrevision der vorhandenen DevKitC-Boards feststellen
-- [ ] onboard RGB-LED-Pin am realen Bestand pruefen
-- [ ] bevorzugten Pinplan an echter Sender- und Receiver-Hardware bench-validieren
-- [ ] BNO055-, Mux- und Flex-Sensor-Pfade gegen den Pinplan verifizieren
+- [x] echte Boardrevision der vorhandenen DevKitC-Boards feststellen
+- [x] onboard RGB-LED-Pin am realen Bestand pruefen
+- [x] bevorzugten Pinplan fuer I2C und ADC an echter Bench-Hardware validieren
+- [x] BNO055-, Mux- und Flex-Sensor-Pfade gegen den Pinplan verifizieren
+- [x] aktuellen Bench-Schaltplanstand dokumentieren
+- [ ] LED-, Buzzer- und UART-Pfade gegen den bestaetigten Pinplan validieren
 - [ ] Verdrahtung und Steckersystem spaeter nach `hardware/verkabelung/` ueberfuehren
-- [ ] aus den validierten Bench-Ergebnissen einen realen Schaltplanstand ableiten
+- [ ] aus den validierten Bench-Ergebnissen einen dauerbetriebsnahen Schaltplanstand ableiten

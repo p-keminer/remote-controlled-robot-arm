@@ -6,19 +6,21 @@ Dieser Ordner beschreibt die Vorbereitung des Entwicklungs- und Testarbeitsplatz
 
 ## Aktueller Stand
 
-Die Bench-Vorbereitung ist als Dokumentations- und Checklistenstruktur angelegt.
-Der reale Arbeitsplatz wird spaeter entlang dieser Struktur dokumentiert.
+Die Bench-Basis ist real genutzt und teilweise validiert.
+Controller- und Receiver-Boards wurden fuer BNO055, PCA9548A, Flex-Sensor und `ESP-NOW` bereits am offenen Bench getestet; LED-, Buzzer-, UART- und Lasttests am realen Roboterarm sind noch offen.
 
 ## Inhalt
 
 - Stromversorgungs- und Verkabelungsdisziplin
 - Reihenfolge fuer sichere Teiltests
 - Trennung von Entwicklungsgeraeten, Testaufbau und spaeterem Zielbetrieb
+- Bench-Reihenfolge vom Sensorpfad ueber Funk bis zur spaeteren UART-/Servo-Integration
 
 ## Regeln
 
 - Bench-Aufbau und Realbetrieb nicht vermischen
 - unsaubere Ad-hoc-Verkabelung spaeter in `docs/` und `hardware/verkabelung/` nachvollziehbar machen
+- Bench-Ergebnisse muessen als echte Nachweise in Doku, Messwerten oder Testdokumenten wieder auftauchen
 
 ## Schnittstellen/Abhaengigkeiten
 

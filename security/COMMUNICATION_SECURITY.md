@@ -41,6 +41,7 @@ Dieses Dokument beschreibt die erste Security-Grundlage fuer die Kommunikationsp
 - jedes Bewegungsframe braucht zusaetzlich einen applikationsseitigen Authentisierungstag
 - alte `session_id` oder ruecklaeufige Zaehler muessen verworfen werden
 - Steuerung wird erst nach explizitem `armed`- oder `ready`-Zustand akzeptiert
+- der aktuelle Bench-Pfad mit XOR-Pruefsumme und Frische-Check bleibt ausdruecklich ein Zwischenstand und ersetzt diese Security-Baseline nicht
 
 ### Empfangs- und Parse-Haertung
 
@@ -48,6 +49,7 @@ Dieses Dokument beschreibt die erste Security-Grundlage fuer die Kommunikationsp
 - Empfangs-Callback nur zum Weiterreichen in eine sichere Queue nutzen, nicht fuer tiefe Logik
 - Rate-Limits und Duplikatcache gegen Flooding und Wiederholungen vorsehen
 - bei unklarer oder veralteter Stack-Version keinen Bewegungsbetrieb freigeben
+- die committed Stack-Zielbasis muss in `../preparation/esp32_environment/README.md` stehen; lokal geflashte Ist-Versionen gehoeren in eine gitignorierte Datei unter `./local/`
 
 ## UART-Grundsaetze
 

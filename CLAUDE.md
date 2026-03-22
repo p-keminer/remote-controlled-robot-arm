@@ -22,10 +22,10 @@ Der Kern des Systems besteht aus mehreren grossen Saeulen:
 
 ## Was bereits steht (Stand 2026-03-22)
 
-- Toolchain: Arduino IDE 3.3.7 + PlatformIO
+- Toolchain: Arduino IDE 3.3.7 als Hauptumgebung, PlatformIO als lokaler Fallback und Gegencheck
 - BNO055 Einzel + Dual via PCA9548A-Mux validiert
 - Flex-Sensor ADC-Pfad ausgelesen und kalibriert
-- ESP-NOW Unicast als Bench-Pfad laeuft; Security-Haertung mit `session_id`, Authentisierungstag und Advisory-gepruefter Stack-Basis ist dokumentiert, aber noch nicht umgesetzt
+- ESP-NOW Unicast als Bench-Pfad laeuft; `ImuPaket v1` mit XOR-Pruefsumme und Frische-Check ist bestaetigt, Security-Haertung mit `session_id`, Authentisierungstag und Advisory-gepruefter Stack-Basis ist dokumentiert, aber noch nicht umgesetzt
 
 ## Kein Hartcodieren — gilt fuer Firmware UND Skripte
 
