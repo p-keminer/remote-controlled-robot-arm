@@ -36,6 +36,28 @@ Dieses Dokument ist die kanonische Quelle fuer alle Kommunikationsregeln zwische
 - Der Receiver darf dem Arduino keine unvalidierten oder unvollstaendigen Bewegungsdaten uebergeben.
 - Timeout und Neutralverhalten muessen auf beiden Seiten abgestimmt sein.
 
+## ImuPaket v1 — ESP-NOW Paketformat (Stand 2026-03-22)
+
+```
+typedef struct {
+    float heading;
+    float roll;
+    float pitch;
+} SensorDaten;
+
+typedef struct {
+    uint8_t     protokoll_version;   // aktuell: 1
+    uint32_t    zaehler;             // Frame-Zaehler fuer Frischeprüfung
+    SensorDaten sensoren[2];         // Euler-Winkel beider IMUs
+    uint8_t     pruefsumme;          // XOR ueber alle vorherigen Bytes
+} ImuPaket;
+```
+
+- Paketgroesse: `sizeof(ImuPaket)` — Receiver verwirft Pakete anderer Groesse
+- Pruefsumme: XOR aller Bytes ausser dem letzten Byte
+- Frische: Pakete mit `zaehler <= letzter_zaehler` werden verworfen
+- Sendeintervall: 50ms (20Hz)
+
 ## Fehlerfaelle
 
 - ungueltige Integritaetspruefung -> Frame verwerfen

@@ -11,6 +11,7 @@ Dieses Dokument ist fuer Menschen und KI gleichermassen verbindlich.
 - `calibration/` enthaelt nur Kalibrierregeln, Referenzdaten und Grenzwerte.
 - `tests/` enthaelt Testablaeufe, Bench-Skripte und Nachweise fuer Security, Safety und Verhalten.
 - `docs/` bleibt manuell gepflegte Arbeits-, Nachweis- und Template-Dokumentation.
+- `future/` enthaelt nur Zukunftsausbau, Post-v1-Ideen und spaeter zu aktivierende Erweiterungslinien.
 - `documentation/` ist ausschliesslich generierter Snapshot-Inhalt und wird nicht manuell gepflegt.
 
 ## Code-Qualitaet und Portabilitaet
@@ -20,6 +21,14 @@ Dieses Dokument ist fuer Menschen und KI gleichermassen verbindlich.
 - Hardware-spezifische Annahmen duerfen nicht ungeordnet ueber mehrere Module verteilt werden.
 - Das Projekt soll spaeter auf andere Hardware uebertragbar bleiben, daher muessen austauschbare Sensor-, Controller- und Transportpfade frueh mitgedacht werden.
 - Neue Erweiterungen sollen vorzugsweise ueber klar benannte Module, Adapter oder Konfigurationspunkte anschliessen.
+
+## Sprache im Code
+
+- Variablennamen, Strukturnamen, Schichtbezeichnungen und Architekturelemente werden auf **Deutsch** verfasst.
+- Funktionsnamen koennen deutsch oder englisch sein, muessen aber konsistent innerhalb eines Moduls bleiben.
+- Pflicht-Deutsch: alle selbst definierten Variablen, Struct-Felder, Enums, Konstanten und Kommentare.
+- Ausnahmen: Arduino/ESP-IDF-API-Bezeichner, Bibliothekstypen und erzwungene Konventionen externer Frameworks bleiben unveraendert.
+- Bestehender Code muss nicht rueckwirkend umbenannt werden — die Regel gilt fuer alle neuen und geaenderten Dateien.
 
 ## Kommunikations- und Systemregeln
 
@@ -36,6 +45,8 @@ Dieses Dokument ist fuer Menschen und KI gleichermassen verbindlich.
 - Diese lokalen Dateien muessen ueber `.gitignore` blockiert bleiben.
 - Echte Secrets, produktive IDs oder Peer-Werte duerfen nicht in Dokumente oder Beispielkonfigurationen eingecheckt werden.
 - Debug- und Servicezugaenge muessen als lokale Entwicklungswege behandelt und klar vom Zielbetrieb getrennt werden.
+- In Firmware-Dateien darf nichts hartcodiert werden, was nicht zwingend eine Compile-Zeitkonstante sein muss. MACs, Schluessel, Peer-Adressen und Geraete-IDs gehoeren in gitignorierte lokale Konfigurationsdateien (z.B. `peer_config.local.h`). Die `.gitignore`-Muster fuer Firmware-Konfigurationen decken `firmware/**/peer_config.local.*`, `firmware/**/credentials.local.*` und `firmware/**/device_identity.local.*` ab.
+- Vor jedem `git push` muss geprueft werden, ob in getrackte Dateien Secrets, Schluessel, MACs, IP-Adressen, Passwoerter oder sonstige sensible Werte eingeflossen sind, die nicht durch `.gitignore` geblockt werden. Ein Push darf erst erfolgen, wenn diese Pruefung abgeschlossen ist.
 
 ## Kalibrierung und Daten
 
@@ -56,6 +67,9 @@ Dieses Dokument ist fuer Menschen und KI gleichermassen verbindlich.
 - Jedes groessere Unterprojekt braucht eine `ROADMAP.md`.
 - `PROJEKT_ABLAUFPLAN.md` fuehrt die Reihenfolge der Projektphasen und `PROJEKT_FORTSCHRITT.md` den aktuellen Managementstand.
 - Verhalten, Datenfluss, Schnittstellen oder Arbeitsablaeufe muessen in den passenden Dokumenten nachgezogen werden.
+- Forschungs-, Architektur-, Hardware-, Security-, Safety- und Entscheidungsdokumente muessen die verwendeten externen Quellen in einem eigenen Abschnitt `Recherchequellen` auffuehren.
+- Jede eingetragene Quelle muss als Link nachvollziehbar sein und kurz erkennbar machen, wofuer sie im Dokument verwendet wurde.
+- Externe technische Annahmen oder Empfehlungen duerfen nicht als feste Projektentscheidung stehen bleiben, wenn die Quelle dazu im betroffenen Dokument fehlt.
 - Nach jedem groesseren Schritt muessen die betroffenen Dokumente direkt aktualisiert werden.
 - Danach muss immer `bash ./scripts/update_docs.sh` ausgefuehrt werden, damit `documentation/` den aktuellen Stand spiegelt.
 - Lokale `ROADMAP.md`-Dateien muessen mit der globalen `ROADMAP.md` konsistent bleiben.
@@ -64,5 +78,6 @@ Dieses Dokument ist fuer Menschen und KI gleichermassen verbindlich.
 
 - Vor groesseren Aenderungen sind `README.md`, `CLAUDE.md`, `ROADMAP.md`, `PROJEKT_ABLAUFPLAN.md`, `PROJEKT_FORTSCHRITT.md` und `GLOBAL_RULES.md` zu lesen.
 - Vor Architektur-, Kommunikations-, Security- oder Safety-Entscheidungen sind die Framework-Dokumente zusaetzlich zu lesen.
-- Vor lokalen Aenderungen ist die Dokumentation des betroffenen Unterordners zu lesen.
+- Beim Wechsel in einen Unterordner ist die lokale `README.md` zu lesen, sofern der Inhalt des Ordners nicht bereits aus der laufenden Sitzung bekannt ist. Das gilt fuer alle KI-Einheiten und Projektmitarbeitenden gleichermassen.
+- Nach jeder Kontextkomprimierung muessen `GLOBAL_RULES.md` und `SECURITY_FRAMEWORK.md` als erstes neu gelesen werden, bevor weitere Arbeit aufgenommen wird. Danach gelten die normalen Lesepflichten wie oben beschrieben.
 - Wenn ausnahmsweise ein vorlaeufiger Workaround noetig ist, muss er als Zwischenstand kenntlich gemacht werden.

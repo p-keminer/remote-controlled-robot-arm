@@ -111,11 +111,36 @@ Die technische Grundlage so beschreiben und spaeter implementieren, dass das Pro
 
 Die Sensorseite des Systems technisch sicher in Betrieb nehmen und Rohdaten nachvollziehbar verifizieren.
 
+### Typische Arbeitspakete
+
+- BNO055 Einzelsensor und Mux-Pfad validieren (bestätigt 2026-03-22)
+- Flex-Sensor ADC-Pfad validieren und Rohwerte dokumentieren (bestätigt 2026-03-22)
+- IMU-Daten per ESP-NOW uebertragen, Paketformat und Integritaet pruefen (bestätigt 2026-03-22)
+- LED-Debugging einbauen: Sender GPIO4/5/6 (IMU-Status), GPIO7 (COMMS), GPIO10 (FAULT)
+- Buzzer-Pfad GPIO21 mit sicherem Default-Off pruefen
+- Receiver-LEDs GPIO4/5/6 einbauen
+- Flex-Sensor nach Montage neu kalibrieren
+
+### Leitdokumente
+
+- `hardware/electronics/PIN_MAPPING_CONFIRMED.md`
+- `hardware/electronics/SCHEMATIC_CURRENT.md`
+- `hardware/electronics/DEBUG_SIGNALS_AND_BUZZER.md`
+- `calibration/flex_sensor/MESSWERTE.md`
+
 ## Phase 7 - Kalibrierung und Gelenk-Mapping
 
 ### Ziel
 
 Aus Rohdaten robuste, wiederholbare Gelenkzielwerte ableiten.
+
+### Typische Arbeitspakete
+
+- Roboterarm aufbauen und Servo-Grundfunktion pruefen
+- Gelenklimits pro Achse definieren und dokumentieren
+- IMU-Winkel auf Servo-Sollwerte mappen
+- Flex-Sensor auf Greifer-Oeffnungsgrad mappen
+- Kalibrierungsdaten in `calibration/` dokumentieren
 
 ## Phase 8 - Kommunikation, Servoausfuehrung und Safety
 
@@ -123,11 +148,38 @@ Aus Rohdaten robuste, wiederholbare Gelenkzielwerte ableiten.
 
 Den Datenpfad vom Wearable bis zur Servoausfuehrung konsistent, ueberpruefbar und fehlertolerant aufbauen.
 
+### Typische Arbeitspakete
+
+- UART-Pfad Receiver → Arduino in Betrieb nehmen (GPIO15/GPIO16)
+- Arduino-Firmware fuer Servo-Ausfuehrung mit Limits und Rampen schreiben
+- Watchdog, Timeout und Neutralverhalten implementieren
+- Safety-Fallback und Buzzer-Warnlogik einbauen
+- Gesamtkette Wearable → ESP-NOW → Receiver → UART → Arduino → Servo testen
+
 ## Phase 9 - Integration, Leistung und Hardware-Verstetigung
 
 ### Ziel
 
 Das Gesamtsystem unter realen Bedingungen validieren und die Hardware schrittweise in Richtung stabiler Daueraufbau fuehren.
+
+## Phase 10 - Zukunftsausbau und Systemerweiterung
+
+### Ziel
+
+Nach dem Grundsystem zusaetzliche Plattform-, Teleoperations- und Portabilitaetslinien geordnet vorbereiten, ohne die v1-Basis mit Zukunftsideen zu vermischen.
+
+### Typische Arbeitspakete
+
+- mobilen Unterbau fuer das Gesamtsystem konzipieren
+- Dashboard- und Controller-Ebene fuer Fahrzeug und Arm planen
+- Kamerasicht und Teleoperationspfad vorbereiten
+- Abstraktionsschicht zwischen Bewegungslogik und konkreter Servo-/Aktuatorausgabe definieren
+
+### Leitdokumente
+
+- `future/README.md`
+- `future/FUTURE_WORK.md`
+- `future/ROADMAP.md`
 
 ## Querschnittspflichten fuer jede Phase
 
@@ -136,6 +188,12 @@ Das Gesamtsystem unter realen Bedingungen validieren und die Hardware schrittwei
 - nach jedem groesseren Schritt muessen alle betroffenen Dokumente aktualisiert werden
 - danach muss immer `bash ./scripts/update_docs.sh` ausgefuehrt werden
 - `documentation/` ist der Verwaltungsstand und muss denselben Zwischenstand spiegeln wie die Quelldokumente
+
+### Quellenpflege
+
+- forschungs- und entscheidungsgetriebene Dokumente fuehren ihre externen Quellen in einem Abschnitt `Recherchequellen`
+- neue technische Empfehlungen, Layoutideen oder Sicherheitsannahmen muessen dort mit Link hinterlegt werden
+- wenn Entscheidungen nur auf internen Tests, Fotos oder Messungen beruhen, ist das im Dokument klar als interne Grundlage kenntlich zu machen
 
 ### Umgang mit lokalen Sensitivdaten
 

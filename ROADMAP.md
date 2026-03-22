@@ -24,6 +24,7 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 - [x] `PROJEKT_FORTSCHRITT.md` fuer den laufenden Managementstand anlegen
 - [x] Regeln fuer Modularitaet, Abstraktion, Skalierbarkeit und Hardware-Portabilitaet nachschaerfen
 - [x] Pflegepflicht fuer Doku-Updates nach groesseren Schritten explizit festziehen
+- [x] Quellenpflicht fuer Forschungs- und Entscheidungsdokumente projektweit festschreiben
 
 ## Phase 2 - Security-Grundlage
 
@@ -60,6 +61,7 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 
 - [x] `hardware/assembly/` und `hardware/bringup/` als neue Unterbereiche einfuehren
 - [x] Inventar-, Aufbau-, Verkabelungs- und Einschaltvorlagen unter `docs/templates/` anlegen
+- [x] Elektronikbereich fuer ESP-Integration, Breadboardpfad, Lochrasterpfad, Pinmapping und Debugsignale dokumentieren
 - [ ] reale Stueckliste, Verkabelung und Aufbauabweichungen spaeter nachziehen
 
 ### Arbeitspaket 4.2 - Nachweisstruktur
@@ -67,6 +69,7 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 - [ ] Hardware-Inventar gegen realen Materialstand dokumentieren
 - [ ] Aufbauablauf und Bringup-Reihenfolge mit echten Nachweisen fuellen
 - [ ] Sensormontage und erste Stromtests sauber protokollieren
+- [ ] Boardrevision, Pinmapping und Debugkonzept auf echter Bench-Hardware validieren
 
 ## Phase 5 - Architektur und Portabilitaetsfundament
 
@@ -135,3 +138,17 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 - [ ] Sensorbefestigung und Kabelfuehrung fuer den Arm dokumentieren
 - [ ] Receiver und Arduino am Arm ordentlich integrieren
 - [ ] Stromversorgung, Befestigung und Entlastung finalisieren
+
+## Phase 10 - Zukunftsausbau nach dem Grundsystem
+
+### Arbeitspaket 10.1 - Mobile Plattform und Teleoperation
+
+- [ ] fahrbaren oder bewegbaren Untergrund fuer das Gesamtsystem planen
+- [ ] Dashboard- und Controller-Steuerung fuer Fahrzeug und Roboterarm konzipieren
+- [ ] Kamerasicht fuer das Gesamtsystem integrierbar vorbereiten
+
+### Arbeitspaket 10.2 - Uebertragbare Aktuatorabstraktion
+
+- [ ] Zwischenschicht zwischen Bewegungsinterpretation und direkter Servoausgabe definieren
+- [ ] Aktuatoradapter fuer andere Servo- oder Robotiksysteme vorbereiten
+- [ ] Zukunftsausbau unter `future/` dokumentieren und spaeter in aktive Bereiche ueberfuehren

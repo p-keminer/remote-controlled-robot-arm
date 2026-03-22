@@ -1,6 +1,6 @@
 # Dokumentationsindex
 
-Erzeugt am: 2026-03-22 00:52:56 CET
+Erzeugt am: 2026-03-22 06:33:44 CET
 
 ## Gesammelte Dokumente
 
@@ -10,6 +10,7 @@ Erzeugt am: 2026-03-22 00:52:56 CET
 - [CLAUDE.md](snapshot/CLAUDE.md)
 - [COMMUNICATION_FRAMEWORK.md](snapshot/COMMUNICATION_FRAMEWORK.md)
 - [GLOBAL_RULES.md](snapshot/GLOBAL_RULES.md)
+- [HELP.md](snapshot/HELP.md)
 - [KONZEPTION.md](snapshot/KONZEPTION.md)
 - [PROJEKT_ABLAUFPLAN.md](snapshot/PROJEKT_ABLAUFPLAN.md)
 - [PROJEKT_FORTSCHRITT.md](snapshot/PROJEKT_FORTSCHRITT.md)
@@ -20,6 +21,7 @@ Erzeugt am: 2026-03-22 00:52:56 CET
 - [SYSTEM_FRAMEWORKS.md](snapshot/SYSTEM_FRAMEWORKS.md)
 - [calibration/README.md](snapshot/calibration/README.md)
 - [calibration/ROADMAP.md](snapshot/calibration/ROADMAP.md)
+- [calibration/flex_sensor/MESSWERTE.md](snapshot/calibration/flex_sensor/MESSWERTE.md)
 - [calibration/flex_sensor/README.md](snapshot/calibration/flex_sensor/README.md)
 - [calibration/imu/README.md](snapshot/calibration/imu/README.md)
 - [calibration/reference_poses/README.md](snapshot/calibration/reference_poses/README.md)
@@ -44,12 +46,27 @@ Erzeugt am: 2026-03-22 00:52:56 CET
 - [firmware/esp32_controller/ROADMAP.md](snapshot/firmware/esp32_controller/ROADMAP.md)
 - [firmware/esp32_receiver/README.md](snapshot/firmware/esp32_receiver/README.md)
 - [firmware/esp32_receiver/ROADMAP.md](snapshot/firmware/esp32_receiver/ROADMAP.md)
+- [future/FUTURE_WORK.md](snapshot/future/FUTURE_WORK.md)
+- [future/README.md](snapshot/future/README.md)
+- [future/ROADMAP.md](snapshot/future/ROADMAP.md)
 - [hardware/README.md](snapshot/hardware/README.md)
 - [hardware/ROADMAP.md](snapshot/hardware/ROADMAP.md)
 - [hardware/assembly/README.md](snapshot/hardware/assembly/README.md)
 - [hardware/bom/README.md](snapshot/hardware/bom/README.md)
 - [hardware/bringup/README.md](snapshot/hardware/bringup/README.md)
+- [hardware/electronics/DEBUG_SIGNALS_AND_BUZZER.md](snapshot/hardware/electronics/DEBUG_SIGNALS_AND_BUZZER.md)
+- [hardware/electronics/ESP_INTEGRATION_CONCEPT.md](snapshot/hardware/electronics/ESP_INTEGRATION_CONCEPT.md)
+- [hardware/electronics/FINAL_PERFBOARD_PLAN.md](snapshot/hardware/electronics/FINAL_PERFBOARD_PLAN.md)
+- [hardware/electronics/PIN_MAPPING_CONFIRMED.md](snapshot/hardware/electronics/PIN_MAPPING_CONFIRMED.md)
+- [hardware/electronics/PIN_MAPPING_RESEARCH.md](snapshot/hardware/electronics/PIN_MAPPING_RESEARCH.md)
+- [hardware/electronics/PROTO_BREADBOARD_PLAN.md](snapshot/hardware/electronics/PROTO_BREADBOARD_PLAN.md)
+- [hardware/electronics/README.md](snapshot/hardware/electronics/README.md)
+- [hardware/electronics/ROADMAP.md](snapshot/hardware/electronics/ROADMAP.md)
+- [hardware/electronics/SCHEMATIC_CURRENT.md](snapshot/hardware/electronics/SCHEMATIC_CURRENT.md)
 - [hardware/mechanik/README.md](snapshot/hardware/mechanik/README.md)
+- [hardware/mechanik/WEARABLE_FINAL_WEAR_SYSTEM.md](snapshot/hardware/mechanik/WEARABLE_FINAL_WEAR_SYSTEM.md)
+- [hardware/mechanik/WEARABLE_PROTOTYPE_V1.md](snapshot/hardware/mechanik/WEARABLE_PROTOTYPE_V1.md)
+- [hardware/mechanik/WEARABLE_SENSOR_CONCEPT.md](snapshot/hardware/mechanik/WEARABLE_SENSOR_CONCEPT.md)
 - [hardware/schaltplaene/README.md](snapshot/hardware/schaltplaene/README.md)
 - [hardware/verkabelung/README.md](snapshot/hardware/verkabelung/README.md)
 - [preparation/README.md](snapshot/preparation/README.md)

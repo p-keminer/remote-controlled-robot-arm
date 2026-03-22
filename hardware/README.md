@@ -7,13 +7,14 @@ Dieser Ordner enthaelt alle nicht-firmwarebezogenen Hardwareunterlagen des Proje
 ## Aktueller Stand
 
 Die Hardwarestruktur ist dokumentiert und wurde um Aufbauablauf und Bringup erweitert.
-Schaltplanstand, Verkabelung, Mechanik, Aufbau, Bringup und Stueckliste sind bewusst getrennt.
+Schaltplanstand, Verkabelung, Mechanik, Elektronik, Aufbau, Bringup und Stueckliste sind bewusst getrennt.
 
 ## Inhalt
 
 - `schaltplaene/` fuer elektrische Schaltunterlagen
 - `verkabelung/` fuer reale Verbindungsplaene und Kabelwege
 - `mechanik/` fuer Montage, Halterungen und Befestigung
+- `electronics/` fuer ESP-Integration, Pinmapping, Breadboard-/Lochrasterpfad und Debugsignale
 - `assembly/` fuer den dokumentierten Aufbauablauf
 - `bringup/` fuer Vorpruefungen und sichere Erstinbetriebnahme
 - `bom/` fuer Stuecklisten und Materialstand
@@ -23,6 +24,7 @@ Schaltplanstand, Verkabelung, Mechanik, Aufbau, Bringup und Stueckliste sind bew
 - theoretische Schaltplaene, dokumentierten Aufbauablauf und reale Verdrahtung nicht vermischen
 - mechanische Abweichungen vom Plan dokumentieren
 - Hardwareentscheide, die Kalibrierung oder Sicherheit beeinflussen, in den passenden Frameworks spiegeln
+- hardwarebezogene Konzept- und Entscheidungsdokumente muessen einen Abschnitt `Recherchequellen` mit den verwendeten Referenzen enthalten
 - reale Nachweise spaeter ueber `docs/templates/` und `docs/` fuehren
 
 ## Schnittstellen/Abhaengigkeiten

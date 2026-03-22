@@ -33,7 +33,7 @@ Vor groesseren Aenderungen sind besonders relevant:
 - `SECURITY_FRAMEWORK.md` fuer Security-Grundsaetze
 - `CALIBRATION_FRAMEWORK.md` fuer Nullpunkt-, Referenz- und Mappingregeln
 - `SAFETY_FRAMEWORK.md` fuer Limits, Watchdog, Neutralposition und Freigaben
-- `preparation/README.md`, `security/README.md`, `hardware/README.md`, `firmware/README.md`, `tests/README.md` und `docs/README.md` fuer lokale Arbeitsbereiche
+- `preparation/README.md`, `security/README.md`, `hardware/README.md`, `firmware/README.md`, `tests/README.md`, `docs/README.md` und `future/README.md` fuer lokale Arbeitsbereiche
 
 ## Wichtige Befehle
 
@@ -49,9 +49,11 @@ Jeder relevante Ordner besitzt mindestens eine eigene `README.md`.
 Groessere Unterprojekte besitzen zusaetzlich eine eigene `ROADMAP.md`.
 Der Ordner `documentation/` ist ein automatisch erzeugter Snapshot und keine manuell gepflegte Quelldokumentation.
 Der Ordner `docs/` bleibt die manuell gepflegte Arbeits- und Nachweisdokumentation.
+Forschungs-, Konzept- und Entscheidungsdokumente muessen die verwendeten externen Quellen in einem eigenen Abschnitt `Recherchequellen` auffuehren.
 Nicht-repotaugliche lokale Werte wie Schluessel, Peer-Listen oder lokale Identitaetsdaten gehoeren nach `security/local/` und duerfen nicht eingecheckt werden.
 
 ## Aktueller Entwicklungsstand
 
 Die Konzeptphase ist beschrieben, die strukturierte Dokumentations- und Prozessbasis ist angelegt.
 Aktuell werden Security, Vorbereitung, Hardware-Readiness und Vorlagenbasis ausgebaut, bevor die ersten groesseren Firmware- und Integrationsschritte folgen.
+Zusaetzliche Post-v1-Ausbaurichtungen werden gesammelt unter `future/FUTURE_WORK.md`.

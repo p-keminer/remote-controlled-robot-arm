@@ -19,6 +19,7 @@ Die ersten Templates sind angelegt, damit Inventar, Aufbau, Verkabelung und Test
 
 - Templates sollen konkret genug fuer dieses Projekt sein, aber keinen erfundenen Realstand vortaeuschen
 - reale Eintraege entstehen spaeter in `docs/`, nicht in den Template-Dateien selbst
+- research- oder entscheidungsnahe Ausfuellungen sollen einen klaren Abschnitt `Recherchequellen` enthalten, sobald externe Quellen eingeflossen sind
 
 ## Schnittstellen/Abhaengigkeiten
 
