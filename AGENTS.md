@@ -21,13 +21,16 @@ Aktuell befindet sich das Projekt in Phase 6/8 — Sensorvalidierung abgeschloss
 - ESP-NOW Unicast mit ImuPaket v1 laeuft (bestaetigt 2026-03-22)
 - Naechste Schritte: LED-Debugging, Buzzer, Roboterarm-Aufbau, UART zu Arduino
 
-## Pflicht nach Kontextkomprimierung
+## Pflicht nach Kontextkomprimierung oder Sitzungsstart
 
 Nach jeder Kontextkomprimierung oder beim Sitzungsstart ohne vollstaendigen Verlauf gilt zwingend:
 
-1. `GLOBAL_RULES.md` lesen
-2. `SECURITY_FRAMEWORK.md` lesen
-3. Danach die normalen Lesepflichten unten einhalten
+1. `MEMORY.md` lesen — enthaelt akkumulierten Projektstand, Hardware-Fakten und verbindliche Feedback-Regeln aus allen bisherigen Sessions
+2. `GLOBAL_RULES.md` lesen
+3. `SECURITY_FRAMEWORK.md` lesen
+4. Danach die normalen Lesepflichten unten einhalten
+
+`MEMORY.md` ist das zentrale Gedaechtnis des Projekts und gilt gleichermassen fuer Claude, Codex und alle anderen KI-Einheiten.
 
 ## Verbindliche Arbeitsweise fuer Agenten
 

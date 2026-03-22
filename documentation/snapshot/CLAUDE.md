@@ -54,8 +54,9 @@ Ein Push darf erst erfolgen, wenn alle drei Pruefungen abgeschlossen sind.
 
 Nach jeder Kontextkomprimierung oder beim Start einer neuen Sitzung ohne vollstaendigen Verlauf muessen als erstes gelesen werden:
 
-1. `GLOBAL_RULES.md`
-2. `SECURITY_FRAMEWORK.md`
+1. `MEMORY.md` — akkumulierter Projektstand, Hardware-Fakten und verbindliche Feedback-Regeln aus allen bisherigen Sessions
+2. `GLOBAL_RULES.md`
+3. `SECURITY_FRAMEWORK.md`
 
 Danach gelten die normalen Lesepflichten unten. Beim Wechsel in einen Unterordner ist die lokale `README.md` zu lesen, sofern der Ordnerinhalt nicht bereits aus der laufenden Sitzung bekannt ist.
 

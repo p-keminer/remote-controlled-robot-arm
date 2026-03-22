@@ -1,6 +1,6 @@
 # Dokumentationsindex
 
-Erzeugt am: 2026-03-22 07:02:51 CET
+Erzeugt am: 2026-03-22 07:06:28 CET
 
 ## Gesammelte Dokumente
 
@@ -12,6 +12,7 @@ Erzeugt am: 2026-03-22 07:02:51 CET
 - [GLOBAL_RULES.md](snapshot/GLOBAL_RULES.md)
 - [HELP.md](snapshot/HELP.md)
 - [KONZEPTION.md](snapshot/KONZEPTION.md)
+- [MEMORY.md](snapshot/MEMORY.md)
 - [PROJEKT_ABLAUFPLAN.md](snapshot/PROJEKT_ABLAUFPLAN.md)
 - [PROJEKT_FORTSCHRITT.md](snapshot/PROJEKT_FORTSCHRITT.md)
 - [README.md](snapshot/README.md)
