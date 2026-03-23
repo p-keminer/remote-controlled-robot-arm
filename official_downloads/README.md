@@ -7,22 +7,23 @@ Er trennt den unveraenderten Vendor-Stand bewusst von der eigenen Projektarchite
 
 ## Aktueller Stand
 
-Der offizielle Adeept-V4.0-Download fuer den vorhandenen Roboterarm ist in das Repository uebernommen, entpackt und ausgewertet.
-Der Bereich dient aktuell als Hersteller-Snapshot fuer Tutorials, Schaltplan, Originalcode und Softwarepakete.
+Der offizielle Adeept-V4.0-Download fuer den vorhandenen Roboterarm ist verlinkt, in WSL ausgewertet und als entpackter Herstellerstand dokumentiert.
+Der Bereich dient aktuell als Hersteller-Snapshot fuer Tutorials, Schaltplan, Originalcode und Softwarepakete, ohne die rohe ZIP-Datei dauerhaft im Repository zu halten.
 
 ## Inhalt
 
-- `raw/` enthaelt den originalen ZIP-Download des Herstellers
+- `raw/` enthaelt nur den Projektverweis auf die offiziellen Herstellerlinks, nicht die rohe ZIP-Datei selbst
 - `extracted/` enthaelt den entpackten Herstellerstand
 - `ADEEPT_V4_PACKAGE_REVIEW.md` fasst die fuer dieses Projekt relevanten Erkenntnisse aus dem Download zusammen
 
 ## Regeln
 
-- Vendor-Dateien werden hier nicht in Projektlogik umgebaut, sondern nur archiviert und analysiert
+- Vendor-Dateien werden hier nicht in Projektlogik umgebaut, sondern nur analysiert und als Herstellerstand eingeordnet
 - produktbezogene Entscheidungen sollen nach Moeglichkeit auf den offiziellen Snapshot und nicht nur auf Shop-Texte gestuetzt werden
 - Abweichungen zwischen Herstellerstand und Projektstand muessen in den zugehoerigen Fachdokumenten sichtbar gemacht werden
 - neue Erkenntnisse aus diesem Ordner muessen in den betroffenen Hardware-, Firmware-, Safety- oder Vorbereitungsdokumenten nachgezogen werden
-- `raw/` und `extracted/` bleiben externe Archivbereiche und werden nicht in den generierten Dokumentationssnapshot unter `documentation/` gespiegelt
+- rohe Vendor-Archive wie `.zip` werden hier nicht dauerhaft in Git versioniert; stattdessen werden offizielle Bezugslinks dokumentiert
+- `raw/` und `extracted/` bleiben externe Herstellerbereiche und werden nicht in den generierten Dokumentationssnapshot unter `documentation/` gespiegelt
 - nur projektgepflegte Markdown-Dokumente wie diese README und `ADEEPT_V4_PACKAGE_REVIEW.md` gelten hier als aktive Quelldokumentation
 
 ## Schnittstellen/Abhaengigkeiten

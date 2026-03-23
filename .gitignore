@@ -36,3 +36,11 @@ out/
 # Lokale Skript-Konfigurationen (enthalten nutzerspezifische Pfade)
 scripts/sync_config.local.sh
 scripts/*.local.sh
+
+# Externe Roharchive nicht im Git-Verlauf halten
+/official_downloads/raw/*.zip
+/official_downloads/raw/*.7z
+/official_downloads/raw/*.rar
+/official_downloads/raw/*.tar
+/official_downloads/raw/*.tar.gz
+/official_downloads/raw/*.tgz

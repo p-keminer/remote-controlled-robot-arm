@@ -1,6 +1,6 @@
 # Adeept V4 Package Review
 
-Dieses Dokument fasst die projektrelevanten Erkenntnisse aus dem importierten offiziellen Adeept-Download zusammen.
+Dieses Dokument fasst die projektrelevanten Erkenntnisse aus dem offiziell verlinkten und lokal ausgewerteten Adeept-Download zusammen.
 Es dient als Bruecke zwischen dem unveraenderten Herstellerpaket und den gepflegten Projektdokumenten.
 
 ## Zweck
@@ -11,7 +11,7 @@ Es dient als Bruecke zwischen dem unveraenderten Herstellerpaket und den gepfleg
 
 ## Gepruefter Herstellerstand
 
-- ZIP-Datei: `official_downloads/raw/ADA031-Adeept_Robotic_Arm_Kit_for_Arduino-V4.0-20251205.zip`
+- offizieller Downloadpfad: `official_downloads/raw/README.md`
 - entpackter Snapshot: `official_downloads/extracted/adeept_v4_0_20251205/ADA031-Adeept_Robotic_Arm_Kit_for_Arduino-V4.0-20251205/`
 
 ## Relevante Inhalte im Download
@@ -113,6 +113,8 @@ Der offizielle Download enthaelt nicht nur Aufbau- und Testmaterial, sondern auc
 
 ## Recherchequellen
 
+- [Adeept Robotic Arm UNO](https://www.adeept.com/robotic-arm-uno_p0118.html) fuer den direkten Produkt- und Kaufpfad des Herstellerkits.
+- [Adeept Learn Detail 64](https://www.adeept.com/learn/detail-64.html) fuer den offiziellen Download- und Lernpfad des Herstellerpakets.
 - [Read me first.pdf](./extracted/adeept_v4_0_20251205/ADA031-Adeept_Robotic_Arm_Kit_for_Arduino-V4.0-20251205/Read%20me%20first.pdf) fuer Herstellerhinweise zu `18650`-Pflicht, Umgebungsgrenzen und dem Verbot, den Arm im Betrieb mit der Hand zu zwingen.
 - [_2 Packing List.pdf](./extracted/adeept_v4_0_20251205/ADA031-Adeept_Robotic_Arm_Kit_for_Arduino-V4.0-20251205/Tutorials-pdf/_2%20Packing%20List.pdf) fuer `Servo x5`, `18650x2 Battery Holder x1`, `USB Cable x1` und `18650 Battery x2` als Selbstbeschaffung.
 - [_3 Introduction of Adeept Arm Drive Board .pdf](./extracted/adeept_v4_0_20251205/ADA031-Adeept_Robotic_Arm_Kit_for_Arduino-V4.0-20251205/Tutorials-pdf/_3%20Introduction%20of%20Adeept%20Arm%20Drive%20Board%20.pdf) fuer `Vin (6-24V)`, `Micro USB` und die Potentiometerkanaele `A0, A1, A2, A3, A6`.
