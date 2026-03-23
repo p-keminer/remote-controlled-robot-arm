@@ -25,9 +25,9 @@ Dieses Dokument ist fuer Menschen und KI gleichermassen verbindlich.
 
 ## Lizenz und Weitergabe
 
-- Das Projekt ist proprietaer; verbindlich gilt `LICENSE.md`.
-- Ohne ausdrueckliche schriftliche Freigabe duerfen projektspezifische Inhalte nicht weitergegeben, gespiegelt, abgeleitet oder in andere Systeme uebernommen werden.
-- Die angestrebte Portabilitaet des Projekts ist ein internes Architekturziel und keine automatische Freigabe zur Uebernahme in andere Robotiksysteme.
+- Die projekt-eigenen Inhalte dieses Repositories stehen unter `LICENSE.md` auf Basis der Apache License 2.0.
+- Sicherheits- und Einsatzhinweise stehen getrennt in `SAFETY_NOTICE.md` und veraendern die Apache-2.0-Lizenz nicht.
+- Die angestrebte Portabilitaet des Projekts ist ein Architekturziel und keine technische oder sicherheitsrechtliche Freigabe fuer beliebige Robotiksysteme.
 - Hersteller- und Drittmaterialien, insbesondere unter `official_downloads/`, behalten ihre eigenen Rechte und Hinweise und werden durch die Projektlizenz nicht umgelabelt.
 - Bei Dokumenten oder Dateien mit abweichenden Rechten muss diese Abweichung lokal klar sichtbar gemacht werden.
 

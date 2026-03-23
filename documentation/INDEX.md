@@ -1,6 +1,6 @@
 # Dokumentationsindex
 
-Erzeugt am: 2026-03-23 04:02:47 CET
+Erzeugt am: 2026-03-23 12:12:43 CET
 
 ## Gesammelte Dokumente
 
@@ -19,6 +19,7 @@ Erzeugt am: 2026-03-23 04:02:47 CET
 - [README.md](snapshot/README.md)
 - [ROADMAP.md](snapshot/ROADMAP.md)
 - [SAFETY_FRAMEWORK.md](snapshot/SAFETY_FRAMEWORK.md)
+- [SAFETY_NOTICE.md](snapshot/SAFETY_NOTICE.md)
 - [SECURITY_FRAMEWORK.md](snapshot/SECURITY_FRAMEWORK.md)
 - [SYSTEM_FRAMEWORKS.md](snapshot/SYSTEM_FRAMEWORKS.md)
 - [calibration/README.md](snapshot/calibration/README.md)

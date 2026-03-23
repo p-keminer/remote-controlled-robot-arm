@@ -5,8 +5,9 @@ Das Projekt wird unter WSL entwickelt und trennt bewusst zwischen Vorbereitung, 
 
 ## Lizenz
 
-Dieses Projekt ist **proprietaer** und steht unter **All rights reserved**.
-Die verbindliche Lizenz- und Nutzungslage steht in `LICENSE.md`.
+Die projekt-eigenen Inhalte dieses Repositories stehen unter **Apache License 2.0**.
+Die verbindliche Lizenz steht in `LICENSE.md`.
+Sicherheits- und Einsatzhinweise stehen getrennt in `SAFETY_NOTICE.md`.
 Hersteller- und Drittmaterialien, insbesondere unter `official_downloads/`, bleiben zusaetzlich ihren eigenen Rechten und Hinweisen unterworfen.
 
 ## Projektziel
@@ -50,7 +51,8 @@ Vor groesseren Aenderungen sind besonders relevant:
 - `hardware/ADEEPT_ARM_PRODUCT_BASELINE.md` fuer die konkrete Produktbasis des vorhandenen Adeept-Kits
 - `hardware/electronics/POWER_SUPPLY_CONCEPT.md` fuer die Stromversorgungsstrategie von Stock-Test, Bench und spaeterem Projektbetrieb
 - `official_downloads/README.md` fuer den importierten offiziellen Herstellerstand
-- `LICENSE.md` fuer die proprietaere Nutzungs- und Weitergaberegelung
+- `LICENSE.md` fuer die Apache-2.0-Lizenz der projekt-eigenen Inhalte
+- `SAFETY_NOTICE.md` fuer die getrennten Sicherheits- und Einsatzhinweise
 
 ## Wichtige Befehle
 
