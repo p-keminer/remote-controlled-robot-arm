@@ -40,6 +40,7 @@ Die erste Projektversion wird als lokal betriebenes Embedded-System behandelt:
 - unbekannte oder nicht freigegebene Peers duerfen keine Bewegungsdaten einspeisen
 - Frames muessen Integritaets-, Versions- und Frischeannahmen unterliegen
 - Replay- oder Duplikatverhalten muss als eigener Sicherheitsfall beschrieben werden
+- Der eigentliche Security-Uplift wird bewusst erst nach drittem IMU und erster `Receiver -> Arduino`-Grundkette aktiviert; schon vorher muessen aber Versionsfelder und Erweiterungspunkte fuer spaetere Security-Felder mitgedacht werden
 
 ## ESP-NOW-Risikobasis
 
@@ -56,6 +57,7 @@ Die erste Projektversion wird als lokal betriebenes Embedded-System behandelt:
 - keine Sicherheitsentscheidung auf XOR, CRC oder reine Plausibilitaetspruefung stuetzen
 - fuer den Anwendungsrahmen eigenen Session-Identifier, monotone Zaehler und einen applikationsseitigen Authentisierungstag vorsehen
 - Empfangs- und Parsinglogik so planen, dass Laengen- und Strukturpruefungen vor jeder tieferen Verarbeitung greifen
+- Schon in Bench-Paketen muessen `protokoll_version` und klar erkennbare Erweiterungspunkte fuer spaetere `flags`, Sensor-Gueltigkeit oder Auth-Felder mitgedacht werden, damit spaetere Security-Aktivierung keinen Komplettumbau erzwingt
 
 ## Abhaengigkeiten und Patch-Disziplin
 

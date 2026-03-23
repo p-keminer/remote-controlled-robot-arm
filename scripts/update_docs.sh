@@ -11,7 +11,7 @@ mkdir -p "$snapshot_root"
 
 mapfile -t markdown_files < <(
   find "$project_root" \
-    \( -type d \( -name documentation -o -name .git -o -name .pio -o -name build -o -name out -o -path "$project_root/security/local" \) -prune \) -o \
+    \( -type d \( -name documentation -o -name .git -o -name .pio -o -name build -o -name out -o -path "$project_root/security/local" -o -path "$project_root/official_downloads/raw" -o -path "$project_root/official_downloads/extracted" \) -prune \) -o \
     \( -type f -name '*.md' ! -name '*.local.md' ! -name '*.secret.md' ! -name '*.private.md' -print \) |
     LC_ALL=C sort
 )

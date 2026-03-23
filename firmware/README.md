@@ -14,6 +14,7 @@ Controller und Receiver koennen Sensor- bzw. Funkpfad bench-validieren; Arduino-
 - `esp32_controller/` fuer Wearable-Sensorik, Vorverarbeitung und Funksendung
 - `esp32_receiver/` fuer Funkempfang, Validierung und UART-Uebergabe
 - `arduino_arm/` fuer direkte Servoansteuerung, Limits und Rampen
+- `UART_FRAME_V1.md` fuer das minimale serielle Startformat zwischen Receiver und Arduino
 
 ## Regeln
 

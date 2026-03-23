@@ -64,13 +64,19 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 - [x] `hardware/assembly/` und `hardware/bringup/` als neue Unterbereiche einfuehren
 - [x] Inventar-, Aufbau-, Verkabelungs- und Einschaltvorlagen unter `docs/templates/` anlegen
 - [x] Elektronikbereich fuer ESP-Integration, Breadboardpfad, Lochrasterpfad, Pinmapping und Debugsignale dokumentieren
+- [x] konkrete Produktbasis des vorhandenen Adeept-Arms mit offizieller Package- und Stromversorgungsbasis dokumentieren
+- [x] offiziellen Adeept-V4.0-Download mit Tutorial-PDFs, Originalcode und Schaltplan ins Repo uebernehmen und auswerten
 - [ ] reale Stueckliste, Verkabelung und Aufbauabweichungen spaeter nachziehen
 
 ### Arbeitspaket 4.2 - Nachweisstruktur
 
 - [ ] Hardware-Inventar gegen realen Materialstand dokumentieren
+- [ ] offiziellen Stock-Baseline-Test des originalen Adeept-Arms vor Umbauten dokumentieren
 - [ ] Aufbauablauf und Bringup-Reihenfolge mit echten Nachweisen fuellen
 - [ ] Sensormontage und erste Stromtests sauber protokollieren
+- [ ] Arbeitsstand `5 aktive Servos + 1 Reserve/Testservo` am realen Kit bestaetigen und gegen echten Aufbau dokumentieren
+- [x] Akku- und Ladegeraet-Auswahl fuer den ersten Projektstand dokumentieren — `4x Molicel INR-18650-M35A` ohne Loetfahne plus `1x XTAR VC4SL` als Beschaffungsbasis festgelegt
+- [ ] reale Beschaffung, Batteriefach-Passung und Strompfad fuer reale Servo-Bewegung gegen den aufgebauten Arm bestaetigen
 - [x] Boardrevision, Pinmapping und Debugkonzept auf echter Bench-Hardware validiert — v1.0, RGB auf GPIO48, GPIO35/36/37 intern belegt, GPIO8/9 I2C bestaetigt, GPIO1 ADC1 bestaetigt (bestaetigt 2026-03-22)
 
 ## Phase 5 - Architektur und Portabilitaetsfundament
@@ -88,6 +94,7 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 - [x] einzelne BNO055 am Controller lesen — I2C-Scan, Adresse 0x29 (ADR=3V3), SDA GPIO8 / SCL GPIO9, Euler-Winkel stabil, Gyro-Kalibrierung 3/3 (bestaetigt 2026-03-22)
 - [x] PCA9548A-Kanalumschaltung fuer mehrere IMUs testen — Mux 0x70, Kanal 0 und 1 einzeln und sequenziell umschalten (bestaetigt 2026-03-22)
 - [x] gleichzeitiges Auslesen aller benoetigten IMUs validieren — zwei BNO055 ueber Kanal 0 und 1, beide stabil, Sys/Gyro/Accel 3/3 (bestaetigt 2026-03-22)
+- [ ] dritten BNO055 ueber Mux-Kanal 2 anbinden und als dritte Segmentquelle bench-validieren
 - [ ] Rohdaten fuer definierte Referenzbewegungen systematisch dokumentieren
 
 ### Arbeitspaket 6.2 - Flex-Sensor-Basis
@@ -117,9 +124,10 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 ### Arbeitspaket 8.1 - Kommunikationskette
 
 - [x] Peer-Setup und Adressverwaltung definiert — Unicast ESP-NOW, MAC in gitignorierter `peer_config.local.h`, Template committed (bestaetigt 2026-03-22)
-- [x] Bench-Paketlayout mit Integritaets- und Frischeannahmen festgezogen — `ImuPaket v1`, XOR-Pruefsumme, Frame-Zaehler, `__attribute__((packed))`, 20Hz (bestaetigt 2026-03-22)
-- [ ] Kommunikationsrahmen von der aktuellen Bench-Variante auf die dokumentierte Security-Baseline mit `session_id`, applikationsseitigem Authentisierungstag und Advisory-gepruefter Stack-Basis anheben
-- [ ] UART-Frame zwischen Receiver und Arduino abstimmen
+- [x] Bench-Paketlayout mit Integritaets- und Frischeannahmen festgezogen — `ImuPaket v1`, XOR-Pruefsumme, Frame-Zaehler, `__attribute__((packed))`, 20Hz, aktuell mit zwei IMUs (bestaetigt 2026-03-22)
+- [x] minimalen UART-Frame v1 zwischen Receiver und Arduino dokumentieren — festes Binaerformat mit Startbytes, Version, Sequenz, Flags, 5 Achs-Sollwerten und CRC8
+- [ ] aktuelle Bench-Variante zuerst auf dritten IMU und erste Arduino-Grundkette erweitern
+- [ ] Kommunikationsrahmen danach von der Bench-Variante auf die dokumentierte Security-Baseline mit `session_id`, applikationsseitigem Authentisierungstag und Advisory-gepruefter Stack-Basis anheben
 
 ### Arbeitspaket 8.2 - Servoebene
 
@@ -147,7 +155,7 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 ### Arbeitspaket 10.1 - Mobile Plattform und Teleoperation
 
 - [ ] fahrbaren oder bewegbaren Untergrund fuer das Gesamtsystem planen
-- [ ] Dashboard- und Controller-Steuerung fuer Fahrzeug und Roboterarm konzipieren
+- [ ] Dashboard-, Handy-App- und Controller-Steuerung fuer Fahrzeug und Roboterarm konzipieren
 - [ ] Kamerasicht fuer das Gesamtsystem integrierbar vorbereiten
 
 ### Arbeitspaket 10.2 - Uebertragbare Aktuatorabstraktion

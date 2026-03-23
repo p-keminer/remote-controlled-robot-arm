@@ -13,7 +13,7 @@ Die Zuordnung ist bewusst als **bevorzugter Startplan** dokumentiert und noch ni
 
 Die vorhandenen Boards sind `ESP32-S3-WROOM-1-N16R8` auf DevKitC-Traeger, **Boardrevision v1.0** (bestätigt 2026-03-22).
 4 Boards verfuegbar: 2 aktiv als Sender und Receiver, 2 als Reserve.
-Onboard Komfortfunktionen werden nicht als kritischer Primaerpfad eingeplant — die RGB-LED ist revisionsabhaengig und gilt nur als Zusatzanzeige.
+Onboard Komfortfunktionen werden nicht als kritischer Primaerpfad eingeplant — die vorhandene RGB-LED auf `GPIO48` ist fuer die aktuellen Boards bestaetigt, bleibt aber wegen spaeterer Hardwareaustauschbarkeit nur Zusatzanzeige.
 
 ## Pins mit besonderer Vorsicht
 
@@ -90,15 +90,15 @@ Deshalb wird fuer den Buzzer zusaetzlich ein Treiber- oder Schaltpfad mit sicher
 
 ## Validierungsreihenfolge
 
-1. reale Boardrevision identifizieren — **bestätigt v1.0 (2026-03-22)**
-2. Einzelsensor auf `GPIO8` / `GPIO9` pruefen — **bestätigt: BNO055 auf 0x29 (ADR=3V3), Rohwerte stabil, Gyro 3/3 (2026-03-22)**
-3. Mux PCA9548A pruefen — **bestätigt: Adresse 0x70, BNO055 über Kanal 0, Sys/Gyro/Accel 3/3 (2026-03-22)**
-4. Flex-Sensor auf GPIO1 pruefen — **bestätigt: gerade=1108, gebogen=940, Bereich 168 Counts (2026-03-22)**
-3. Flex-Sensor auf `GPIO1` pruefen
-4. Sender-LEDs pruefen
-5. Receiver-UART auf `GPIO15` / `GPIO16` pruefen
-6. Buzzerpfad mit sicherem Default-Off pruefen
-7. erst danach Mux- und Mehr-IMU-Pfad erweitern
+1. reale Boardrevision identifizieren — **bestaetigt v1.0, RGB auf `GPIO48` (2026-03-22)**
+2. Einzelsensor auf `GPIO8` / `GPIO9` pruefen — **bestaetigt: BNO055 auf 0x29 (ADR=3V3), Rohwerte stabil, Gyro 3/3 (2026-03-22)**
+3. Mux PCA9548A pruefen — **bestaetigt: Adresse 0x70, BNO055 ueber Kanal 0, Sys/Gyro/Accel 3/3 (2026-03-22)**
+4. Zwei BNO055 gleichzeitig ueber den Mux pruefen — **bestaetigt: Kanaele 0 und 1 stabil, beide Sensoren valide (2026-03-22)**
+5. Flex-Sensor auf `GPIO1` pruefen — **bestaetigt: gerade=1108, gebogen=940, Bereich 168 Counts (2026-03-22)**
+6. Sender-LEDs pruefen
+7. Receiver-UART auf `GPIO15` / `GPIO16` pruefen
+8. Buzzerpfad mit sicherem Default-Off pruefen
+9. dritten IMU auf dem Mux-Pfad und weitere Mehr-IMU-Erweiterung pruefen
 
 ## Recherchequellen
 

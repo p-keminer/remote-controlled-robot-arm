@@ -11,6 +11,7 @@ Den Controller-ESP32 als robuste Quelle fuer Sensorwerte, Kalibrierbezug und Fun
 - [x] Multiplexer-Scan fuer mehrere IMUs aufsetzen und validieren
 - [x] Flex-Sensor-Ausleseweg festziehen
 - [x] Bench-Paketaufbereitung fuer ESP-NOW umsetzen
+- [ ] dritten IMU ueber den Mux-Pfad als dritte Segmentquelle integrieren
 - [ ] Referenz- und Nullpunktlogik sichtbar machen
-- [ ] Bench-Paket von `ImuPaket v1` auf die dokumentierte Security-Baseline anheben
+- [ ] Bench-Paket nach drittem IMU und erster Arduino-Grundkette auf die dokumentierte Security-Baseline anheben
 - [ ] LED- und Buzzer-Debugpfade einbauen

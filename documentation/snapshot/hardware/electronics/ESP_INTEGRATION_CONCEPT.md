@@ -81,6 +81,23 @@ Bestaetigte Boarddetails (2026-03-22):
 - kurze und nachvollziehbare Verbindung zum Arduino
 - Warnsignale und Statusanzeigen von aussen gut sichtbar bzw. hoerbar
 
+## Stromversorgung der Arm-Seite
+
+Fuer die Arm-Seite ist die offizielle Adeept-Produktbasis mitzudenken:
+
+- die offizielle Produktseite nennt `2x18650` als Batteriekaufpunkt
+- dieselbe Produktseite erlaubt alternativ Versorgung ueber `Micro USB`
+- die gepruefte offizielle Support-Aussage von Adeept warnt jedoch, dass `Micro USB` bei Mehrservo-Betrieb zu wenig Strom liefern kann
+- das importierte offizielle V4.0-Paket verankert `18650` zusaetzlich ueber `Read me first`, `Packing List`, Stock-Test und Lernmodus
+
+Projektfolgerung:
+
+- `Micro USB` wird nicht als automatisch belastbare Vollbewegungsversorgung fuer mehrere Servos behandelt
+- vor echten Bewegungs- und Belastungstests muss ein dokumentierter Strompfad festgelegt werden
+- als aktuelle Beschaffungsbasis gelten `4x Molicel INR-18650-M35A` ohne Loetfahne plus `1x XTAR VC4SL`
+- reale Batteriefach-Passung, Beschaffung und Bewegungsfreigabe muessen vor dem modifizierten Echtbetrieb weiterhin bestaetigt werden
+- Detailregeln und Beschaffungskriterien werden in `POWER_SUPPLY_CONCEPT.md` weitergefuehrt
+
 ## 3D-Gehaeuse- und Traegerkonzept
 
 ### Sender-Gehaeuse
@@ -130,8 +147,10 @@ Roboterseite
 ## Offene Punkte
 
 - genaue Abmessungen des Sender-Gehaeuses erst nach Vermessung des realen Boards und der Zusatzplatinen festlegen
-- pruefen, ob die BNO055-Mux-Kombination mit dem ESP32-S3 in der geplanten Form stabil genug laeuft (erster Bench-Test ausstehend)
+- dritten IMU auf dem bestehenden Mux-Pfad als naechste Segmentquelle bench-validieren
 - reale Kabelfuehrung und Stecker erst nach erstem Bench-Aufbau festlegen
+- offiziellen Stock-Strompfad des Adeept-Arms gegen den spaeteren Projekt-Strompfad sauber trennen
+- Batteriekauf und reale Stromversorgungsentscheidung fuer Mehrservo-Bewegung dokumentieren
 
 *Geschlossen: Boardrevision ist v1.0, onboard RGB-LED auf GPIO48, GPIO35/36/37 intern belegt (bestätigt 2026-03-22).*
 
@@ -141,3 +160,5 @@ Roboterseite
 - [ESP32-S3-DevKitC-1 User Guide v1.0](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32s3/esp32-s3-devkitc-1/user_guide_v1.0.html) fuer die aeltere Boardvariante mit onboard RGB-LED auf `GPIO48`.
 - [ESP32-S3 PCB Layout Design Guidelines](https://docs.espressif.com/projects/esp-hardware-design-guidelines/en/latest/esp32s3/pcb-layout-design.html) fuer Antennenfreiraum, Baseboard-Positionierung und Gehaeuseeinfluss auf RF.
 - [Adafruit BNO055 Guide](https://cdn-learn.adafruit.com/downloads/pdf/adafruit-bno055-absolute-orientation-sensor.pdf) fuer die dokumentierten Risiken von `BNO055` mit `ESP32-S3` und I2C-Multiplexern.
+- [Adeept 5-DOF Robotic Arm Kit Compatible with Arduino IDE](https://www.adeept.com/adeept-5-dof-robotic-arm-kit-compatible-with-arduino-ide-programmable-diy-coding-stem-educational-5-axis-robot-arm-with-oled-display-processing-code_p0360.html) fuer den offiziellen Produkt- und Stromversorgungsrahmen des Arm-Kits.
+- [Adeept Forum: Adeept 5-DOF Arduino ROBOT ARM](https://www.adeept.com/forum/thread-1009-1-1.html) fuer die offizielle Support-Aussage zum Strombedarf der Servos bei `Micro USB`-Versorgung.

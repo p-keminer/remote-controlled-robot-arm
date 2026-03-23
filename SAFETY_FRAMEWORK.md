@@ -30,6 +30,12 @@ Dieses Dokument definiert die verbindlichen Sicherheitsregeln fuer Bewegungsfrei
 - Receiver und Arduino brauchen klare Zeitgrenzen fuer gueltige Daten
 - bei Zeitueberschreitung wird Bewegung gestoppt oder auf sichere Rueckfallwerte gefahren
 
+### Manuelle Eingriffe
+
+- der Roboterarm wird im aktiven Betrieb nicht mit der Hand zwangsbewegt
+- manuelle Korrekturen oder mechanische Neuorientierungen erfolgen nur in dokumentiert sicherem Zustand
+- Herstellerwarnungen zu Handhabung und Stromversorgung werden in Bringup- und Aufbaupfaden mitgezogen
+
 ### Freigabe
 
 - eine spaetere Totmann- oder Bewegungsfreigabelogik wird als eigenes Sicherheitsfeature behandelt
@@ -39,3 +45,7 @@ Dieses Dokument definiert die verbindlichen Sicherheitsregeln fuer Bewegungsfrei
 
 - neue Bewegungsfunktionen gelten erst dann als belastbar, wenn relevante Sicherheitspruefungen unter `tests/safety/` beschrieben sind
 - kritische Messungen und Beobachtungen werden unter `docs/measurement_logs/` festgehalten
+
+## Recherchequellen
+
+- [Read me first.pdf](./official_downloads/extracted/adeept_v4_0_20251205/ADA031-Adeept_Robotic_Arm_Kit_for_Arduino-V4.0-20251205/Read%20me%20first.pdf) fuer die Herstellerwarnung, den Arm im Betrieb nicht per Hand zu zwingen.

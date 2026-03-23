@@ -11,6 +11,7 @@ Schaltplanstand, Verkabelung, Mechanik, Elektronik, Aufbau, Bringup und Stueckli
 
 ## Inhalt
 
+- `ADEEPT_ARM_PRODUCT_BASELINE.md` fuer die konkrete Produktbasis, Package List und Stromversorgungsbasis des vorhandenen Kits
 - `schaltplaene/` fuer elektrische Schaltunterlagen
 - `verkabelung/` fuer reale Verbindungsplaene und Kabelwege
 - `mechanik/` fuer Montage, Halterungen und Befestigung

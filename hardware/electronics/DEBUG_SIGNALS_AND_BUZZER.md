@@ -15,7 +15,7 @@ Die Kombination aus LEDs und Buzzer soll Debug, Bringup und spaetere Safety-Reak
 - der Buzzer ist ein **Ergaenzungskanal**, kein Ersatz fuer sichtbare Zustandsanzeige oder sichere Stopplogik
 - die wichtigste akustische Warnung sitzt auf der Receiver- bzw. Roboterseite
 - die drei IMU-Status-LEDs gehoeren primaer auf die Sender-Seite
-- die onboard RGB-LED ist nur Zusatzkomfort, solange die reale Boardrevision nicht verifiziert ist
+- die onboard RGB-LED ist trotz bestaetigter Boardrevision nur Zusatzkomfort und kein alleiniger Primaerpfad
 
 ## Sender-Signale
 

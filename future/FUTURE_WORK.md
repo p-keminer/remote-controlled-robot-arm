@@ -47,13 +47,17 @@ Dabei soll nicht nur der Roboterarm, sondern auch die mobile Plattform steuerbar
 - Controller-Eingaben fuer Fahrzeug und Arm
 - umschaltbare oder kombinierbare Bedienmodi
 - spaetere Teleoperations- oder Assistenzmodi moeglich
+- eigener Dashboard- oder Handy-App-Pfad statt dauerhafter Abhaengigkeit von der stockseitigen Processing-Steuerung
+- spaetere Unterstuetzung fuer dedizierten Eigencontroller und z.B. Xbox-Controller
 
 ### Typische spaetere Arbeitspakete
 
 - Dashboard-Architektur definieren
+- Handy-App- oder Web-Dashboard-Variante gegen lokalen Controllerpfad abwaegen
 - Bedienlogik fuer Arm- und Fahrzeugmodus entwerfen
+- Controller-Mapping fuer Xbox-Controller und spaetere Eigencontroller beschreiben
 - Statusdarstellung fuer Sensorik, Funk, Safety und Betriebsmodus planen
-- Controller-Mapping fuer unterschiedliche Bediengeraete beschreiben
+- Fallback- und Moduswechsel zwischen mehreren Bediengeraeten beschreiben
 
 ## Zukunftslinie 3 - Kamerasicht und Teleoperationssicht
 

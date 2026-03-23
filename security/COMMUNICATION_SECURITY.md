@@ -42,6 +42,7 @@ Dieses Dokument beschreibt die erste Security-Grundlage fuer die Kommunikationsp
 - alte `session_id` oder ruecklaeufige Zaehler muessen verworfen werden
 - Steuerung wird erst nach explizitem `armed`- oder `ready`-Zustand akzeptiert
 - der aktuelle Bench-Pfad mit XOR-Pruefsumme und Frische-Check bleibt ausdruecklich ein Zwischenstand und ersetzt diese Security-Baseline nicht
+- der eigentliche Security-Uplift wird erst nach drittem IMU und erster `Receiver -> Arduino`-Grundkette aktiviert; ab der naechsten Paketrevision muessen aber mindestens `protokoll_version`, `flags` und klar erkennbare Erweiterungspunkte fuer spaetere Security-Felder mitgefuehrt werden
 
 ### Empfangs- und Parse-Haertung
 

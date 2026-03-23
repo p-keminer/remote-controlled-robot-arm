@@ -94,9 +94,12 @@ Die reale Hardwarebetrachtung von Anfang an sichtbar machen, ohne den Arm in die
 ### Typische Arbeitspakete
 
 - Inventar- und Materialstand dokumentierbar machen
+- exakte Produktbasis des vorhandenen Adeept-Kits festhalten
+- offiziellen Herstellerdownload mit Stock-Tutorials, Schaltplan und Originalcode als Referenzbasis einordnen
 - Aufbauablauf und Bringup-Reihenfolge beschreiben
 - Templates fuer Inventar, Aufbau, Verkabelung, Sensormontage und Erstinbetriebnahme bereitstellen
 - Hardwareabweichungen spaeter sauber gegen Dokumente pruefen koennen
+- Stock-Baseline-Test des Originalarms vor Umbauten verbindlich einplanen
 
 ### Leitdokumente
 
@@ -120,6 +123,7 @@ Die Sensorseite des Systems technisch sicher in Betrieb nehmen und Rohdaten nach
 ### Typische Arbeitspakete
 
 - BNO055 Einzelsensor und Mux-Pfad validieren (bestaetigt 2026-03-22)
+- dritten IMU ueber den Mux-Pfad als dritte Segmentquelle anbinden und validieren
 - Flex-Sensor ADC-Pfad validieren und Rohwerte dokumentieren (bestaetigt 2026-03-22)
 - IMU-Daten per ESP-NOW uebertragen, Bench-Paketformat und Integritaet pruefen (bestaetigt 2026-03-22)
 - LED-Debugging einbauen: Sender GPIO4/5/6 (IMU-Status), GPIO7 (COMMS), GPIO10 (FAULT)
@@ -143,6 +147,7 @@ Aus Rohdaten robuste, wiederholbare Gelenkzielwerte ableiten.
 ### Typische Arbeitspakete
 
 - Roboterarm aufbauen und Servo-Grundfunktion pruefen
+- Servozuordnung, reale Servozahl und Originalkanalbelegung nach Aufbau festhalten
 - Gelenklimits pro Achse definieren und dokumentieren
 - IMU-Winkel auf Servo-Sollwerte mappen
 - Flex-Sensor auf Greifer-Oeffnungsgrad mappen
@@ -157,7 +162,11 @@ Den Datenpfad vom Wearable bis zur Servoausfuehrung konsistent, ueberpruefbar un
 ### Typische Arbeitspakete
 
 - Bench-Funkpfad von `ImuPaket v1` auf die dokumentierte Security-Baseline anheben
+- Security-Uplift bewusst erst nach drittem IMU und erster UART-Grundkette aktivieren
 - UART-Pfad Receiver → Arduino in Betrieb nehmen (GPIO15/GPIO16)
+- einfachen UART-Frame v1 mit festem Binaerformat beibehalten und erst spaeter bei Bedarf erweitern
+- Stromversorgung fuer reale Mehrservo-Bewegung verbindlich festlegen
+- Stock- und Projekt-Strompfad sichtbar getrennt dokumentieren
 - Arduino-Firmware fuer Servo-Ausfuehrung mit Limits und Rampen schreiben
 - Watchdog, Timeout und Neutralverhalten implementieren
 - Safety-Fallback und Buzzer-Warnlogik einbauen

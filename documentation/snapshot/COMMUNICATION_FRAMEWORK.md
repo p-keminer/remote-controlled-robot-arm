@@ -27,7 +27,7 @@ Dieses Dokument ist die kanonische Quelle fuer alle Kommunikationsregeln zwische
 
 - Standardpfad ist lokales `ESP-NOW`.
 - Der Steuerpfad soll nicht als offener Broadcast-Standardpfad behandelt werden.
-- Der aktuelle Bench-Pfad beruecksichtigt bereits Protokollversion, Integritaet und Frischeannahmen.
+- Der aktuelle Bench-Pfad beruecksichtigt bereits Protokollversion, Integritaet und Frischeannahmen, bildet aktuell aber erst zwei IMUs ab.
 - Der Produktivpfad fuer Realbetrieb muss zusaetzlich einen Session-Bezug und einen applikationsseitigen Authentisierungstag tragen.
 - Unbekannte, veraltete oder ungueltige Frames duerfen nicht in Bewegung uebergehen.
 - MAC-seitiger Sendeerfolg reicht nicht; der Projektpfad braucht Anwendungs-ACK und definierte Duplicate-Logik.
@@ -36,9 +36,10 @@ Dieses Dokument ist die kanonische Quelle fuer alle Kommunikationsregeln zwische
 ## UART Receiver -> Arduino
 
 - UART ist die bevorzugte Bruecke fuer Debugbarkeit und einfache Kopplung.
-- Das serielle Frame enthaelt nur Daten, die fuer die Servoebene wirklich noetig sind.
+- Das serielle Frame enthaelt nur Daten, die fuer die Servoebene wirklich noetig sind und bleibt bewusst klein.
 - Der Receiver darf dem Arduino keine unvalidierten oder unvollstaendigen Bewegungsdaten uebergeben.
 - Timeout und Neutralverhalten muessen auf beiden Seiten abgestimmt sein.
+- Das feste Minimalformat fuer den ersten Projektstand ist in `firmware/UART_FRAME_V1.md` beschrieben.
 
 ## ImuPaket v1 - aktueller Bench-Stand fuer ESP-NOW (Stand 2026-03-22)
 
@@ -63,6 +64,15 @@ typedef struct __attribute__((packed)) {
 - Frische: Pakete mit `zaehler <= letzter_zaehler` werden verworfen
 - Sendeintervall: 50ms (20Hz)
 - Dieser Stand ist als Bench-Zwischenstufe fuer Sensor- und Funkvalidierung zulaessig, aber nicht als fertige Security-Baseline fuer Realbetrieb
+- Der aktuelle Ist-Stand bildet zwei IMUs ab; der naechste funktionale Schritt ist die Erweiterung auf den dritten IMU ueber den Mux-Pfad
+
+## Naechste Paketrevision vor dem Security-Uplift
+
+- dritter IMU wird als dritte Segmentquelle in das Bewegungsmodell aufgenommen
+- `protokoll_version` bleibt Pflichtfeld fuer kontrollierte Weiterentwicklung
+- `flags` und eine Sensor-Gueltigkeits- oder Quellenmaske sollen ab der naechsten Paketrevision sichtbar mitgefuehrt werden
+- wenn das Paket erneut angefasst wird, soll ein klar reservierter Erweiterungsbereich fuer spaetere Security-Felder mitgeplant werden
+- der eigentliche Security-Uplift wird dennoch erst nach drittem IMU und erster `Receiver -> Arduino`-Grundkette aktiviert
 
 ## ImuPaket v2 - Security-Zielbild vor Realbetrieb
 
@@ -79,7 +89,7 @@ typedef struct {
     uint16_t    flags;               // armed, degraded, calibrating, estop
     uint32_t    session_id;          // zufaellig pro Boot / Bind-Vorgang
     uint32_t    zaehler;             // monoton pro Session
-    SensorDaten sensoren[2];         // Euler-Winkel beider IMUs
+    SensorDaten sensoren[3];         // Zielbild: drei Segmentsensoren
     uint16_t    flex_raw;            // Rohwert oder normalisierter Griffwert
     uint16_t    reserved;
     uint64_t    auth_tag64;          // gekuerzter MAC ueber alle vorherigen Bytes
@@ -98,6 +108,29 @@ Hinweis:
 
 - Einfache XOR- oder CRC-Felder koennen zusaetzlich fuer Debug oder Korruptionserkennung existieren, ersetzen aber nicht den applikationsseitigen Authentisierungstag.
 - Das aktuell implementierte `ImuPaket v1` bleibt bis zum Security-Uplift ein Bench-Artefakt und ist kein Produktivfreigabekriterium.
+
+## UART-Frame v1 - Minimaler Startstand fuer Receiver -> Arduino
+
+```c
+typedef struct __attribute__((packed)) {
+    uint8_t start_a;            // 0xA5
+    uint8_t start_b;            // 0x5A
+    uint8_t protokoll_version;  // 1
+    uint8_t sequenz;            // 0..255, danach Ueberlauf
+    uint8_t flags;              // Datenstatus, Neutralanforderung, degraded, estop
+    uint8_t basis_soll;         // 0..255, abstrahierter Sollwert
+    uint8_t schulter_soll;      // 0..255, abstrahierter Sollwert
+    uint8_t ellbogen_soll;      // 0..255, abstrahierter Sollwert
+    uint8_t handgelenk_soll;    // 0..255, abstrahierter Sollwert
+    uint8_t greifer_soll;       // 0..255, abstrahierter Sollwert
+    uint8_t crc8;               // Integritaetspruefung ueber alle vorherigen Bytes
+} UartFrameV1;
+```
+
+- Das Format bleibt absichtlich klein, fest und binaerisch.
+- `basis_soll` bis `greifer_soll` sind im ersten Startstand bewusst abstrahierte Achs-Sollwerte und keine direkt hart codierten Servopulse.
+- Die oberen Bits in `flags` bleiben fuer spaetere Erweiterungen reserviert.
+- Erst nach funktionierender Grundkette wird entschieden, ob weitere Diagnose- oder Safety-Felder wirklich noetig sind.
 
 ## Fehlerfaelle
 

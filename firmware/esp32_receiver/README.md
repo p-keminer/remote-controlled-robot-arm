@@ -8,6 +8,7 @@ Dieser Ordner ist fuer die Receiver-Firmware des zweiten ESP32 reserviert.
 
 Der Bereich ist als Bench-Firmware vorhanden.
 `esp32_receiver.ino` empfaengt `ESP-NOW`-Pakete, prueft Paketgroesse, Protokollversion, XOR-Pruefsumme und Frische; UART, Safety-Reaktionen und Security-Uplift sind noch offen.
+Der serielle Minimalrahmen fuer die naechste Ausbaustufe ist bereits in `../UART_FRAME_V1.md` dokumentiert, wird aber erst nach drittem IMU und realer Grundkette bench-validiert.
 
 ## Inhalt
 
@@ -21,6 +22,7 @@ Der Bereich ist als Bench-Firmware vorhanden.
 - der Receiver enthaelt keine direkte Servo-PWM
 - unvalidierte Pakete duerfen nicht an den Arduino weitergereicht werden
 - Timeout- und Watchdog-Annahmen muessen mit `SAFETY_FRAMEWORK.md` konsistent sein
+- das erste UART-Format bleibt bewusst fest, klein und binarisch; Erweiterungen duerfen nur kontrolliert ueber Versions- und Flagfelder erfolgen
 
 ## Schnittstellen/Abhaengigkeiten
 

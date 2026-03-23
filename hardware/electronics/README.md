@@ -7,11 +7,15 @@ Dieser Ordner dokumentiert die Integration der ESP32-, Sensor- und Debug-Elektro
 ## Aktueller Stand
 
 Die Dokumentationsbasis fuer `ESP32-S3 DevKitC-1 N16R8` ist angelegt und teilweise real validiert.
-Boardrevision, RGB-Pin, I2C-Pinplan, ADC-Pfad und der aktuelle Bench-Schaltplan sind bestaetigt; LED-, Buzzer-, UART-, Lochraster- und Gehaeusethemen bleiben offen.
+Boardrevision, RGB-Pin, I2C-Pinplan, ADC-Pfad und der aktuelle Bench-Schaltplan sind bestaetigt.
+Zusaetzlich ist jetzt ein eigenes Stromversorgungskonzept verfuegbar, das den offiziellen Adeept-Stock-Pfad vom spaeteren Projektbetrieb trennt.
+LED-, Buzzer-, UART-, Lochraster- und Gehaeusethemen sind konzeptionell dokumentiert, in der praktischen Umsetzung aber noch offen.
 
 ## Inhalt
 
 - `ESP_INTEGRATION_CONCEPT.md` fuer die Gesamtrolle von Sender- und Receiver-Elektronik
+- `../ADEEPT_ARM_PRODUCT_BASELINE.md` fuer Produktbasis, Package-List und Stromversorgungsrahmen des Originalarms
+- `POWER_SUPPLY_CONCEPT.md` fuer die Stromversorgungsstrategie von Stock-Test, Bench und Dauerbetrieb
 - `PROTO_BREADBOARD_PLAN.md` fuer Bench-Prototyp und fruehe offene Verdrahtung
 - `FINAL_PERFBOARD_PLAN.md` fuer den dauerbetriebsnahen Lochraster- und Gehaeusepfad
 - `PIN_MAPPING_RESEARCH.md` fuer den ersten boardnahen GPIO-Plan
@@ -31,5 +35,6 @@ Boardrevision, RGB-Pin, I2C-Pinplan, ADC-Pfad und der aktuelle Bench-Schaltplan 
 
 - arbeitet mit `../mechanik/` fuer Traegeorte, Gehaeuse und Kabelentlastung zusammen
 - verweist auf `../../preparation/esp32_environment/` fuer Toolchain- und Boardvorbereitung
+- verweist auf `../../official_downloads/` fuer offiziellen Stock-Code und Herstellerunterlagen
 - spiegelt Kommunikationsannahmen aus `../../COMMUNICATION_FRAMEWORK.md`
 - spiegelt Safety- und Security-Annahmen aus `../../SAFETY_FRAMEWORK.md` und `../../SECURITY_FRAMEWORK.md`

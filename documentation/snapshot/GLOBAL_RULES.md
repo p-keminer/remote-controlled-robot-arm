@@ -12,6 +12,7 @@ Dieses Dokument ist fuer Menschen und KI gleichermassen verbindlich.
 - `tests/` enthaelt Testablaeufe, Bench-Skripte und Nachweise fuer Security, Safety und Verhalten.
 - `docs/` bleibt manuell gepflegte Arbeits-, Nachweis- und Template-Dokumentation.
 - `future/` enthaelt nur Zukunftsausbau, Post-v1-Ideen und spaeter zu aktivierende Erweiterungslinien.
+- `official_downloads/` enthaelt nur importierte Herstellerstaende, Vendor-Artefakte und projektrelevante Auswertungen dazu.
 - `documentation/` ist ausschliesslich generierter Snapshot-Inhalt und wird nicht manuell gepflegt.
 
 ## Code-Qualitaet und Portabilitaet
@@ -76,6 +77,7 @@ Dieses Dokument ist fuer Menschen und KI gleichermassen verbindlich.
 - Externe technische Annahmen oder Empfehlungen duerfen nicht als feste Projektentscheidung stehen bleiben, wenn die Quelle dazu im betroffenen Dokument fehlt.
 - Nach jedem groesseren Schritt muessen die betroffenen Dokumente direkt aktualisiert werden.
 - Danach muss immer `bash ./scripts/update_docs.sh` ausgefuehrt werden, damit `documentation/` den aktuellen Stand spiegelt.
+- `documentation/` spiegelt nur die projektgepflegte Markdown-Quelldokumentation; externe Vendor-Archive wie `official_downloads/raw/` und `official_downloads/extracted/` bleiben davon ausgenommen.
 - Lokale `ROADMAP.md`-Dateien muessen mit der globalen `ROADMAP.md` konsistent bleiben.
 
 ## Zusammenarbeit mit KI

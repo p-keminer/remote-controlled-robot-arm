@@ -7,7 +7,8 @@ Dieser Ordner ist fuer die Wearable-Firmware des Controller-ESP32 reserviert.
 ## Aktueller Stand
 
 Der Teilbereich ist als Bench-Firmware vorhanden.
-`esp32_controller.ino` liest BNO055 ueber PCA9548A, erfasst den Flex-Sensor und sendet `ImuPaket v1` per `ESP-NOW`; Mapping, Session-/Auth-Haertung und Debugsignale sind noch offen.
+`esp32_controller.ino` liest BNO055 ueber PCA9548A, erfasst den Flex-Sensor und sendet `ImuPaket v1` per `ESP-NOW`; der aktuelle Ist-Stand bildet zwei IMUs ab.
+Naechste Schritte sind der dritte IMU ueber den Mux-Pfad sowie eine spaetere Protokollerweiterung mit klaren Erweiterungspunkten fuer den Security-Uplift.
 
 ## Inhalt
 
@@ -21,6 +22,7 @@ Der Teilbereich ist als Bench-Firmware vorhanden.
 - der Controller sendet Zielwerte, aber keine direkte Servoansteuerung
 - Sensorzuordnung, Achsinvertierungen und Nullpunktannahmen muessen mit `calibration/` abgestimmt sein
 - Kommunikationsdetails gehoeren nicht nur in den Code, sondern auch in `COMMUNICATION_FRAMEWORK.md`
+- sobald das Bench-Paket weiterentwickelt wird, muessen `protokoll_version`, `flags` oder andere klare Erweiterungspunkte fuer den spaeteren Security-Uplift mitgedacht werden
 
 ## Schnittstellen/Abhaengigkeiten
 

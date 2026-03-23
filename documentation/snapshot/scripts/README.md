@@ -27,7 +27,7 @@ Weitere Build-, Flash- oder Testhelfer koennen spaeter hier sauber einsortiert w
 
 ## Inhalt
 
-- `update_docs.sh` — sammelt die verteilte Projektdokumentation in `documentation/` und schliesst generierte oder externe Bereiche aus
+- `update_docs.sh` — sammelt die verteilte Projektdokumentation in `documentation/` und schliesst generierte, lokale oder externe Bereiche wie `official_downloads/raw/` und `official_downloads/extracted/` aus
 - `sync_to_windows.sh` — kopiert `.ino`- und `.h`-Dateien nach Windows fuer Arduino IDE (erfordert `sync_config.local.sh`)
 - `watch_and_sync.sh` — beobachtet `firmware/` per inotify und synct bei Aenderung nach Windows (erfordert `sync_config.local.sh`)
 - `sync_config.local.sh.template` — **Vorlage** fuer lokale Pfad-Konfiguration; als `sync_config.local.sh` kopieren und anpassen
@@ -49,4 +49,5 @@ cp scripts/sync_config.local.sh.template scripts/sync_config.local.sh
 ## Schnittstellen/Abhaengigkeiten
 
 - arbeitet auf der Markdown-Quelldokumentation des Repositories
+- spiegelt nur projektgepflegte Markdown-Dokumente, nicht den kompletten entpackten Vendor-Stand
 - schreibt nur in den generierten Ordner `documentation/`

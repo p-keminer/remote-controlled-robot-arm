@@ -12,10 +12,11 @@ Die erste Version wird als lokal betriebenes Embedded-System vorbereitet: `ESP-N
 
 Die aktuelle Phase konzentriert sich auf:
 
+- dritten BNO055 ueber den Mux-Pfad als dritten Segmentsensor anbinden und bench-validieren
 - LED-Debugging am Controller (GPIO4/5/6 IMU-Status, GPIO7 COMMS, GPIO10 FAULT) und Receiver (GPIO4/5/6)
 - Buzzer-Pfad GPIO21 mit sicherem Default-Off pruefen
 - Roboterarm aufbauen und UART-Pfad Receiver → Arduino in Betrieb nehmen
-- Bench-Kommunikation von `ImuPaket v1` auf die dokumentierte Security-Baseline mit Session- und Authentisierungsschicht anheben
+- Bench-Kommunikation erst nach drittem IMU und erster UART-Grundkette von `ImuPaket v1` auf die dokumentierte Security-Baseline mit Session- und Authentisierungsschicht anheben
 
 Abgeschlossen (Stand 2026-03-22):
 
@@ -40,6 +41,9 @@ Vor groesseren Aenderungen sind besonders relevant:
 - `CALIBRATION_FRAMEWORK.md` fuer Nullpunkt-, Referenz- und Mappingregeln
 - `SAFETY_FRAMEWORK.md` fuer Limits, Watchdog, Neutralposition und Freigaben
 - `preparation/README.md`, `security/README.md`, `hardware/README.md`, `firmware/README.md`, `tests/README.md`, `docs/README.md` und `future/README.md` fuer lokale Arbeitsbereiche
+- `hardware/ADEEPT_ARM_PRODUCT_BASELINE.md` fuer die konkrete Produktbasis des vorhandenen Adeept-Kits
+- `hardware/electronics/POWER_SUPPLY_CONCEPT.md` fuer die Stromversorgungsstrategie von Stock-Test, Bench und spaeterem Projektbetrieb
+- `official_downloads/README.md` fuer den importierten offiziellen Herstellerstand
 
 ## Wichtige Befehle
 
@@ -55,6 +59,7 @@ Jeder relevante Ordner besitzt mindestens eine eigene `README.md`.
 Groessere Unterprojekte besitzen zusaetzlich eine eigene `ROADMAP.md`.
 Der Ordner `documentation/` ist ein automatisch erzeugter Snapshot und keine manuell gepflegte Quelldokumentation.
 Der Ordner `docs/` bleibt die manuell gepflegte Arbeits- und Nachweisdokumentation.
+Der Snapshot unter `documentation/` sammelt nur projektgepflegte Markdown-Dokumente; Vendor-Archive unter `official_downloads/raw/` und `official_downloads/extracted/` bleiben bewusst ausserhalb dieses Verwaltungsstands.
 Forschungs-, Konzept- und Entscheidungsdokumente muessen die verwendeten externen Quellen in einem eigenen Abschnitt `Recherchequellen` auffuehren.
 Nicht-repotaugliche lokale Werte wie Schluessel, Peer-Listen, lokale Identitaetsdaten, API-Schluessel und absolute Dateipfade (z.B. `/home/username/`, `/mnt/c/Users/username/`) gehoeren nach `security/local/` oder in gitignorierte `*.local.*`-Konfigurationsdateien und duerfen niemals eingecheckt werden.
 
@@ -63,6 +68,8 @@ Nicht-repotaugliche lokale Werte wie Schluessel, Peer-Listen, lokale Identitaets
 Dokumentations- und Prozessbasis ist angelegt.
 Toolchain steht: Arduino IDE 3.3.7 ist die Hauptumgebung, PlatformIO bleibt als lokaler Fallback und Gegencheck erhalten.
 Sensorpfad ist bench-validiert: BNO055 (Einzel und Dual ueber PCA9548A-Mux), Flex-Sensor und `ESP-NOW` Unicast mit `ImuPaket v1` als Bench-Zwischenstand.
-Die dokumentierte Security-Baseline mit `session_id`, applikationsseitigem Authentisierungstag und Advisory-gepruefter Stack-Basis ist vorbereitet, aber noch nicht in die Firmware uebernommen.
-Naechster Schritt: LED-Debugging, Buzzer-Pfad, Roboterarm-Aufbau und UART-Inbetriebnahme zum Arduino.
+Der offizielle Adeept-V4.0-Download mit Tutorial-PDFs, Schaltplan und Originalcode liegt jetzt strukturiert unter `official_downloads/` und ist gegen Produktbasis, Servoannahmen und Stromversorgung ausgewertet.
+Als aktuelle Beschaffungsbasis fuer den Stock- und Projekt-Strompfad sind `4x Molicel INR-18650-M35A` ohne Loetfahne plus `1x XTAR VC4SL` dokumentiert.
+Die dokumentierte Security-Baseline mit `session_id`, applikationsseitigem Authentisierungstag und Advisory-gepruefter Stack-Basis ist vorbereitet, wird aber bewusst erst nach drittem IMU und erster UART-Grundkette aktiviert.
+Naechster Schritt: dritten IMU anbinden, LED-Debugging und Buzzer pruefen, Roboterarm aufbauen und UART-Inbetriebnahme zum Arduino.
 Zusaetzliche Post-v1-Ausbaurichtungen werden gesammelt unter `future/FUTURE_WORK.md`.

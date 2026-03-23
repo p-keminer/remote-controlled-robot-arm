@@ -17,6 +17,8 @@ Eine belastbare Elektronikdokumentation fuer Sender- und Receiver-ESP32 aufbauen
 - [x] bevorzugten Pinplan fuer I2C und ADC an echter Bench-Hardware validieren
 - [x] BNO055-, Mux- und Flex-Sensor-Pfade gegen den Pinplan verifizieren
 - [x] aktuellen Bench-Schaltplanstand dokumentieren
+- [x] Stromversorgung der Arm-Seite gegen die offizielle Adeept-Produktbasis abgleichen und als Konzept dokumentieren
 - [ ] LED-, Buzzer- und UART-Pfade gegen den bestaetigten Pinplan validieren
 - [ ] Verdrahtung und Steckersystem spaeter nach `hardware/verkabelung/` ueberfuehren
 - [ ] aus den validierten Bench-Ergebnissen einen dauerbetriebsnahen Schaltplanstand ableiten
+- [ ] reale Akku-/Strompfadentscheidung nach Arm-Aufbau und Messung finalisieren

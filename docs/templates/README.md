@@ -7,6 +7,7 @@ Dieser Ordner enthaelt Dokumentationsvorlagen fuer den realen Roboterarm, Bench-
 ## Aktueller Stand
 
 Die ersten Templates sind angelegt, damit Inventar, Aufbau, Verkabelung und Tests spaeter einheitlich dokumentiert werden.
+Die Inventarvorlage wird an der konkreten Adeept-Produktbasis gespiegelt.
 
 ## Inhalt
 

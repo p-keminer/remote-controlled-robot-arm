@@ -1,6 +1,6 @@
 # Dokumentationsindex
 
-Erzeugt am: 2026-03-22 19:57:56 CET
+Erzeugt am: 2026-03-23 03:14:33 CET
 
 ## Gesammelte Dokumente
 
@@ -41,6 +41,7 @@ Erzeugt am: 2026-03-22 19:57:56 CET
 - [docs/templates/WIRING_LOG_TEMPLATE.md](snapshot/docs/templates/WIRING_LOG_TEMPLATE.md)
 - [firmware/README.md](snapshot/firmware/README.md)
 - [firmware/ROADMAP.md](snapshot/firmware/ROADMAP.md)
+- [firmware/UART_FRAME_V1.md](snapshot/firmware/UART_FRAME_V1.md)
 - [firmware/arduino_arm/README.md](snapshot/firmware/arduino_arm/README.md)
 - [firmware/arduino_arm/ROADMAP.md](snapshot/firmware/arduino_arm/ROADMAP.md)
 - [firmware/esp32_controller/README.md](snapshot/firmware/esp32_controller/README.md)
@@ -50,6 +51,7 @@ Erzeugt am: 2026-03-22 19:57:56 CET
 - [future/FUTURE_WORK.md](snapshot/future/FUTURE_WORK.md)
 - [future/README.md](snapshot/future/README.md)
 - [future/ROADMAP.md](snapshot/future/ROADMAP.md)
+- [hardware/ADEEPT_ARM_PRODUCT_BASELINE.md](snapshot/hardware/ADEEPT_ARM_PRODUCT_BASELINE.md)
 - [hardware/README.md](snapshot/hardware/README.md)
 - [hardware/ROADMAP.md](snapshot/hardware/ROADMAP.md)
 - [hardware/assembly/README.md](snapshot/hardware/assembly/README.md)
@@ -60,6 +62,7 @@ Erzeugt am: 2026-03-22 19:57:56 CET
 - [hardware/electronics/FINAL_PERFBOARD_PLAN.md](snapshot/hardware/electronics/FINAL_PERFBOARD_PLAN.md)
 - [hardware/electronics/PIN_MAPPING_CONFIRMED.md](snapshot/hardware/electronics/PIN_MAPPING_CONFIRMED.md)
 - [hardware/electronics/PIN_MAPPING_RESEARCH.md](snapshot/hardware/electronics/PIN_MAPPING_RESEARCH.md)
+- [hardware/electronics/POWER_SUPPLY_CONCEPT.md](snapshot/hardware/electronics/POWER_SUPPLY_CONCEPT.md)
 - [hardware/electronics/PROTO_BREADBOARD_PLAN.md](snapshot/hardware/electronics/PROTO_BREADBOARD_PLAN.md)
 - [hardware/electronics/README.md](snapshot/hardware/electronics/README.md)
 - [hardware/electronics/ROADMAP.md](snapshot/hardware/electronics/ROADMAP.md)
@@ -70,6 +73,8 @@ Erzeugt am: 2026-03-22 19:57:56 CET
 - [hardware/mechanik/WEARABLE_SENSOR_CONCEPT.md](snapshot/hardware/mechanik/WEARABLE_SENSOR_CONCEPT.md)
 - [hardware/schaltplaene/README.md](snapshot/hardware/schaltplaene/README.md)
 - [hardware/verkabelung/README.md](snapshot/hardware/verkabelung/README.md)
+- [official_downloads/ADEEPT_V4_PACKAGE_REVIEW.md](snapshot/official_downloads/ADEEPT_V4_PACKAGE_REVIEW.md)
+- [official_downloads/README.md](snapshot/official_downloads/README.md)
 - [preparation/README.md](snapshot/preparation/README.md)
 - [preparation/ROADMAP.md](snapshot/preparation/ROADMAP.md)
 - [preparation/arduino_ide_setup/README.md](snapshot/preparation/arduino_ide_setup/README.md)

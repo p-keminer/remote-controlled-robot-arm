@@ -12,6 +12,9 @@ typedef struct {
     float pitch;
 } SensorDaten;
 
+// Aktueller Bench-Stand: zwei IMUs.
+// Naechste Paketrevision: dritter IMU sowie klare Erweiterungspunkte
+// fuer flags, Sensor-Gueltigkeit und spaeteren Security-Uplift.
 typedef struct __attribute__((packed)) {
     uint32_t    zaehler;
     SensorDaten sensoren[2];

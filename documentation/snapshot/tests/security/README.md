@@ -8,6 +8,7 @@ Dieser Ordner ist fuer sicherheitsbezogene Test- und Nachweisfaelle reserviert, 
 
 Die Struktur und die Security-Baseline sind dokumentiert.
 Konkrete formale Testfaelle muessen noch aus dem aktuellen Bench-Pfad und dem geplanten Security-Uplift abgeleitet werden.
+Die aktuelle Sequenz ist dabei verbindlich: erst dritter IMU und erste `Receiver -> Arduino`-Grundkette, danach der eigentliche Security-Uplift mit Session- und Authentisierungsschicht.
 
 ## Inhalt
 

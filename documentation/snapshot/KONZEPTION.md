@@ -4,6 +4,7 @@
 **Status:** Konzeptphase
 
 > Hinweis: Dieses Dokument bleibt der historische Konzeptursprung des Projekts. Der aktuelle Bench-Stand, die verbindlichen Regeln und die operative Phasenlage werden in `README.md`, `ROADMAP.md`, `PROJEKT_ABLAUFPLAN.md` und `PROJEKT_FORTSCHRITT.md` fortgefuehrt.
+> Die konkrete Produktbasis des vorhandenen Kits, die offizielle Package List und die Stromversorgungsfrage werden zusaetzlich in `hardware/ADEEPT_ARM_PRODUCT_BASELINE.md` gepflegt.
 
 ---
 

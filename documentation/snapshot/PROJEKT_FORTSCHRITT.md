@@ -9,6 +9,7 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - Aktive Hauptphasen: Phase 6 - Sensorvalidierung und Phase 8 - Kommunikation, Servoausfuehrung und Safety-Vorbereitung
 - Parallel gepflegt: Phase 1 - Dokumentationsfundament, Phase 2 - Security-Grundlage, Phase 3 - Vorbereitung und Toolchain, Phase 4 - Hardware-Readiness
 - Entwicklungsrealitaet: Arduino IDE 3.3.7 als Hauptumgebung und PlatformIO als Fallback stehen; Controller -> Receiver laeuft per `ESP-NOW` mit `ImuPaket v1` als Bench-Zwischenstand, waehrend UART, Arduino-Servoebene, Security-Uplift und realer Arm-Aufbau noch offen sind
+- Kommunikationsreihenfolge: aktueller Funk-Bench laeuft mit zwei IMUs; dritter IMU und erste UART-Grundkette kommen vor dem eigentlichen Security-Uplift
 
 ## Aktuelle Phasenampel
 
@@ -40,6 +41,7 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - [x] `.gitignore` und `security/local/` fuer lokale, nicht-repotaugliche Daten vorbereitet
 - [x] `CLAUDE.md` als kompakter KI-Brief eingefuehrt
 - [x] Quellenpflicht fuer forschungs- und entscheidungsgetriebene Dokumente in Regeln und Hardware-Doku verankert
+- [x] offizieller Adeept-V4.0-Download mit Tutorial-PDFs, Originalcode und Schaltplan unter `official_downloads/` uebernommen und projektrelevant ausgewertet
 - [x] Toolchain vollstaendig eingerichtet: Arduino IDE 3.3.7, ESP32 Core 3.3.7, boards.local.txt fuer N16R8 und PlatformIO als Gegencheck dokumentiert und einsatzbereit
 - [x] echte Boardrevision der vorhandenen ESP32-S3-DevKits und die RGB-LED-Pins am Hardwarebestand geprueft — v1.0, RGB auf GPIO48, GPIO35/36/37 intern belegt
 - [x] ESP-NOW Hello-World erfolgreich zwischen Controller und Receiver getestet
@@ -52,23 +54,31 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - [x] IMU-Daten per ESP-NOW Unicast uebertragen: `ImuPaket v1` mit XOR-Pruefsumme und Frische-Check, alle Bench-Pakete valide
 - [x] Flex-Sensor Rohmessung: gerade=1108, maximal gebogen=940, Bereich 168 Counts, GPIO1
 - [x] No-Hardcoding-Regel eingefuehrt: MACs in `peer_config.local.h` ausgelagert, gitignoriert
+- [x] Akku- und Ladegeraet-Auswahl als Projektarbeitsstand festgelegt: `4x Molicel INR-18650-M35A` ohne Loetfahne plus `1x XTAR VC4SL`
+- [x] Projektentscheidung zu den wichtigsten Stock-Funktionen festgezogen: OLED uebernehmen, Potentiometer-Steuerung als Fallback behalten, Learning/Action Memory uebernehmen, Processing vorerst als Referenz- und Fallbackpfad behalten
+- [x] minimaler UART-Frame v1 fuer `Receiver -> Arduino` dokumentiert: feste Startbytes, Version, Sequenz, Flags, 5 Achs-Sollwerte, CRC8
 
 ## Noch offen im aktuellen Schwerpunkt
 
 - [ ] Root-Dokumente, lokale Bereichsdokumente und neue Security-/Preparation-Bereiche dauerhaft synchron halten
+- [ ] dritten IMU ueber den Mux-Pfad als dritte Segmentquelle bench-validieren
 - [ ] bevorzugten Pinplan fuer Sender-LEDs, Receiver-LEDs, Buzzer und UART gegen echte Bench-Tests absichern
 - [ ] konkrete `ESP-NOW`-/`ESP-IDF`-Zielbasis fuer Realbetrieb freigeben und in `preparation/esp32_environment/README.md` plus lokalem Stack-Log dokumentieren
-- [ ] Bench-Protokoll von XOR-/Frische-Check auf die dokumentierte Security-Baseline mit `session_id` und Authentisierungstag anheben
-- [ ] UART-Frame zwischen Receiver und Arduino festziehen und bench-validieren
+- [ ] einfache UART-Grundkette `Receiver -> Arduino` bench-validieren
+- [ ] Bench-Protokoll erst nach drittem IMU und erster UART-Grundkette von XOR-/Frische-Check auf die dokumentierte Security-Baseline mit `session_id` und Authentisierungstag anheben
+- [ ] Stock-Baseline des originalen Adeept-Arms vor Umbauten dokumentieren
+- [ ] ausgewaehlte Akkus und das Ladegeraet beschaffen und gegen reales Batteriefach sowie Ladealltag pruefen
+- [ ] Arbeitsstand `5 aktive Servos + 1 Reserve/Testservo` gegen den realen Kit-Inhalt und den aufgebauten Arm bestaetigen
 - [ ] reale Hardware-, Inventar- und Aufbauinformationen in die vorbereiteten Vorlagen ueberfuehren
 - [ ] Security-, Safety- und Kommunikationsfaelle in konkrete Test- und Messdokumente herunterbrechen
 
 ## Naechste sinnvolle Arbeitspakete
 
-1. LED-Debugging einbauen: Sender GPIO4/5/6 (IMU-Status), GPIO7 (COMMS), GPIO10 (FAULT) und Receiver GPIO4/5/6
-2. Buzzer-Pfad GPIO21 mit sicherem Default-Off pruefen
-3. Bench-Funkpfad auf Session-/Authentisierungsschicht anheben
+1. dritten IMU ueber den Mux-Pfad als dritte Segmentquelle anschliessen und bench-validieren
+2. LED-Debugging einbauen: Sender GPIO4/5/6 (IMU-Status), GPIO7 (COMMS), GPIO10 (FAULT) und Receiver GPIO4/5/6
+3. Buzzer-Pfad GPIO21 mit sicherem Default-Off pruefen
 4. Roboterarm aufbauen und UART-Pfad Receiver → Arduino in Betrieb nehmen
+5. Security-Uplift erst danach auf die Grundkette aufsetzen
 
 ## Leitende Dokumente fuer den aktuellen Stand
 

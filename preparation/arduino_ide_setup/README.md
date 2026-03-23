@@ -17,6 +17,7 @@ Arduino IDE ist der bevorzugte Arbeitsweg fuer folgende Szenarien:
 - ESP32 Board Manager / Arduino-ESP32-Core 3.3.7 ist als Hauptumgebungsstand dokumentiert
 - Boardeinstellungen fuer `ESP32S3 Dev Module` und N16R8 sind festgehalten
 - Relevante Bench-Ergebnisse koennen ueber Arduino IDE und alternativ ueber PlatformIO gegengeprueft werden
+- der offizielle Adeept-Stock-Pfad des Arm-Boards bleibt ueber `Arduino Uno` und CH341-Treiber dokumentiert, auch wenn das Projekt alltagsseitig mit aktueller Arduino IDE arbeitet
 
 ## Board Manager URL fuer Espressif ESP32
 
@@ -32,6 +33,7 @@ Fuer den `ESP32-S3-WROOM-1-N16R8` das Board `ESP32S3 Dev Module` waehlen.
 - Board Manager URL und Grundkonfiguration fuer ESP32-S3
 - Bibliotheksreferenz fuer den Alltagsworkflow
 - Einfache Pruefpunkte fuer Einsatzbereitschaft
+- Herstellerkontext fuer das originale Adeept-Arm-Board
 
 ## Regeln
 
@@ -39,8 +41,13 @@ Fuer den `ESP32-S3-WROOM-1-N16R8` das Board `ESP32S3 Dev Module` waehlen.
 - reale Installationsstaende nur dokumentieren wenn durchgefuehrt
 - Board- und Bibliothekseinstellungen muessen mit `../esp32_environment/README.md` konsistent bleiben
 - PlatformIO nur als zusaetzlichen Fallback- und Gegencheckpfad behandeln
+- offizieller Herstellerkontext darf dokumentiert werden, ohne die Projekt-Hauptumgebung umzudefinieren
 
 ## Schnittstellen/Abhaengigkeiten
 
 - bezieht sich auf `../../firmware/` und `../../docs/templates/`
 - ergaenzt `../esp32_environment/README.md`
+
+## Recherchequellen
+
+- [Adeept V4 Package Review](../../official_downloads/ADEEPT_V4_PACKAGE_REVIEW.md) fuer den offiziellen Herstellerpfad `Arduino Uno` und CH341-Treiber beim Stock-Board.

@@ -14,7 +14,9 @@ Beim Sitzungsstart oder nach Kontextkomprimierung ist dieses Dokument zu lesen.
 - PCA9548A-Mux validiert: Kanal 0 und 1 einzeln umschaltbar, zwei BNO055 gleichzeitig ausgelesen
 - Flex-Sensor validiert: GPIO1 ADC1, Spannungsteiler 10kOhm Pull-Down, gerade=1108, maximal gebogen=940, Bereich 168 Counts
 - MACs dokumentiert in `security/local/device_identities.local.txt` (gitignoriert)
-- Naechste Schritte: LED-Debugging (GPIO4/5/6/7/10), Buzzer GPIO21, Funkpfad auf Security-Baseline anheben, Roboterarm aufbauen, UART zu Arduino
+- Akku-/Lade-Arbeitsstand festgelegt: `4x Molicel INR-18650-M35A` ohne Loetfahne + `1x XTAR VC4SL`
+- Stock-Funktionsentscheidung: OLED uebernehmen, Potentiometer als Fallback, Learning/Action Memory uebernehmen, Processing vorerst als Referenz-/Fallbackpfad behalten
+- Naechste Schritte: dritten IMU anbinden, LED-Debugging (GPIO4/5/6/7/10), Buzzer GPIO21, Roboterarm aufbauen, UART zu Arduino, Security-Uplift erst danach
 
 ---
 
