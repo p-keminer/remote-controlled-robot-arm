@@ -19,6 +19,7 @@ Der Bereich dient aktuell als Hersteller-Snapshot fuer Tutorials, Schaltplan, Or
 ## Regeln
 
 - Vendor-Dateien werden hier nicht in Projektlogik umgebaut, sondern nur analysiert und als Herstellerstand eingeordnet
+- Hersteller- und Drittinhalte in diesem Ordner bleiben ihren eigenen Urheber- und Lizenzhinweisen unterworfen und fallen nicht automatisch unter die Projektlizenz
 - produktbezogene Entscheidungen sollen nach Moeglichkeit auf den offiziellen Snapshot und nicht nur auf Shop-Texte gestuetzt werden
 - Abweichungen zwischen Herstellerstand und Projektstand muessen in den zugehoerigen Fachdokumenten sichtbar gemacht werden
 - neue Erkenntnisse aus diesem Ordner muessen in den betroffenen Hardware-, Firmware-, Safety- oder Vorbereitungsdokumenten nachgezogen werden

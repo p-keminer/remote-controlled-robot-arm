@@ -11,8 +11,8 @@ bash ./scripts/update_docs.sh
 
 ## Letzte Aktualisierung
 
-2026-03-23 03:23:45 CET
+2026-03-23 04:02:47 CET
 
 ## Anzahl gesammelter Dokumente
 
-92
+93

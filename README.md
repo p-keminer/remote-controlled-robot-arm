@@ -3,6 +3,12 @@
 Dieses Repository ist das dokumentationsgetriebene Grundgeruest fuer einen IMU-gesteuerten 5-DOF-Roboterarm auf Basis eines Adeept-Arms.
 Das Projekt wird unter WSL entwickelt und trennt bewusst zwischen Vorbereitung, Security, Hardware, Kalibrierung, Firmware und Tests.
 
+## Lizenz
+
+Dieses Projekt ist **proprietaer** und steht unter **All rights reserved**.
+Die verbindliche Lizenz- und Nutzungslage steht in `LICENSE.md`.
+Hersteller- und Drittmaterialien, insbesondere unter `official_downloads/`, bleiben zusaetzlich ihren eigenen Rechten und Hinweisen unterworfen.
+
 ## Projektziel
 
 Gebaut werden soll ein Roboterarm, der Bewegungen des menschlichen Arms ueber mehrere BNO055-IMUs und einen Flex-Sensor in Servo-Zielwinkel uebersetzt.
@@ -44,6 +50,7 @@ Vor groesseren Aenderungen sind besonders relevant:
 - `hardware/ADEEPT_ARM_PRODUCT_BASELINE.md` fuer die konkrete Produktbasis des vorhandenen Adeept-Kits
 - `hardware/electronics/POWER_SUPPLY_CONCEPT.md` fuer die Stromversorgungsstrategie von Stock-Test, Bench und spaeterem Projektbetrieb
 - `official_downloads/README.md` fuer den importierten offiziellen Herstellerstand
+- `LICENSE.md` fuer die proprietaere Nutzungs- und Weitergaberegelung
 
 ## Wichtige Befehle
 

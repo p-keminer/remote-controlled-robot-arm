@@ -23,6 +23,14 @@ Dieses Dokument ist fuer Menschen und KI gleichermassen verbindlich.
 - Das Projekt soll spaeter auf andere Hardware uebertragbar bleiben, daher muessen austauschbare Sensor-, Controller- und Transportpfade frueh mitgedacht werden.
 - Neue Erweiterungen sollen vorzugsweise ueber klar benannte Module, Adapter oder Konfigurationspunkte anschliessen.
 
+## Lizenz und Weitergabe
+
+- Das Projekt ist proprietaer; verbindlich gilt `LICENSE.md`.
+- Ohne ausdrueckliche schriftliche Freigabe duerfen projektspezifische Inhalte nicht weitergegeben, gespiegelt, abgeleitet oder in andere Systeme uebernommen werden.
+- Die angestrebte Portabilitaet des Projekts ist ein internes Architekturziel und keine automatische Freigabe zur Uebernahme in andere Robotiksysteme.
+- Hersteller- und Drittmaterialien, insbesondere unter `official_downloads/`, behalten ihre eigenen Rechte und Hinweise und werden durch die Projektlizenz nicht umgelabelt.
+- Bei Dokumenten oder Dateien mit abweichenden Rechten muss diese Abweichung lokal klar sichtbar gemacht werden.
+
 ## Sprache im Code
 
 - Variablennamen, Strukturnamen, Schichtbezeichnungen und Architekturelemente werden auf **Deutsch** verfasst.
