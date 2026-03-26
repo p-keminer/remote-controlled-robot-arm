@@ -21,21 +21,24 @@ Sobald der Sender getragen wird, soll die Haupt-Elektronik auf eine kleine Traeg
 Der erste Sender-Benchaufbau soll enthalten:
 
 - `ESP32-S3 DevKitC-1 N16R8`
-- `PCA9548A` oder den aktuell geplanten Mehr-IMU-Pfad
-- mindestens einen einzelnen IMU-Testpfad vor dem Mehr-IMU-Test
-- Flex-Sensor mit Spannungsteiler an ADC
-- drei externe Status-LEDs fuer Oberarm, Unterarm und Hand/Wrist
-- optionale vierte LED fuer COMMS oder Fehler
-- serielle Log-Ausgabe ueber den Standard-Debugpfad
+- `PCA9548A` I2C-Mux (0x70) mit drei BNO055 auf Kanaelen 0/1/2
+- Flex-Sensor mit Spannungsteiler 10kOhm an ADC (GPIO1)
+- LED Gruen (GPIO4, 100 Ohm) — Hand/Wrist S2
+- LED Gelb (GPIO5, 100 Ohm) — Unterarm S1
+- LED Rot (GPIO6, 100 Ohm) — Oberarm S0
+- LED Blau (GPIO7, 100 Ohm) — COMMS
+- LED Weiss (GPIO10, 100 Ohm) — FAULT
+- serielle Log-Ausgabe ueber USB-C
 
 ## Receiver-Benchaufbau
 
 Der erste Receiver-Benchaufbau soll enthalten:
 
 - `ESP32-S3 DevKitC-1 N16R8`
-- UART-Testpfad zum Arduino
-- mindestens drei sichtbare Status-LEDs fuer Funk, UART und Fehler
-- Hauptbuzzer fuer Warn- und Safety-Zustaende
+- UART-Testpfad zum Arduino (GPIO15 TX, GPIO16 RX — geplant)
+- LED Gruen (GPIO4, 100 Ohm) — LINK
+- LED Blau (GPIO5, 100 Ohm) — UART (reserviert)
+- LED Gelb (GPIO6, 100 Ohm) — FAULT
 - einfachen Zugriff auf USB, Reset und Flashing
 
 ## Was auf Breadboard erlaubt ist
@@ -63,19 +66,26 @@ Der erste Receiver-Benchaufbau soll enthalten:
 ## Einfache Bench-Skizze
 
 ```text
-Sender-Bench
+Sender-Bench (Stand 2026-03-26, bench-validiert)
 
-  IMU(s) ---- PCA9548A ---- ESP32-S3 ---- LED 1
-                                 |        LED 2
-  Flex-Sensor -------------------+        LED 3
-                                 |
-                              USB / Logs
+  BNO055 #0 (Oberarm) ──┐
+  BNO055 #1 (Unterarm) ─┼── PCA9548A ── ESP32-S3 ── LED Rot    (GPIO6, Oberarm)
+  BNO055 #2 (Hand) ─────┘       │                   LED Gelb   (GPIO5, Unterarm)
+                                 │                   LED Gruen  (GPIO4, Hand)
+  Flex-Sensor ── 10k ── GPIO1 ──┘                   LED Blau   (GPIO7, COMMS)
+                                                     LED Weiss  (GPIO10, FAULT)
+                                                          │
+                                                       USB-C / Logs
 
-Receiver-Bench
+Receiver-Bench (Stand 2026-03-26, bench-validiert)
 
-  ESP-NOW )) ESP32-S3 ---- UART ---- Arduino
-                 |            |
-               LEDs         Buzzer
+  ESP-NOW )) ESP32-S3 ──── UART (geplant) ──── Arduino
+                 │
+          LED Gruen  (GPIO4, LINK)
+          LED Blau   (GPIO5, UART reserviert)
+          LED Gelb   (GPIO6, FAULT)
+                 │
+              USB-C / Logs
 ```
 
 ## Uebergang aus dem Breadboard heraus

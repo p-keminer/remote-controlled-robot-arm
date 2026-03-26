@@ -8,8 +8,8 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - Projektmodus: bench-validierte Sensor-, Kommunikations- und Elektronikbasis mit laufender Dokumentationssynchronisierung
 - Aktive Hauptphasen: Phase 6 - Sensorvalidierung und Phase 8 - Kommunikation, Servoausfuehrung und Safety-Vorbereitung
 - Parallel gepflegt: Phase 1 - Dokumentationsfundament, Phase 2 - Security-Grundlage, Phase 3 - Vorbereitung und Toolchain, Phase 4 - Hardware-Readiness
-- Entwicklungsrealitaet: Arduino IDE 3.3.7 als Hauptumgebung und PlatformIO als Fallback stehen; Controller -> Receiver laeuft per `ESP-NOW` mit `ImuPaket v1` als Bench-Zwischenstand, waehrend UART, Arduino-Servoebene, Security-Uplift und realer Arm-Aufbau noch offen sind
-- Kommunikationsreihenfolge: aktueller Funk-Bench laeuft mit zwei IMUs; dritter IMU und erste UART-Grundkette kommen vor dem eigentlichen Security-Uplift
+- Entwicklungsrealitaet: Arduino IDE 3.3.7 als Hauptumgebung und PlatformIO als Fallback stehen; Controller -> Receiver laeuft per `ESP-NOW` mit `ImuPaket v3` (drei IMUs, Kalibrierungsstatus, NVS-Persistenz), waehrend UART, Arduino-Servoebene, Security-Uplift und realer Arm-Aufbau noch offen sind
+- Kommunikationsreihenfolge: dritter IMU ist bench-validiert; naechste Schritte sind LED-Debugging, Buzzer und dann UART-Grundkette vor dem Security-Uplift
 
 ## Aktuelle Phasenampel
 
@@ -57,11 +57,15 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - [x] Akku- und Ladegeraet-Auswahl als Projektarbeitsstand festgelegt: `4x Molicel INR-18650-M35A` ohne Loetfahne plus `1x XTAR VC4SL`
 - [x] Projektentscheidung zu den wichtigsten Stock-Funktionen festgezogen: OLED uebernehmen, Potentiometer-Steuerung als Fallback behalten, Learning/Action Memory uebernehmen, Processing vorerst als Referenz- und Fallbackpfad behalten
 - [x] minimaler UART-Frame v1 fuer `Receiver -> Arduino` dokumentiert: feste Startbytes, Version, Sequenz, Flags, 5 Achs-Sollwerte, CRC8
+- [x] dritten BNO055 ueber PCA9548A Mux-Kanal 2 angeschlossen und bench-validiert: alle drei Sensoren liefern live Euler-Daten ueber ESP-NOW, Pakete valide (bestaetigt 2026-03-26)
+- [x] ImuPaket auf Protokollversion 3 angehoben: KalibStatus (sys/gyro/accel/mag) pro Sensor im Paket, Mux-Delay auf 10ms erhoeht (bestaetigt 2026-03-26)
+- [x] BNO055-Kalibrierungspersistenz im NVS eingebaut: Offsets werden automatisch gespeichert wenn Gyro>=3, Accel>=2, Mag>=2 und beim Boot wiederhergestellt (bestaetigt 2026-03-26)
+- [x] Einzelkalibrierungsmodus eingefuehrt: CAL0/CAL1/CAL2 per Serial fuer fokussierte Sensor-Kalibrierung, RECAL zum Zuruecksetzen (bestaetigt 2026-03-26)
+- [x] Firmware-Versionsarchiv angelegt: espnow_imu_v1, espnow_receiver_v1, espnow_imu_v2, espnow_receiver_v2 als Bench-Snapshots unter firmware/ (bestaetigt 2026-03-26)
 
 ## Noch offen im aktuellen Schwerpunkt
 
 - [ ] Root-Dokumente, lokale Bereichsdokumente und neue Security-/Preparation-Bereiche dauerhaft synchron halten
-- [ ] dritten IMU ueber den Mux-Pfad als dritte Segmentquelle bench-validieren
 - [ ] bevorzugten Pinplan fuer Sender-LEDs, Receiver-LEDs, Buzzer und UART gegen echte Bench-Tests absichern
 - [ ] konkrete `ESP-NOW`-/`ESP-IDF`-Zielbasis fuer Realbetrieb freigeben und in `preparation/esp32_environment/README.md` plus lokalem Stack-Log dokumentieren
 - [ ] einfache UART-Grundkette `Receiver -> Arduino` bench-validieren
@@ -74,11 +78,10 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 
 ## Naechste sinnvolle Arbeitspakete
 
-1. dritten IMU ueber den Mux-Pfad als dritte Segmentquelle anschliessen und bench-validieren
-2. LED-Debugging einbauen: Sender GPIO4/5/6 (IMU-Status), GPIO7 (COMMS), GPIO10 (FAULT) und Receiver GPIO4/5/6
-3. Buzzer-Pfad GPIO21 mit sicherem Default-Off pruefen
-4. Roboterarm aufbauen und UART-Pfad Receiver → Arduino in Betrieb nehmen
-5. Security-Uplift erst danach auf die Grundkette aufsetzen
+1. LED-Debugging einbauen: Sender GPIO4/5/6 (IMU-Status), GPIO7 (COMMS), GPIO10 (FAULT) und Receiver GPIO4/5/6
+2. Buzzer-Pfad GPIO21 mit sicherem Default-Off pruefen
+3. Roboterarm aufbauen und UART-Pfad Receiver → Arduino in Betrieb nehmen
+4. Security-Uplift erst danach auf die Grundkette aufsetzen
 
 ## Leitende Dokumente fuer den aktuellen Stand
 

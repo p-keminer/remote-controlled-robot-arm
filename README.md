@@ -1,7 +1,7 @@
 # IMU Robotic Arm
 
 Dieses Repository ist das dokumentationsgetriebene Grundgeruest fuer einen IMU-gesteuerten 5-DOF-Roboterarm auf Basis eines Adeept-Arms.
-Das Projekt wird unter WSL entwickelt und trennt bewusst zwischen Vorbereitung, Security, Hardware, Kalibrierung, Firmware und Tests.
+Das Projekt wird unter Windows und WSL entwickelt und trennt bewusst zwischen Vorbereitung, Security, Hardware, Kalibrierung, Firmware und Tests.
 
 ## Lizenz
 
@@ -19,18 +19,18 @@ Die erste Version wird als lokal betriebenes Embedded-System vorbereitet: `ESP-N
 
 Die aktuelle Phase konzentriert sich auf:
 
-- dritten BNO055 ueber den Mux-Pfad als dritten Segmentsensor anbinden und bench-validieren
-- LED-Debugging am Controller (GPIO4/5/6 IMU-Status, GPIO7 COMMS, GPIO10 FAULT) und Receiver (GPIO4/5/6)
-- Buzzer-Pfad GPIO21 mit sicherem Default-Off pruefen
 - Roboterarm aufbauen und UART-Pfad Receiver → Arduino in Betrieb nehmen
-- Bench-Kommunikation erst nach drittem IMU und erster UART-Grundkette von `ImuPaket v1` auf die dokumentierte Security-Baseline mit Session- und Authentisierungsschicht anheben
+- Bench-Kommunikation nach erster UART-Grundkette von `ImuPaket v3` auf die dokumentierte Security-Baseline mit Session- und Authentisierungsschicht anheben
 
-Abgeschlossen (Stand 2026-03-22):
+Abgeschlossen (Stand 2026-03-26):
 
 - Toolchain vollstaendig eingerichtet: Arduino IDE 3.3.7 als Hauptumgebung, PlatformIO als lokaler Fallback- und Gegencheckpfad
-- BNO055 Einzelsensor, PCA9548A-Mux und zwei simultane Sensoren validiert
+- BNO055 Einzelsensor, PCA9548A-Mux und drei simultane Sensoren validiert (Mux-Kanaele 0/1/2)
 - Flex-Sensor ADC-Pfad ausgelesen und Rohwerte dokumentiert
-- IMU-Daten per ESP-NOW Unicast uebertragen: `ImuPaket v1` als Bench-Paket mit XOR-Pruefsumme und Frische-Check
+- IMU-Daten per ESP-NOW Unicast uebertragen: `ImuPaket v3` mit drei IMUs, Kalibrierungsstatus, XOR-Pruefsumme und Frische-Check
+- BNO055-Kalibrierungsoffsets persistent im NVS gespeichert mit Einzelkalibrierungsmodus (CAL0/CAL1/CAL2)
+- LED-Debugging bench-validiert: Controller Ampelsystem (Gruen/Gelb/Rot + Blau COMMS + Weiss FAULT), Receiver (Gruen LINK + Blau UART + Gelb FAULT)
+- Live-Sensorausfallerkennung fuer IMUs und Flex-Sensor mit automatischer Wiederherstellung
 
 ## Leitdokumente
 
@@ -76,7 +76,7 @@ Nicht-repotaugliche lokale Werte wie Schluessel, Peer-Listen, lokale Identitaets
 
 Dokumentations- und Prozessbasis ist angelegt.
 Toolchain steht: Arduino IDE 3.3.7 ist die Hauptumgebung, PlatformIO bleibt als lokaler Fallback und Gegencheck erhalten.
-Sensorpfad ist bench-validiert: BNO055 (Einzel und Dual ueber PCA9548A-Mux), Flex-Sensor und `ESP-NOW` Unicast mit `ImuPaket v1` als Bench-Zwischenstand.
+Sensorpfad ist bench-validiert: drei BNO055 ueber PCA9548A-Mux, Flex-Sensor und `ESP-NOW` Unicast mit `ImuPaket v3` (Kalibrierungsstatus und NVS-Persistenz).
 Der offizielle Adeept-V4.0-Download mit Tutorial-PDFs, Schaltplan und Originalcode liegt jetzt strukturiert unter `official_downloads/` und ist gegen Produktbasis, Servoannahmen und Stromversorgung ausgewertet.
 Als aktuelle Beschaffungsbasis fuer den Stock- und Projekt-Strompfad sind `4x Molicel INR-18650-M35A` ohne Loetfahne plus `1x XTAR VC4SL` dokumentiert.
 Die dokumentierte Security-Baseline mit `session_id`, applikationsseitigem Authentisierungstag und Advisory-gepruefter Stack-Basis ist vorbereitet, wird aber bewusst erst nach drittem IMU und erster UART-Grundkette aktiviert.

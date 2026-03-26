@@ -94,7 +94,7 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 - [x] einzelne BNO055 am Controller lesen — I2C-Scan, Adresse 0x29 (ADR=3V3), SDA GPIO8 / SCL GPIO9, Euler-Winkel stabil, Gyro-Kalibrierung 3/3 (bestaetigt 2026-03-22)
 - [x] PCA9548A-Kanalumschaltung fuer mehrere IMUs testen — Mux 0x70, Kanal 0 und 1 einzeln und sequenziell umschalten (bestaetigt 2026-03-22)
 - [x] gleichzeitiges Auslesen aller benoetigten IMUs validieren — zwei BNO055 ueber Kanal 0 und 1, beide stabil, Sys/Gyro/Accel 3/3 (bestaetigt 2026-03-22)
-- [ ] dritten BNO055 ueber Mux-Kanal 2 anbinden und als dritte Segmentquelle bench-validieren
+- [x] dritten BNO055 ueber Mux-Kanal 2 anbinden und als dritte Segmentquelle bench-validieren — alle drei Sensoren liefern live Euler-Daten ueber ESP-NOW, Kalibrierungspersistenz im NVS (bestaetigt 2026-03-26)
 - [ ] Rohdaten fuer definierte Referenzbewegungen systematisch dokumentieren
 
 ### Arbeitspaket 6.2 - Flex-Sensor-Basis
@@ -110,7 +110,7 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 - [ ] Nullpunkt-Prozedur fuer IMUs festlegen
 - [ ] Referenzpose fuer den Start sauber dokumentieren
 - [ ] Achsinvertierungen und Segmentzuordnung pro Sensor pruefen
-- [ ] Persistenzstrategie fuer Kalibrierdaten festlegen
+- [x] Persistenzstrategie fuer Kalibrierdaten festlegen — BNO055-Offsets werden im ESP32-NVS gespeichert und beim Boot geladen, Einzelkalibrierung per CAL0/CAL1/CAL2 (bestaetigt 2026-03-26)
 
 ### Arbeitspaket 7.2 - Gelenkwinkel
 
@@ -126,7 +126,8 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 - [x] Peer-Setup und Adressverwaltung definiert — Unicast ESP-NOW, MAC in gitignorierter `peer_config.local.h`, Template committed (bestaetigt 2026-03-22)
 - [x] Bench-Paketlayout mit Integritaets- und Frischeannahmen festgezogen — `ImuPaket v1`, XOR-Pruefsumme, Frame-Zaehler, `__attribute__((packed))`, 20Hz, aktuell mit zwei IMUs (bestaetigt 2026-03-22)
 - [x] minimalen UART-Frame v1 zwischen Receiver und Arduino dokumentieren — festes Binaerformat mit Startbytes, Version, Sequenz, Flags, 5 Achs-Sollwerten und CRC8
-- [ ] aktuelle Bench-Variante zuerst auf dritten IMU und erste Arduino-Grundkette erweitern
+- [x] Bench-Variante auf dritten IMU erweitert — ImuPaket v3 mit drei Sensoren und KalibStatus, Protokollversion 3 (bestaetigt 2026-03-26)
+- [ ] erste Arduino-Grundkette per UART aufbauen und validieren
 - [ ] Kommunikationsrahmen danach von der Bench-Variante auf die dokumentierte Security-Baseline mit `session_id`, applikationsseitigem Authentisierungstag und Advisory-gepruefter Stack-Basis anheben
 
 ### Arbeitspaket 8.2 - Servoebene

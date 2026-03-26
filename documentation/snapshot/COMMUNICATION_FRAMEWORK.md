@@ -27,7 +27,7 @@ Dieses Dokument ist die kanonische Quelle fuer alle Kommunikationsregeln zwische
 
 - Standardpfad ist lokales `ESP-NOW`.
 - Der Steuerpfad soll nicht als offener Broadcast-Standardpfad behandelt werden.
-- Der aktuelle Bench-Pfad beruecksichtigt bereits Protokollversion, Integritaet und Frischeannahmen, bildet aktuell aber erst zwei IMUs ab.
+- Der aktuelle Bench-Pfad beruecksichtigt bereits Protokollversion, Integritaet und Frischeannahmen und bildet drei IMUs mit Kalibrierungsstatus ab (ImuPaket v3).
 - Der Produktivpfad fuer Realbetrieb muss zusaetzlich einen Session-Bezug und einen applikationsseitigen Authentisierungstag tragen.
 - Unbekannte, veraltete oder ungueltige Frames duerfen nicht in Bewegung uebergehen.
 - MAC-seitiger Sendeerfolg reicht nicht; der Projektpfad braucht Anwendungs-ACK und definierte Duplicate-Logik.
@@ -41,7 +41,7 @@ Dieses Dokument ist die kanonische Quelle fuer alle Kommunikationsregeln zwische
 - Timeout und Neutralverhalten muessen auf beiden Seiten abgestimmt sein.
 - Das feste Minimalformat fuer den ersten Projektstand ist in `firmware/UART_FRAME_V1.md` beschrieben.
 
-## ImuPaket v1 - aktueller Bench-Stand fuer ESP-NOW (Stand 2026-03-22)
+## ImuPaket v1 - historischer Bench-Stand (2026-03-22, abgeloest)
 
 ```c
 typedef struct {
@@ -54,25 +54,57 @@ typedef struct __attribute__((packed)) {
     uint32_t    zaehler;
     SensorDaten sensoren[2];
     float       flex_prozent;
-    uint8_t     protokoll_version;
+    uint8_t     protokoll_version;  // 1
     uint8_t     pruefsumme;
 } ImuPaketV1Bench;
 ```
 
-- Paketgroesse: `sizeof(ImuPaketV1Bench)` — Receiver verwirft Pakete anderer Groesse
+- Abgeloest durch ImuPaket v3 (siehe unten)
+- Archiviert unter `firmware/espnow_imu_v1/` und `firmware/espnow_receiver_v1/`
+
+## ImuPaket v3 - aktueller Bench-Stand fuer ESP-NOW (Stand 2026-03-26)
+
+```c
+typedef struct {
+    float heading;
+    float roll;
+    float pitch;
+} SensorDaten;
+
+typedef struct {
+    uint8_t sys;
+    uint8_t gyro;
+    uint8_t accel;
+    uint8_t mag;
+} KalibStatus;
+
+typedef struct __attribute__((packed)) {
+    uint32_t    zaehler;
+    SensorDaten sensoren[3];        // Oberarm, Unterarm, Hand/Wrist
+    KalibStatus kalib[3];           // Kalibrierungsstatus pro Sensor (0-3 je Achse)
+    float       flex_prozent;       // -1.0 wenn Sensor unplausibel
+    uint8_t     protokoll_version;  // 3
+    uint8_t     pruefsumme;
+} ImuPaketV3Bench;
+```
+
+- Paketgroesse: `sizeof(ImuPaketV3Bench)` — Receiver verwirft Pakete anderer Groesse
 - Integritaet im Bench-Pfad: XOR-Pruefsumme ueber alle Bytes bis auf das Pruefsummenfeld
 - Frische: Pakete mit `zaehler <= letzter_zaehler` werden verworfen
 - Sendeintervall: 50ms (20Hz)
+- Drei IMUs ueber PCA9548A Mux-Kanaele 0/1/2, Mux-Delay 10ms
+- Kalibrierungsoffsets persistent im ESP32-NVS, automatisches Laden beim Boot
+- Einzelkalibrierung per Serial-Befehl (CAL0/CAL1/CAL2, RECAL, STOP)
+- Live-Sensorausfallerkennung fuer IMUs und Flex-Sensor mit automatischer Wiederherstellung
+- LED-Debugging: 5 LEDs am Controller (Ampelsystem + COMMS + FAULT), 3 am Receiver (LINK + UART + FAULT)
 - Dieser Stand ist als Bench-Zwischenstufe fuer Sensor- und Funkvalidierung zulaessig, aber nicht als fertige Security-Baseline fuer Realbetrieb
-- Der aktuelle Ist-Stand bildet zwei IMUs ab; der naechste funktionale Schritt ist die Erweiterung auf den dritten IMU ueber den Mux-Pfad
+- Archiviert unter `firmware/espnow_imu_v2/` (ohne Persistenz) und aktuell in `firmware/esp32_controller/`
 
 ## Naechste Paketrevision vor dem Security-Uplift
 
-- dritter IMU wird als dritte Segmentquelle in das Bewegungsmodell aufgenommen
-- `protokoll_version` bleibt Pflichtfeld fuer kontrollierte Weiterentwicklung
 - `flags` und eine Sensor-Gueltigkeits- oder Quellenmaske sollen ab der naechsten Paketrevision sichtbar mitgefuehrt werden
 - wenn das Paket erneut angefasst wird, soll ein klar reservierter Erweiterungsbereich fuer spaetere Security-Felder mitgeplant werden
-- der eigentliche Security-Uplift wird dennoch erst nach drittem IMU und erster `Receiver -> Arduino`-Grundkette aktiviert
+- der eigentliche Security-Uplift wird erst nach erster `Receiver -> Arduino`-Grundkette aktiviert
 
 ## ImuPaket v2 - Security-Zielbild vor Realbetrieb
 
@@ -107,7 +139,7 @@ typedef struct {
 Hinweis:
 
 - Einfache XOR- oder CRC-Felder koennen zusaetzlich fuer Debug oder Korruptionserkennung existieren, ersetzen aber nicht den applikationsseitigen Authentisierungstag.
-- Das aktuell implementierte `ImuPaket v1` bleibt bis zum Security-Uplift ein Bench-Artefakt und ist kein Produktivfreigabekriterium.
+- Das aktuell implementierte `ImuPaket v3` bleibt bis zum Security-Uplift ein Bench-Artefakt und ist kein Produktivfreigabekriterium.
 
 ## UART-Frame v1 - Minimaler Startstand fuer Receiver -> Arduino
 
