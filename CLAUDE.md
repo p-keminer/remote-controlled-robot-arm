@@ -16,7 +16,7 @@ Der Kern des Systems besteht aus mehreren grossen Saeulen:
 
 ## Was dieses Projekt noch nicht ist
 
-- noch kein zusammengebauter Endaufbau
+- Adeept-Arm ist mechanisch im Stock-Zustand aufgebaut, aber noch nicht eingeschaltet oder getestet
 - noch keine vollstaendige Firmwarekette bis zum Servo
 - kein WLAN-, Cloud- oder Web-Interface-Projekt
 

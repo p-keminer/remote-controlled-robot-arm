@@ -16,10 +16,12 @@ Die Architektur trennt Vorbereitung, Security, Hardware, Kalibrierung, Firmware 
 Aktuell befindet sich das Projekt in Phase 6/8 — Sensor- und Kommunikations-Bench ist validiert, Hardware-Aufbau, UART-Kette und Security-Haertung sind noch offen:
 
 - Toolchain steht: Arduino IDE 3.3.7 als Hauptumgebung, PlatformIO als Fallback und Gegencheck (bestaetigt 2026-03-22)
-- BNO055 Einzel + Dual via PCA9548A-Mux validiert (bestaetigt 2026-03-22)
-- Flex-Sensor ADC-Pfad ausgelesen und kalibriert (bestaetigt 2026-03-22)
-- ESP-NOW Unicast mit `ImuPaket v1` als Bench-Pfad laeuft (bestaetigt 2026-03-22)
-- Naechste Schritte: LED-Debugging, Buzzer, Security-Uplift fuer den Funkpfad, Roboterarm-Aufbau und UART zu Arduino
+- BNO055 drei Sensoren (Oberarm/Unterarm/Hand) via PCA9548A-Mux validiert, Kalibrierungsoffsets im NVS persistent (bestaetigt 2026-03-26)
+- Flex-Sensor ADC-Pfad ausgelesen und kalibriert mit Live-Plausibilitaetspruefung (bestaetigt 2026-03-26)
+- ESP-NOW Unicast mit `ImuPaket v3` (drei IMUs, KalibStatus, NVS-Persistenz) laeuft (bestaetigt 2026-03-26)
+- LED-Debugging bench-validiert: Controller Ampelsystem + COMMS + FAULT, Receiver LINK + UART + FAULT (bestaetigt 2026-03-26)
+- Adeept 5-DOF Roboterarm mechanisch im Stock-Zustand aufgebaut (bestaetigt 2026-03-24)
+- Naechste Schritte: Stock-Baseline-Test, UART-Pfad Receiver → Arduino, Security-Uplift
 
 ## Pflicht nach Kontextkomprimierung oder Sitzungsstart
 

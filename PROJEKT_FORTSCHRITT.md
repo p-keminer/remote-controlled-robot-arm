@@ -18,9 +18,9 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 | Phase 1 - Dokumentationsfundament | in Arbeit | Basis steht und wird nach jedem Bench-Schritt nachgezogen |
 | Phase 2 - Security-Grundlage | in Arbeit | Advisory-Lage, Provisioning und Security-Baseline sind dokumentiert; Stack-Freigabe und formale Testfaelle sind offen |
 | Phase 3 - Vorbereitung und Toolchain | weit fortgeschritten | Toolchain, Boardfakten und Bench-Readiness sind real bestaetigt; lokale Gegencheck- und Freigabeprozesse werden weiter geschaerft |
-| Phase 4 - Hardware-Readiness und Nachweisstruktur | in Arbeit | Wearable-, Elektronik- und Bringup-Doku stehen; Inventar, Aufbau und reale Verkabelung fehlen noch |
+| Phase 4 - Hardware-Readiness und Nachweisstruktur | in Arbeit | Arm ist mechanisch aufgebaut (Stock-Zustand); Inventardoku, Stock-Baseline-Test, Batteriefach und reale Verkabelung fehlen noch |
 | Phase 5 - Architektur und Portabilitaetsfundament | vorbereitet | fachlich beschrieben, aber noch nicht als echte Adapter- und Abstraktionsschicht umgesetzt |
-| Phase 6 - Sensorvalidierung | in Arbeit | BNO055, PCA9548A, Flex-Sensor und Funk-Bench sind validiert; Referenzbewegungen und formale Bench-Nachweise fehlen noch |
+| Phase 6 - Sensorvalidierung | weit fortgeschritten | drei BNO055, PCA9548A, Flex-Sensor und Funk-Bench sind validiert; LED-Debugging bench-validiert; Referenzbewegungen und formale Bench-Nachweise fehlen noch |
 | Phase 7 - Kalibrierung und Mapping | vorbereitet | startet nach Arm-Aufbau, Referenzpose und erster Servo-Grundfunktion |
 | Phase 8 - Kommunikation, Servoausfuehrung und Safety | in Arbeit | `ESP-NOW`-Benchpfad ist validiert; Security-Uplift, UART und Arduino-Safety-Logik sind offen |
 | Phase 9 - Integration und Hardware-Verstetigung | nicht gestartet | folgt nach erster lauffaehiger Gesamtkette bis zur Servoebene |
@@ -62,6 +62,7 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - [x] BNO055-Kalibrierungspersistenz im NVS eingebaut: Offsets werden automatisch gespeichert wenn Gyro>=3, Accel>=2, Mag>=2 und beim Boot wiederhergestellt (bestaetigt 2026-03-26)
 - [x] Einzelkalibrierungsmodus eingefuehrt: CAL0/CAL1/CAL2 per Serial fuer fokussierte Sensor-Kalibrierung, RECAL zum Zuruecksetzen (bestaetigt 2026-03-26)
 - [x] Firmware-Versionsarchiv angelegt: espnow_imu_v1, espnow_receiver_v1, espnow_imu_v2, espnow_receiver_v2 als Bench-Snapshots unter firmware/ (bestaetigt 2026-03-26)
+- [x] Adeept 5-DOF Roboterarm mechanisch im Stock-Zustand aufgebaut — Fotos unter docs/photos/ (bestaetigt 2026-03-24)
 
 ## Noch offen im aktuellen Schwerpunkt
 
@@ -70,7 +71,7 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - [ ] konkrete `ESP-NOW`-/`ESP-IDF`-Zielbasis fuer Realbetrieb freigeben und in `preparation/esp32_environment/README.md` plus lokalem Stack-Log dokumentieren
 - [ ] einfache UART-Grundkette `Receiver -> Arduino` bench-validieren
 - [ ] Bench-Protokoll erst nach drittem IMU und erster UART-Grundkette von XOR-/Frische-Check auf die dokumentierte Security-Baseline mit `session_id` und Authentisierungstag anheben
-- [ ] Stock-Baseline des originalen Adeept-Arms vor Umbauten dokumentieren
+- [ ] Stock-Baseline-Test des aufgebauten Adeept-Arms durchfuehren und dokumentieren (Arm ist aufgebaut, Test steht noch aus)
 - [ ] ausgewaehlte Akkus und das Ladegeraet beschaffen und gegen reales Batteriefach sowie Ladealltag pruefen
 - [ ] Arbeitsstand `5 aktive Servos + 1 Reserve/Testservo` gegen den realen Kit-Inhalt und den aufgebauten Arm bestaetigen
 - [ ] reale Hardware-, Inventar- und Aufbauinformationen in die vorbereiteten Vorlagen ueberfuehren
@@ -78,10 +79,9 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 
 ## Naechste sinnvolle Arbeitspakete
 
-1. LED-Debugging einbauen: Sender GPIO4/5/6 (IMU-Status), GPIO7 (COMMS), GPIO10 (FAULT) und Receiver GPIO4/5/6
-2. Buzzer-Pfad GPIO21 mit sicherem Default-Off pruefen
-3. Roboterarm aufbauen und UART-Pfad Receiver → Arduino in Betrieb nehmen
-4. Security-Uplift erst danach auf die Grundkette aufsetzen
+1. Stock-Baseline-Test des aufgebauten Adeept-Arms durchfuehren (Servo90, Unpacking_test_code)
+2. UART-Pfad Receiver → Arduino in Betrieb nehmen
+3. Security-Uplift erst danach auf die Grundkette aufsetzen
 
 ## Leitende Dokumente fuer den aktuellen Stand
 

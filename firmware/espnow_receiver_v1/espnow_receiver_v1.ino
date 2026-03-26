@@ -1,6 +1,8 @@
 #include <WiFi.h>
 #include <esp_now.h>
 
+// ARCHIV — historischer Bench-Stand v1 (abgeloest 2026-03-26)
+// Aktuelle Version: siehe firmware/esp32_receiver/
 // Receiver: IMU-Pakete empfangen und validieren
 // Prueft: Protokollversion, Pruefsumme, Frame-Frische
 

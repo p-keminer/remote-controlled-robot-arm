@@ -1,6 +1,8 @@
 #include <WiFi.h>
 #include <esp_now.h>
 
+// ARCHIV — historischer Bench-Stand v2 (abgeloest 2026-03-26)
+// Aktuelle Version: siehe firmware/esp32_receiver/
 // Receiver v2: 3 IMUs + Kalibrierungsanzeige
 // Prueft: Protokollversion, Pruefsumme, Frame-Frische
 

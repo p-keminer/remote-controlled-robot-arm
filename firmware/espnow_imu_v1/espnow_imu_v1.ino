@@ -4,6 +4,8 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
 
+// ARCHIV — historischer Bench-Stand v1 (abgeloest 2026-03-26)
+// Aktuelle Version: siehe firmware/esp32_controller/
 // Controller: IMU-Daten lesen und per ESP-NOW senden
 // I2C: SDA GPIO8 / SCL GPIO9 | Mux: 0x70 | Sensoren: 0x29
 // Peer-Adresse kommt aus peer_config.local.h (gitignored)

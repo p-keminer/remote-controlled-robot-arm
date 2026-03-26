@@ -72,6 +72,7 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 
 - [ ] Hardware-Inventar gegen realen Materialstand dokumentieren
 - [ ] offiziellen Stock-Baseline-Test des originalen Adeept-Arms vor Umbauten dokumentieren
+- [x] Adeept 5-DOF Roboterarm mechanisch im Stock-Zustand aufgebaut — Fotos unter docs/photos/ (bestaetigt 2026-03-24)
 - [ ] Aufbauablauf und Bringup-Reihenfolge mit echten Nachweisen fuellen
 - [ ] Sensormontage und erste Stromtests sauber protokollieren
 - [ ] Arbeitsstand `5 aktive Servos + 1 Reserve/Testservo` am realen Kit bestaetigen und gegen echten Aufbau dokumentieren
@@ -124,7 +125,7 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 ### Arbeitspaket 8.1 - Kommunikationskette
 
 - [x] Peer-Setup und Adressverwaltung definiert — Unicast ESP-NOW, MAC in gitignorierter `peer_config.local.h`, Template committed (bestaetigt 2026-03-22)
-- [x] Bench-Paketlayout mit Integritaets- und Frischeannahmen festgezogen — `ImuPaket v1`, XOR-Pruefsumme, Frame-Zaehler, `__attribute__((packed))`, 20Hz, aktuell mit zwei IMUs (bestaetigt 2026-03-22)
+- [x] Bench-Paketlayout v1 mit zwei IMUs abgeschlossen — historisch, abgeloest durch ImuPaket v3 (2026-03-26)
 - [x] minimalen UART-Frame v1 zwischen Receiver und Arduino dokumentieren — festes Binaerformat mit Startbytes, Version, Sequenz, Flags, 5 Achs-Sollwerten und CRC8
 - [x] Bench-Variante auf dritten IMU erweitert — ImuPaket v3 mit drei Sensoren und KalibStatus, Protokollversion 3 (bestaetigt 2026-03-26)
 - [ ] erste Arduino-Grundkette per UART aufbauen und validieren

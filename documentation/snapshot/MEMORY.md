@@ -6,13 +6,16 @@ Beim Sitzungsstart oder nach Kontextkomprimierung ist dieses Dokument zu lesen.
 
 ---
 
-## Projektstand (Stand 2026-03-22)
+## Projektstand (Stand 2026-03-26)
 
 - Toolchain vollstaendig eingerichtet: Arduino IDE 3.3.7 + boards.local.txt als Hauptumgebung, PlatformIO als lokaler Fallback und Gegencheck
-- ESP-NOW Unicast laeuft: Controller → Receiver per MAC, ImuPaket v1 mit XOR-Pruefsumme und Frame-Zaehler
-- BNO055 validiert: I2C-Scan (0x29, ADR=3V3), Rohwerte stabil, Gyro-Kalibrierung 3/3
-- PCA9548A-Mux validiert: Kanal 0 und 1 einzeln umschaltbar, zwei BNO055 gleichzeitig ausgelesen
-- Flex-Sensor validiert: GPIO1 ADC1, Spannungsteiler 10kOhm Pull-Down, gerade=1108, maximal gebogen=940, Bereich 168 Counts
+- ESP-NOW Unicast laeuft: Controller → Receiver per MAC, ImuPaket v3 mit drei IMUs, Kalibrierungsstatus und NVS-Persistenz (bestaetigt 2026-03-26)
+- BNO055 validiert: drei Sensoren (Oberarm/Unterarm/Hand) ueber PCA9548A-Mux Kanaele 0/1/2, Kalibrierungsoffsets persistent im NVS
+- Einzelkalibrierungsmodus per Serial: CAL0/CAL1/CAL2, RECAL, STOP
+- Flex-Sensor validiert: GPIO1 ADC1, Spannungsteiler 10kOhm Pull-Down, gerade=1108, maximal gebogen=940, Live-Plausibilitaetspruefung (200-3800)
+- LED-Debugging bench-validiert: Controller Ampelsystem (Gruen Hand, Gelb Unterarm, Rot Oberarm, Blau COMMS, Weiss FAULT), Receiver (Gruen LINK, Blau UART, Gelb FAULT), alle 100 Ohm
+- Live-Sensorausfallerkennung fuer IMUs und Flex-Sensor mit automatischer Wiederherstellung
+- Adeept 5-DOF Roboterarm mechanisch im Stock-Zustand aufgebaut (bestaetigt 2026-03-24, Fotos unter docs/photos/)
 - MACs dokumentiert in `security/local/device_identities.local.txt` (gitignoriert)
 - Akku-/Lade-Arbeitsstand festgelegt: `4x Molicel INR-18650-M35A` ohne Loetfahne + `1x XTAR VC4SL`
 - Stock-Funktionsentscheidung: OLED uebernehmen, Potentiometer als Fallback, Learning/Action Memory uebernehmen, Processing vorerst als Referenz-/Fallbackpfad behalten

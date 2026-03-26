@@ -6,9 +6,8 @@ Dieser Ordner dokumentiert den Aufbau des Roboterarms als nachvollziehbaren Abla
 
 ## Aktueller Stand
 
-Der reale Zusammenbau wird in dieser Ausbaustufe nicht durchgefuehrt.
-Die Dokumentation bereitet aber bereits den Ablauf, die Reihenfolge und die Nachweisstruktur dafuer vor.
-Vor spaeteren Umbauten wird ein dokumentierter Stock-Baseline-Test des originalen Adeept-Arms als Pflichtschritt behandelt.
+Der Adeept 5-DOF Roboterarm ist mechanisch im Stock-Zustand aufgebaut (bestaetigt 2026-03-24, Fotos unter docs/photos/).
+Ein Stock-Baseline-Test (Servo90, Unpacking_test_code) steht noch aus und wird vor jeglichen Umbauten als Pflichtschritt behandelt.
 Der offizielle Herstellerstand legt dabei nahe, vor dem eigentlichen Aufbau zuerst den `Servo90`-Pfad und danach den `Unpacking_test_code` als Stock-Referenz mitzudenken.
 
 ## Inhalt

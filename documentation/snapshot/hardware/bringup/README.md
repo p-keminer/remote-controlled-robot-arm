@@ -7,7 +7,7 @@ Dieser Ordner beschreibt Vorpruefungen, sichere Erstinbetriebnahme und die Reihe
 ## Aktueller Stand
 
 Die Bringup-Dokumentation ist vorbereitet.
-Die reale Inbetriebnahme folgt spaeter entlang der hier beschriebenen Struktur.
+Der Arm ist mechanisch im Stock-Zustand aufgebaut (bestaetigt 2026-03-24). Die reale Erstinbetriebnahme (Stock-Baseline-Test) folgt als naechster Schritt.
 Vor Bewegungs- oder Umbautests muss zuerst ein dokumentierter Stock-Baseline-Test des originalen Adeept-Arms erfolgen.
 Der offizielle Herstellerdownload fordert dabei qualifizierte `18650`-Zellen und warnt davor, den Arm im Betrieb mit der Hand zu zwingen.
 Als aktuelle Beschaffungsbasis sind `4x Molicel INR-18650-M35A` ohne Loetfahne plus `1x XTAR VC4SL` dokumentiert; reale Batteriefach-Passung und Bewegungsfreigabe bleiben aber noch offen.

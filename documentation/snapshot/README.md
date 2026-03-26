@@ -19,7 +19,8 @@ Die erste Version wird als lokal betriebenes Embedded-System vorbereitet: `ESP-N
 
 Die aktuelle Phase konzentriert sich auf:
 
-- Roboterarm aufbauen und UART-Pfad Receiver → Arduino in Betrieb nehmen
+- Stock-Baseline-Test des aufgebauten Adeept-Arms durchfuehren und dokumentieren
+- UART-Pfad Receiver → Arduino in Betrieb nehmen
 - Bench-Kommunikation nach erster UART-Grundkette von `ImuPaket v3` auf die dokumentierte Security-Baseline mit Session- und Authentisierungsschicht anheben
 
 Abgeschlossen (Stand 2026-03-26):
@@ -31,6 +32,7 @@ Abgeschlossen (Stand 2026-03-26):
 - BNO055-Kalibrierungsoffsets persistent im NVS gespeichert mit Einzelkalibrierungsmodus (CAL0/CAL1/CAL2)
 - LED-Debugging bench-validiert: Controller Ampelsystem (Gruen/Gelb/Rot + Blau COMMS + Weiss FAULT), Receiver (Gruen LINK + Blau UART + Gelb FAULT)
 - Live-Sensorausfallerkennung fuer IMUs und Flex-Sensor mit automatischer Wiederherstellung
+- Adeept 5-DOF Roboterarm mechanisch im Stock-Zustand aufgebaut (noch nicht eingeschaltet/getestet)
 
 ## Leitdokumente
 
