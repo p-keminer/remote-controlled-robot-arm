@@ -32,6 +32,11 @@ out/
 /firmware/**/device_identity.local.*
 /firmware/**/peer_config.local.*
 /firmware/**/packet_auth.local.*
+/firmware/**/wifi_config.local.*
+
+# Lokale Dashboard- und MCP-Konfigurationen
+/dashboard/mcp/*.local.*
+/dashboard/mcp/.env
 
 # Lokale Skript-Konfigurationen (enthalten nutzerspezifische Pfade)
 scripts/sync_config.local.sh

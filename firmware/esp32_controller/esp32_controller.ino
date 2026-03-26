@@ -92,6 +92,9 @@ static bool sensor_bereit[ANZAHL_SENSOREN] = {false, false, false};
 static bool letzter_tx_ok = false;
 static bool fehler_aktiv = false;
 static bool flex_bereit = true;
+#if BRIDGE_AKTIV
+static bool bridge_registriert = false;
+#endif
 
 // Einzelkalibrierungsmodus: -1 = aus, 0/1/2 = aktiver Sensor
 static int8_t kalib_einzeln = -1;
@@ -206,6 +209,13 @@ void leds_aktualisieren(const KalibStatus kalib[]) {
 }
 
 void beiBesendung(const wifi_tx_info_t* tx_info, esp_now_send_status_t status) {
+    // Bridge-Fehler ignorieren: COMMS-LED nur bei Receiver-Fehler ausschalten
+#if BRIDGE_AKTIV
+    if (memcmp(tx_info->dst_addr, bridge_adresse, 6) == 0) {
+        // Bridge-Send — Fehler sind unkritisch, nicht auf COMMS-LED auswirken
+        return;
+    }
+#endif
     letzter_tx_ok = (status == ESP_NOW_SEND_SUCCESS);
     if (!letzter_tx_ok && kalib_einzeln < 0) {
         Serial.printf("[TX] FEHLER bei #%lu\n", sende_zaehler - 1);
@@ -261,6 +271,20 @@ void setup() {
         Serial.println("FEHLER: Peer konnte nicht hinzugefuegt werden");
         return;
     }
+
+#if BRIDGE_AKTIV
+    esp_now_peer_info_t bridge_peer = {};
+    memcpy(bridge_peer.peer_addr, bridge_adresse, 6);
+    bridge_peer.channel = 0;
+    bridge_peer.encrypt = false;
+
+    if (esp_now_add_peer(&bridge_peer) != ESP_OK) {
+        Serial.println("[BRIDGE] WARNUNG: Bridge-Peer konnte nicht registriert werden");
+    } else {
+        bridge_registriert = true;
+        Serial.println("[BRIDGE] Debug-Bridge als zweiter Peer registriert");
+    }
+#endif
 
     analogReadResolution(12);
     Serial.println("Bereit. Befehle: CAL0/CAL1/CAL2, STOP, RECAL");
@@ -414,6 +438,12 @@ void loop_normal() {
     paket.flex_prozent = flex_lesen();
     paket.pruefsumme = pruefsumme_berechnen(&paket);
     esp_now_send(empfaenger_adresse, (uint8_t*)&paket, sizeof(paket));
+
+#if BRIDGE_AKTIV
+    if (bridge_registriert) {
+        esp_now_send(bridge_adresse, (uint8_t*)&paket, sizeof(paket));
+    }
+#endif
 
     delay(SENDE_INTERVALL);
 }
