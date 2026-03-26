@@ -6,14 +6,16 @@ Dieser Ordner enthaelt Bildnachweise fuer Aufbau, Montage, Sensorlage und Verkab
 
 ## Aktueller Stand
 
-Die Struktur ist vorbereitet, Bildmaterial wird spaeter hier abgelegt.
+Erste Fotos vom Roboterarm-Aufbau und Bench-Setup sind dokumentiert.
 
 ## Inhalt
 
-- Fotos des Wearable-Aufbaus
-- Fotos der IMU-Ausrichtung
-- Fotos der Verkabelung und Armseite
-- Bildnachweise fuer Referenzposen
+- `2026-03-24_roboterarm_seitenansicht.heic` — Adeept-Arm Seitenansicht (Stock-Zustand)
+- `2026-03-24_roboterarm_rueckansicht.heic` — Adeept-Arm Rueckansicht (Stock-Zustand)
+- `2026-03-24_roboterarm_basis_detail.heic` — Adeept-Arm Basis-Detail (Stock-Zustand)
+- `2026-03-26_bench_breadboards_uebersicht.heic` — Bench-Setup mit Controller und Receiver Breadboards
+- `2026-03-26_bench_breadboards_detail.heic` — Bench-Breadboard Detail (IMU-Verkabelung)
+- Spaeter: Fotos des Wearable-Aufbaus, IMU-Ausrichtung, Referenzposen
 
 ## Regeln
 

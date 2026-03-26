@@ -28,11 +28,25 @@ Die erste Projektversion wird als lokal betriebenes Embedded-System behandelt:
 
 ## V1-Entscheidungen
 
-- keine WLAN-Infrastruktur und keine Webschnittstellen dokumentieren
+- keine WLAN-Infrastruktur im Steuerpfad (Controller → Receiver → Arduino)
+- WiFi wird ausschliesslich zwischen Bridge-ESP32 und Pi fuer das Entwicklungs-Dashboard genutzt
 - keine produktiven Secrets im Repository ablegen
 - keine offene Broadcast-Steuerung als Standardpfad zulassen
 - keine unkontrollierte Debug- oder Provisioning-Schnittstelle fuer den Zielbetrieb vorsehen
 - feste, dokumentierte Peer-Beziehungen statt dynamischer automatischer Kopplung anstreben
+- Pre-Commit und Pre-Push Git-Hooks scannen automatisch auf Secrets (IPs, MACs, Passwoerter, Pfade)
+
+## Bridge-Sicherheit (Entwicklungsebene)
+
+- die Bridge empfaengt ESP-NOW Pakete als zweiter Peer und leitet sie per MQTT weiter
+- die Bridge kann keine Steuerbefehle senden — sie ist rein beobachtend
+- MQTT-Zugang ist passwortgeschuetzt (`allow_anonymous false` in Mosquitto)
+- Bridge und MCP-Server nutzen getrennte MQTT-User mit eigenen Passwoertern
+- WiFi-Credentials liegen in gitignorierten `*.local.*`-Dateien
+- OTA-Firmware-Upload auf der Bridge ist passwortgeschuetzt und erfordert explizite User-Bestaetigung
+- OTA-Passwort ist von WiFi- und MQTT-Passwort getrennt (drei separate Geheimnisse)
+- OTA ist ausschliesslich auf dem Bridge-ESP32 aktiviert — nie auf Controller oder Receiver
+- ein Ausfall der Bridge oder des MQTT-Systems hat keinen Einfluss auf den Steuerpfad
 
 ## Kommunikationssicherheit
 

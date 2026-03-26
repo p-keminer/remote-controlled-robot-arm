@@ -41,6 +41,12 @@ Dieses Dokument definiert die verbindlichen Sicherheitsregeln fuer Bewegungsfrei
 - eine spaetere Totmann- oder Bewegungsfreigabelogik wird als eigenes Sicherheitsfeature behandelt
 - bis dahin muss dokumentiert sein, unter welchen Bedingungen das System aktiv Bewegungsbefehle annimmt
 
+### Bridge-Unabhaengigkeit
+
+- ein Ausfall der Bridge, des MQTT-Systems oder des Pi-Dashboards darf den Steuerpfad nicht beeinflussen
+- der Receiver muss ohne Bridge funktionieren und Daten an den Arduino weiterleiten koennen
+- die Bridge kann keine Steuerbefehle senden und hat keinen Zugriff auf Servobewegung
+
 ## Testfreigaben
 
 - neue Bewegungsfunktionen gelten erst dann als belastbar, wenn relevante Sicherheitspruefungen unter `tests/safety/` beschrieben sind

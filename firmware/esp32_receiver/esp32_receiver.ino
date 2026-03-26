@@ -1,22 +1,27 @@
 #include <WiFi.h>
 #include <esp_now.h>
+#include <esp_wifi.h>
+#include <Adafruit_NeoPixel.h>
 
 // Receiver: IMU-Pakete empfangen und validieren
 // Prueft: Protokollversion, Pruefsumme, Frame-Frische
 //
-// LED-Debugging (alle mit 100 Ohm Vorwiderstand):
-//   GPIO4  Gruen  — LINK (ESP-NOW Empfang aktiv)
-//   GPIO5  Blau   — UART (Weiterleitung aktiv, spaeter)
-//   GPIO6  Gelb   — FAULT (Fehler: Pruefsumme, Version, Timeout)
+// LED-Debugging (invertiert: aus = OK, blinken = Problem):
+//   GPIO4  Gruen  — blinkt wenn UART-Problem (spaeter)
+//   GPIO5  Blau   — blinkt wenn ESP-NOW Timeout
+//   GPIO48 RGB    — rot blinkend bei FAULT (Pruefsumme, Version)
 
 #define PROTOKOLL_VERSION 3
 #define ANZAHL_SENSOREN   3
 
-#define LED_LINK          4   // Gruen — Empfang laeuft
-#define LED_UART          5   // Blau  — UART-Weiterleitung (spaeter)
-#define LED_FAULT         6   // Gelb  — Fehler
+#define LED_UART          4   // Gruen — UART-Problem
+#define LED_LINK          5   // Blau  — ESP-NOW Timeout
+#define RGB_PIN          48   // Interne RGB-LED
+#define RGB_ANZAHL        1
 
 #define EMPFANGS_TIMEOUT  2000  // ms ohne Paket = Verbindung verloren
+
+Adafruit_NeoPixel rgb(RGB_ANZAHL, RGB_PIN, NEO_GRB + NEO_KHZ800);
 
 typedef struct {
     float heading;
@@ -83,9 +88,6 @@ void beiEmpfang(const esp_now_recv_info_t* empfangs_info, const uint8_t* daten, 
     letzter_empfang_ms = millis();
     fehler_flag = false;
 
-    // LINK-LED an bei erfolgreichem Empfang
-    digitalWrite(LED_LINK, HIGH);
-
     Serial.printf("#%lu\n", paket.zaehler);
     for (uint8_t i = 0; i < ANZAHL_SENSOREN; i++) {
         Serial.printf("  S%d | H:%6.1f  R:%6.1f  P:%6.1f  [S%d G%d A%d M%d]\n", i,
@@ -101,16 +103,24 @@ void beiEmpfang(const esp_now_recv_info_t* empfangs_info, const uint8_t* daten, 
 void leds_init() {
     pinMode(LED_LINK, OUTPUT);
     pinMode(LED_UART, OUTPUT);
-    pinMode(LED_FAULT, OUTPUT);
+    digitalWrite(LED_LINK, LOW);
+    digitalWrite(LED_UART, LOW);
+
+    rgb.begin();
+    rgb.setBrightness(30);
+    rgb.clear();
+    rgb.show();
 
     // Starttest: alle LEDs kurz an
     digitalWrite(LED_LINK, HIGH);
     digitalWrite(LED_UART, HIGH);
-    digitalWrite(LED_FAULT, HIGH);
+    rgb.setPixelColor(0, rgb.Color(255, 0, 0));
+    rgb.show();
     delay(300);
     digitalWrite(LED_LINK, LOW);
     digitalWrite(LED_UART, LOW);
-    digitalWrite(LED_FAULT, LOW);
+    rgb.clear();
+    rgb.show();
 }
 
 void setup() {
@@ -121,8 +131,10 @@ void setup() {
 
     WiFi.mode(WIFI_STA);
     WiFi.disconnect();
+    // Kanal 6 = Router-Kanal, muss gleich sein wie Controller und Bridge
+    esp_wifi_set_channel(6, WIFI_SECOND_CHAN_NONE);
 
-    Serial.println("=== Receiver: IMU-Daten + LEDs ===");
+    Serial.println("=== Receiver: IMU-Daten (Kanal 6) ===");
     Serial.printf("MAC: %s\n", WiFi.macAddress().c_str());
 
     if (esp_now_init() != ESP_OK) {
@@ -131,27 +143,25 @@ void setup() {
     }
 
     esp_now_register_recv_cb(beiEmpfang);
-    Serial.println("Bereit.");
+    Serial.println("Bereit. LEDs aus = alles OK.");
 }
 
 void loop() {
     unsigned long jetzt = millis();
+    bool blink = (jetzt / 500) % 2;  // 1Hz Blinktakt
 
-    // Timeout: kein Paket seit EMPFANGS_TIMEOUT ms
-    if (letzter_empfang_ms > 0 && (jetzt - letzter_empfang_ms) > EMPFANGS_TIMEOUT) {
-        digitalWrite(LED_LINK, LOW);
-        digitalWrite(LED_FAULT, HIGH);
+    // ESP-NOW Timeout: Blau blinkt
+    bool espnow_timeout = (letzter_empfang_ms > 0 && (jetzt - letzter_empfang_ms) > EMPFANGS_TIMEOUT);
+    digitalWrite(LED_LINK, (espnow_timeout && blink) ? HIGH : LOW);
+
+    // FAULT: RGB rot blinkend bei Validierungsfehler oder Timeout
+    bool fault = fehler_flag || espnow_timeout;
+    if (fault) {
+        rgb.setPixelColor(0, blink ? rgb.Color(255, 0, 0) : rgb.Color(0, 0, 0));
+    } else {
+        rgb.clear();
     }
-
-    // Fehler-LED bei Validierungsfehler
-    if (fehler_flag) {
-        digitalWrite(LED_FAULT, HIGH);
-    } else if (letzter_empfang_ms > 0 && (jetzt - letzter_empfang_ms) <= EMPFANGS_TIMEOUT) {
-        digitalWrite(LED_FAULT, LOW);
-    }
-
-    // UART-LED bleibt aus bis UART implementiert ist
-    // digitalWrite(LED_UART, HIGH);
+    rgb.show();
 
     delay(100);
 }

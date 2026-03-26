@@ -28,8 +28,10 @@ Weitere Build-, Flash- oder Testhelfer koennen spaeter hier sauber einsortiert w
 ## Inhalt
 
 - `update_docs.sh` — sammelt die verteilte Projektdokumentation in `documentation/` und schliesst generierte, lokale oder externe Bereiche wie `official_downloads/raw/` und `official_downloads/extracted/` aus
-- `sync_to_windows.sh` — kopiert `.ino`- und `.h`-Dateien nach Windows fuer Arduino IDE (erfordert `sync_config.local.sh`)
-- `watch_and_sync.sh` — beobachtet `firmware/` per inotify und synct bei Aenderung nach Windows (erfordert `sync_config.local.sh`)
+- `sync_wsl_to_windows.sh` — synchronisiert das komplette Repo von WSL nach Windows per rsync (erfordert `sync_config.local.sh`)
+- `sync_windows_to_wsl.sh` — synchronisiert das komplette Repo von Windows nach WSL per rsync (erfordert `sync_config.local.sh`)
+- `secret_scan.sh` — scannt 10 Kategorien von Secrets (IPs, MACs, Passwoerter, Pfade, SSIDs, SSH-Daten, Keys, Ports, .local-Dateien); wird automatisch als Pre-Commit/Pre-Push Hook ausgefuehrt
+- `install_hooks.sh` — installiert Pre-Commit und Pre-Push Git-Hooks fuer den Secret-Scanner
 - `sync_config.local.sh.template` — **Vorlage** fuer lokale Pfad-Konfiguration; als `sync_config.local.sh` kopieren und anpassen
 
 ## Setup fuer Sync-Skripte

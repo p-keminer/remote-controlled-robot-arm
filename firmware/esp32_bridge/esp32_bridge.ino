@@ -2,6 +2,7 @@
 #include <esp_now.h>
 #include <PubSubClient.h>
 #include <ArduinoOTA.h>
+#include <Adafruit_NeoPixel.h>
 
 // Bridge-ESP32: ESP-NOW Empfang → MQTT Weiterleitung an Pi
 // Reines Entwicklungswerkzeug — kein Teil des v1-Steuerpfads.
@@ -14,11 +15,11 @@
 //   peer_config.local.h  — Controller-MAC (Absendervalidierung)
 //   wifi_config.local.h  — WiFi, MQTT-Broker, OTA-Passwort
 //
-// LED-Debugging:
-//   GPIO4  Gruen  — ESP-NOW Link (blinkt bei Empfang)
-//   GPIO5  Blau   — WiFi verbunden
-//   GPIO6  Gelb   — MQTT verbunden
-//   GPIO10 Weiss  — FAULT (Fehler)
+// LED-Debugging (invertiert: aus = OK, blinken = Problem):
+//   GPIO4  Gruen  — blinkt wenn WiFi getrennt
+//   GPIO5  Blau   — blinkt wenn ESP-NOW Timeout
+//   GPIO7  Weiss  — blinkt wenn MQTT getrennt
+//   GPIO48 RGB    — rot blinkend bei FAULT (allgemeiner Fehler)
 
 #include "peer_config.local.h"
 #include "wifi_config.local.h"
@@ -56,10 +57,13 @@ typedef struct __attribute__((packed)) {
 // LED-Pins
 // ============================================================
 
-#define LED_LINK    4   // Gruen  — ESP-NOW Empfang
-#define LED_WIFI    5   // Blau   — WiFi verbunden
-#define LED_MQTT    6   // Gelb   — MQTT verbunden
-#define LED_FAULT  10   // Weiss  — Fehler
+#define LED_WIFI    4   // Gruen  — blinkt wenn WiFi getrennt
+#define LED_LINK    5   // Blau   — blinkt wenn ESP-NOW Timeout
+#define LED_MQTT    7   // Weiss  — blinkt wenn MQTT getrennt
+#define RGB_PIN    48   // Interne RGB-LED
+#define RGB_ANZAHL  1
+
+Adafruit_NeoPixel rgb(RGB_ANZAHL, RGB_PIN, NEO_GRB + NEO_KHZ800);
 
 // ============================================================
 // Globale Variablen
@@ -103,13 +107,11 @@ uint8_t pruefsumme_berechnen(const ImuPaket* paket) {
 // ============================================================
 
 void beiEmpfang(const esp_now_recv_info_t* info, const uint8_t* daten, int laenge) {
-    // Groesse pruefen
     if (laenge != sizeof(ImuPaket)) {
         fehler_gesamt++;
         return;
     }
 
-    // Absender validieren (nur vom Controller akzeptieren)
     if (memcmp(info->src_addr, controller_adresse, 6) != 0) {
         fehler_gesamt++;
         return;
@@ -117,19 +119,16 @@ void beiEmpfang(const esp_now_recv_info_t* info, const uint8_t* daten, int laeng
 
     const ImuPaket* paket = (const ImuPaket*)daten;
 
-    // Protokollversion pruefen
     if (paket->protokoll_version != PROTOKOLL_VERSION) {
         fehler_gesamt++;
         return;
     }
 
-    // Pruefsumme validieren
     if (paket->pruefsumme != pruefsumme_berechnen(paket)) {
         fehler_gesamt++;
         return;
     }
 
-    // Paket uebernehmen
     memcpy((void*)&empfangenes_paket, daten, sizeof(ImuPaket));
     neues_paket = true;
     letzter_empfang_ms = millis();
@@ -142,7 +141,6 @@ void beiEmpfang(const esp_now_recv_info_t* info, const uint8_t* daten, int laeng
 // ============================================================
 
 void mqtt_imu_senden(const ImuPaket* p) {
-    // Kompaktes JSON — kurze Schluessel fuer 20Hz
     char json[384];
     int n = snprintf(json, sizeof(json),
         "{\"z\":%lu,"
@@ -170,7 +168,6 @@ void mqtt_imu_senden(const ImuPaket* p) {
 }
 
 void mqtt_status_senden() {
-    // PPS berechnen
     unsigned long jetzt = millis();
     unsigned long delta = jetzt - pps_start_ms;
     if (delta >= 1000) {
@@ -198,7 +195,7 @@ void mqtt_status_senden() {
         fehlerrate,
         pps);
 
-    mqtt.publish(TOPIC_STATUS, json, true);  // retained
+    mqtt.publish(TOPIC_STATUS, json, true);
 }
 
 // ============================================================
@@ -227,7 +224,7 @@ void mqtt_kalib_pruefen(const ImuPaket* p) {
         p->kalib[1].sys, p->kalib[1].gyro, p->kalib[1].accel, p->kalib[1].mag,
         p->kalib[2].sys, p->kalib[2].gyro, p->kalib[2].accel, p->kalib[2].mag);
 
-    mqtt.publish(TOPIC_KALIB, json, true);  // retained
+    mqtt.publish(TOPIC_KALIB, json, true);
 }
 
 // ============================================================
@@ -263,7 +260,7 @@ void mqtt_verbinden() {
 
     Serial.printf("[MQTT] Verbinde mit %s:%d...\n", MQTT_BROKER, MQTT_PORT);
     mqtt.setServer(MQTT_BROKER, MQTT_PORT);
-    mqtt.setBufferSize(512);  // Fuer die JSON-Payloads
+    mqtt.setBufferSize(512);
 
     if (mqtt.connect(OTA_HOSTNAME, MQTT_USER, MQTT_PASSWORT)) {
         Serial.println("[MQTT] Verbunden!");
@@ -283,7 +280,6 @@ void ota_setup() {
     ArduinoOTA.onStart([]() {
         ota_aktiv = true;
         Serial.println("[OTA] Update gestartet...");
-        // OTA-Log per MQTT
         if (mqtt.connected()) {
             char log_msg[128];
             snprintf(log_msg, sizeof(log_msg),
@@ -291,7 +287,7 @@ void ota_setup() {
                 WiFi.localIP().toString().c_str(),
                 (unsigned long)(millis() / 1000));
             mqtt.publish(TOPIC_OTA_LOG, log_msg);
-            mqtt.loop();  // Sicherstellen dass die Nachricht rausgeht
+            mqtt.loop();
         }
     });
 
@@ -337,41 +333,55 @@ void leds_init() {
     pinMode(LED_LINK, OUTPUT);
     pinMode(LED_WIFI, OUTPUT);
     pinMode(LED_MQTT, OUTPUT);
-    pinMode(LED_FAULT, OUTPUT);
+    digitalWrite(LED_LINK, LOW);
+    digitalWrite(LED_WIFI, LOW);
+    digitalWrite(LED_MQTT, LOW);
 
-    // Starttest
+    rgb.begin();
+    rgb.setBrightness(30);
+    rgb.clear();
+    rgb.show();
+
+    // Starttest: alle LEDs kurz an
     digitalWrite(LED_LINK, HIGH);
     digitalWrite(LED_WIFI, HIGH);
     digitalWrite(LED_MQTT, HIGH);
-    digitalWrite(LED_FAULT, HIGH);
+    rgb.setPixelColor(0, rgb.Color(255, 0, 0));
+    rgb.show();
     delay(300);
     digitalWrite(LED_LINK, LOW);
     digitalWrite(LED_WIFI, LOW);
     digitalWrite(LED_MQTT, LOW);
-    digitalWrite(LED_FAULT, LOW);
+    rgb.clear();
+    rgb.show();
 }
 
 void leds_aktualisieren() {
     unsigned long jetzt = millis();
+    bool blink = (jetzt / 500) % 2;  // 1Hz Blinktakt
 
-    // LINK: blinkt kurz bei Empfang (letztes Paket < 200ms)
-    bool empfang_aktiv = (letzter_empfang_ms > 0) && (jetzt - letzter_empfang_ms < 200);
-    digitalWrite(LED_LINK, empfang_aktiv ? HIGH : LOW);
+    // WiFi getrennt: Gruen blinkt
+    bool wifi_problem = (WiFi.status() != WL_CONNECTED);
+    digitalWrite(LED_WIFI, (wifi_problem && blink) ? HIGH : LOW);
 
-    // WIFI
-    digitalWrite(LED_WIFI, (WiFi.status() == WL_CONNECTED) ? HIGH : LOW);
+    // ESP-NOW Timeout: Blau blinkt
+    bool espnow_timeout = false;
+    if (letzter_empfang_ms > 0 && (jetzt - letzter_empfang_ms > 2000)) espnow_timeout = true;
+    if (letzter_empfang_ms == 0 && jetzt > 10000) espnow_timeout = true;
+    digitalWrite(LED_LINK, (espnow_timeout && blink) ? HIGH : LOW);
 
-    // MQTT
-    digitalWrite(LED_MQTT, mqtt.connected() ? HIGH : LOW);
+    // MQTT getrennt: Weiss blinkt
+    bool mqtt_problem = !mqtt.connected();
+    digitalWrite(LED_MQTT, (mqtt_problem && blink) ? HIGH : LOW);
 
-    // FAULT: kein Empfang seit 2s ODER kein WiFi ODER kein MQTT
-    bool fehler = false;
-    if (letzter_empfang_ms > 0 && (jetzt - letzter_empfang_ms > 2000)) fehler = true;
-    if (WiFi.status() != WL_CONNECTED) fehler = true;
-    if (!mqtt.connected()) fehler = true;
-    // Beim Boot: kein Fehler bis erstes Paket ankommt (Timeout nach 10s)
-    if (letzter_empfang_ms == 0 && jetzt > 10000) fehler = true;
-    digitalWrite(LED_FAULT, fehler ? HIGH : LOW);
+    // RGB: rot blinkend wenn irgendein Problem
+    bool fault = wifi_problem || espnow_timeout || mqtt_problem;
+    if (fault) {
+        rgb.setPixelColor(0, blink ? rgb.Color(255, 0, 0) : rgb.Color(0, 0, 0));
+    } else {
+        rgb.clear();
+    }
+    rgb.show();
 }
 
 // ============================================================
@@ -385,17 +395,14 @@ void setup() {
     boot_zeit_ms = millis();
     leds_init();
 
-    Serial.println("=== Bridge-ESP32: ESP-NOW → MQTT ===");
+    Serial.println("=== Bridge-ESP32: ESP-NOW -> MQTT ===");
     Serial.println("[INFO] Reines Entwicklungswerkzeug — kein Steuerpfad");
 
-    // WiFi STA-Modus (fuer ESP-NOW + WiFi Koexistenz)
     WiFi.mode(WIFI_STA);
     Serial.printf("[INFO] MAC: %s\n", WiFi.macAddress().c_str());
 
-    // WiFi verbinden (setzt den Kanal fuer ESP-NOW)
     wifi_verbinden();
 
-    // ESP-NOW initialisieren (nach WiFi, damit Kanal uebernommen wird)
     if (esp_now_init() != ESP_OK) {
         Serial.println("[FEHLER] ESP-NOW init fehlgeschlagen");
         return;
@@ -403,14 +410,11 @@ void setup() {
     esp_now_register_recv_cb(beiEmpfang);
     Serial.println("[ESP-NOW] Empfangs-Callback registriert");
 
-    // MQTT verbinden
     mqtt_verbinden();
-
-    // OTA Setup
     ota_setup();
 
     pps_start_ms = millis();
-    Serial.println("[INFO] Bereit — warte auf ESP-NOW Pakete vom Controller");
+    Serial.println("[INFO] Bereit. LEDs aus = alles OK.");
 }
 
 // ============================================================
@@ -418,16 +422,13 @@ void setup() {
 // ============================================================
 
 void loop() {
-    // OTA Handler
     ArduinoOTA.handle();
-    if (ota_aktiv) return;  // Waehrend OTA nichts anderes tun
+    if (ota_aktiv) return;
 
-    // WiFi Reconnect
     if (WiFi.status() != WL_CONNECTED) {
         wifi_verbinden();
     }
 
-    // MQTT Reconnect + Loop
     if (WiFi.status() == WL_CONNECTED) {
         if (!mqtt.connected()) {
             mqtt_verbinden();
@@ -435,7 +436,6 @@ void loop() {
         mqtt.loop();
     }
 
-    // Neues Paket per MQTT weiterleiten
     if (neues_paket) {
         neues_paket = false;
 
@@ -448,7 +448,6 @@ void loop() {
         }
     }
 
-    // Status alle 1 Sekunde senden
     unsigned long jetzt = millis();
     if (jetzt - letzte_status_ms >= 1000) {
         letzte_status_ms = jetzt;
@@ -457,6 +456,5 @@ void loop() {
         }
     }
 
-    // LEDs aktualisieren
     leds_aktualisieren();
 }

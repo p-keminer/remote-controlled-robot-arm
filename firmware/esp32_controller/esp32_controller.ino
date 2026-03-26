@@ -1,9 +1,11 @@
 #include <WiFi.h>
 #include <esp_now.h>
+#include <esp_wifi.h>
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
 #include <Preferences.h>
+#include <Adafruit_NeoPixel.h>
 
 // Controller: IMU-Daten lesen und per ESP-NOW senden
 // I2C: SDA GPIO8 / SCL GPIO9 | Mux: 0x70 | Sensoren: 0x29
@@ -18,12 +20,12 @@
 //   CAL2     — Einzelkalibrierung Sensor 2
 //   STOP     — Einzelkalibrierung abbrechen, Normalbetrieb
 //
-// LED-Debugging (alle mit 100 Ohm Vorwiderstand):
-//   GPIO4  Gruen  — Hand/Wrist-IMU (S2) kalibriert
-//   GPIO5  Gelb   — Unterarm-IMU (S1) kalibriert
-//   GPIO6  Rot    — Oberarm-IMU (S0) kalibriert
-//   GPIO7  Blau   — COMMS (blinkt bei erfolgreichem Senden)
-//   GPIO10 Weiss  — FAULT (leuchtet bei Fehler)
+// LED-Debugging (invertiert: aus = OK, blinken = Problem):
+//   GPIO4  Gruen  — blinkt wenn S2 (Hand/Wrist) nicht kalibriert
+//   GPIO5  Gelb   — blinkt wenn S1 (Unterarm) nicht kalibriert
+//   GPIO6  Gelb   — blinkt wenn S0 (Oberarm) nicht kalibriert
+//   GPIO7  Blau   — blinkt wenn ESP-NOW Send fehlschlaegt
+//   GPIO48 RGB    — rot blinkend bei FAULT (Sensorausfall, Flex-Fehler)
 
 #include "peer_config.local.h"
 
@@ -43,12 +45,13 @@
 #define KALIB_SCHWELLE_ACCEL 2
 #define KALIB_SCHWELLE_MAG   2
 
-// LED-Pins: Ampelsystem Hand(gruen)->Unterarm(gelb)->Oberarm(rot)
-#define LED_HAND          4   // Gruen  — S2 Hand/Wrist
-#define LED_UNTERARM      5   // Gelb   — S1 Unterarm
-#define LED_OBERARM       6   // Rot    — S0 Oberarm
-#define LED_COMMS         7   // Blau   — Kommunikation
-#define LED_FAULT        10   // Weiss  — Fehler
+// LED-Pins (invertiert: aus = OK, blinken = Problem)
+#define LED_HAND          4   // Gruen  — S2 Hand/Wrist nicht kalibriert
+#define LED_UNTERARM      5   // Gelb   — S1 Unterarm nicht kalibriert
+#define LED_OBERARM       6   // Gelb   — S0 Oberarm nicht kalibriert
+#define LED_COMMS         7   // Blau   — ESP-NOW Send fehlgeschlagen
+#define RGB_PIN          48   // Interne RGB-LED
+#define RGB_ANZAHL        1
 
 // Zuordnung: LED-Pin pro Sensor-Index (S0=Oberarm, S1=Unterarm, S2=Hand)
 static const uint8_t led_sensor_pin[ANZAHL_SENSOREN] = {
@@ -56,6 +59,8 @@ static const uint8_t led_sensor_pin[ANZAHL_SENSOREN] = {
     LED_UNTERARM,   // S1
     LED_HAND        // S2
 };
+
+Adafruit_NeoPixel rgb(RGB_ANZAHL, RGB_PIN, NEO_GRB + NEO_KHZ800);
 
 typedef struct {
     float heading;
@@ -171,33 +176,46 @@ void leds_init() {
     pinMode(LED_UNTERARM, OUTPUT);
     pinMode(LED_OBERARM, OUTPUT);
     pinMode(LED_COMMS, OUTPUT);
-    pinMode(LED_FAULT, OUTPUT);
+    digitalWrite(LED_HAND, LOW);
+    digitalWrite(LED_UNTERARM, LOW);
+    digitalWrite(LED_OBERARM, LOW);
+    digitalWrite(LED_COMMS, LOW);
+
+    rgb.begin();
+    rgb.setBrightness(30);
+    rgb.clear();
+    rgb.show();
 
     // Starttest: alle LEDs kurz an
     digitalWrite(LED_HAND, HIGH);
     digitalWrite(LED_UNTERARM, HIGH);
     digitalWrite(LED_OBERARM, HIGH);
     digitalWrite(LED_COMMS, HIGH);
-    digitalWrite(LED_FAULT, HIGH);
+    rgb.setPixelColor(0, rgb.Color(255, 0, 0));
+    rgb.show();
     delay(300);
     digitalWrite(LED_HAND, LOW);
     digitalWrite(LED_UNTERARM, LOW);
     digitalWrite(LED_OBERARM, LOW);
     digitalWrite(LED_COMMS, LOW);
-    digitalWrite(LED_FAULT, LOW);
+    rgb.clear();
+    rgb.show();
 }
 
 void leds_aktualisieren(const KalibStatus kalib[]) {
-    // IMU-LEDs: an wenn Sensor bereit UND Gyro kalibriert (>=3)
+    unsigned long jetzt = millis();
+    bool blink = (jetzt / 500) % 2;  // 1Hz Blinktakt
+
+    // IMU-LEDs: blinken wenn Sensor NICHT kalibriert oder NICHT bereit (invertiert)
     for (uint8_t i = 0; i < ANZAHL_SENSOREN; i++) {
         bool ok = sensor_bereit[i] && kalib[i].gyro >= KALIB_SCHWELLE_GYRO;
-        digitalWrite(led_sensor_pin[i], ok ? HIGH : LOW);
+        digitalWrite(led_sensor_pin[i], (!ok && blink) ? HIGH : LOW);
     }
 
-    // COMMS: an wenn letztes Senden erfolgreich
-    digitalWrite(LED_COMMS, letzter_tx_ok ? HIGH : LOW);
+    // COMMS: blinkt wenn letztes Senden fehlgeschlagen (invertiert)
+    digitalWrite(LED_COMMS, (!letzter_tx_ok && blink) ? HIGH : LOW);
 
-    // FAULT: an wenn ein IMU-Sensor fehlt oder Flex-Sensor unplausibel
+    // FAULT: RGB rot blinkend wenn ein IMU-Sensor fehlt oder Flex-Sensor unplausibel
     fehler_aktiv = !flex_bereit;
     for (uint8_t i = 0; i < ANZAHL_SENSOREN; i++) {
         if (!sensor_bereit[i]) {
@@ -205,13 +223,18 @@ void leds_aktualisieren(const KalibStatus kalib[]) {
             break;
         }
     }
-    digitalWrite(LED_FAULT, fehler_aktiv ? HIGH : LOW);
+    if (fehler_aktiv) {
+        rgb.setPixelColor(0, blink ? rgb.Color(255, 0, 0) : rgb.Color(0, 0, 0));
+    } else {
+        rgb.clear();
+    }
+    rgb.show();
 }
 
 void beiBesendung(const wifi_tx_info_t* tx_info, esp_now_send_status_t status) {
     // Bridge-Fehler ignorieren: COMMS-LED nur bei Receiver-Fehler ausschalten
 #if BRIDGE_AKTIV
-    if (memcmp(tx_info->dst_addr, bridge_adresse, 6) == 0) {
+    if (memcmp(tx_info->des_addr, bridge_adresse, 6) == 0) {
         // Bridge-Send — Fehler sind unkritisch, nicht auf COMMS-LED auswirken
         return;
     }
@@ -253,6 +276,11 @@ void setup() {
 
     WiFi.mode(WIFI_STA);
     WiFi.disconnect();
+#if BRIDGE_AKTIV
+    // Alle ESPs muessen auf dem gleichen Kanal sein wie die Bridge (= Router-Kanal)
+    esp_wifi_set_channel(6, WIFI_SECOND_CHAN_NONE);
+    Serial.println("[BRIDGE] WiFi-Kanal auf 6 gesetzt (Router-Kanal)");
+#endif
     Serial.printf("MAC: %s\n", WiFi.macAddress().c_str());
 
     if (esp_now_init() != ESP_OK) {
@@ -264,7 +292,7 @@ void setup() {
 
     esp_now_peer_info_t gegenstelle = {};
     memcpy(gegenstelle.peer_addr, empfaenger_adresse, 6);
-    gegenstelle.channel = 0;
+    gegenstelle.channel = 0;  // 0 = gleicher Kanal wie lokal (jetzt 6)
     gegenstelle.encrypt = false;
 
     if (esp_now_add_peer(&gegenstelle) != ESP_OK) {
@@ -275,7 +303,7 @@ void setup() {
 #if BRIDGE_AKTIV
     esp_now_peer_info_t bridge_peer = {};
     memcpy(bridge_peer.peer_addr, bridge_adresse, 6);
-    bridge_peer.channel = 0;
+    bridge_peer.channel = 0;  // 0 = gleicher Kanal wie lokal (jetzt 6)
     bridge_peer.encrypt = false;
 
     if (esp_now_add_peer(&bridge_peer) != ESP_OK) {

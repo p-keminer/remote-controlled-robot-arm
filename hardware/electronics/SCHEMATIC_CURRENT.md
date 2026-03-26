@@ -3,6 +3,8 @@
 Aktueller Bench-Aufbau — Stand 2026-03-26.
 Nur bestaetigte und getestete Verbindungen. Geplante aber noch nicht getestete Pfade sind als `(geplant)` markiert.
 
+**LED-Schema:** Invertiert — aus = OK, blinken = Problem. RGB auf GPIO48 als FAULT auf allen ESPs.
+
 ## Controller-Seite
 
 ```
@@ -37,11 +39,13 @@ ESP32-S3-WROOM-1-N16R8                  │  │
 │                     │  │
 │                     │  └── 10kOhm ── GND
 │                     │
-│  GPIO4  ────────────┼── LED Gruen (Hand)     + 100 Ohm ── GND
-│  GPIO5  ────────────┼── LED Gelb (Unterarm)  + 100 Ohm ── GND
-│  GPIO6  ────────────┼── LED Rot (Oberarm)    + 100 Ohm ── GND
-│  GPIO7  ────────────┼── LED Blau (COMMS)     + 100 Ohm ── GND
-│  GPIO10 ────────────┼── LED Weiss (FAULT)    + 100 Ohm ── GND
+│  GPIO4  ────────────┼── LED Gruen (Hand S2)    + 100 Ohm ── GND  [blinkt bei Problem]
+│  GPIO5  ────────────┼── LED Gelb (Unterarm S1) + 100 Ohm ── GND  [blinkt bei Problem]
+│  GPIO6  ────────────┼── LED Gelb (Oberarm S0)  + 100 Ohm ── GND  [blinkt bei Problem]
+│  GPIO7  ────────────┼── LED Blau (COMMS)       + 100 Ohm ── GND  [blinkt bei Problem]
+│  GPIO48 ────────────┼── LED RGB onboard (FAULT)                   [rot blinkt bei Fehler]
+│                     │
+│  WiFi (intern) ─────┼──)) ESP-NOW Kanal 6 → Receiver + Bridge
 │                     │
 │  USB-C ─────────────┼── PC (Flash / Serial Monitor)
 └─────────────────────┘
@@ -53,16 +57,43 @@ ESP32-S3-WROOM-1-N16R8                  │  │
 ESP32-S3-WROOM-1-N16R8
 ┌─────────────────────┐
 │                     │
-│  WiFi (intern) ─────┼──)) ESP-NOW Unicast von Controller
+│  WiFi (intern) ─────┼──)) ESP-NOW Kanal 6 ← Controller
 │                     │
-│  GPIO4  ────────────┼── LED Gruen (LINK)     + 100 Ohm ── GND
-│  GPIO5  ────────────┼── LED Blau (UART)      + 100 Ohm ── GND
-│  GPIO6  ────────────┼── LED Gelb (FAULT)     + 100 Ohm ── GND
+│  GPIO4  ────────────┼── LED Gruen (UART)       + 100 Ohm ── GND  [reserviert, spaeter]
+│  GPIO5  ────────────┼── LED Blau (ESP-NOW)     + 100 Ohm ── GND  [blinkt bei Timeout]
+│  GPIO48 ────────────┼── LED RGB onboard (FAULT)                   [rot blinkt bei Fehler]
 │  GPIO15 (geplant) ──┼── UART TX ── Arduino RX
 │  GPIO16 (geplant) ──┼── UART RX ── Arduino TX
 │                     │
 │  USB-C ─────────────┼── PC (Flash / Serial Monitor)
 └─────────────────────┘
+```
+
+## Bridge-Seite (Entwicklungswerkzeug)
+
+```
+ESP32-S3-WROOM-1-N16R8
+┌─────────────────────┐
+│                     │
+│  WiFi (intern, STA) ┼──)) WiFi zu Router auf Kanal 6
+│  ESP-NOW (intern) ──┼──)) ESP-NOW Kanal 6 ← Controller
+│                     │
+│  GPIO4  ────────────┼── LED Gruen (WiFi)       + 100 Ohm ── GND  [blinkt wenn getrennt]
+│  GPIO5  ────────────┼── LED Blau (ESP-NOW)     + 100 Ohm ── GND  [blinkt bei Timeout]
+│  GPIO7  ────────────┼── LED Weiss (MQTT)       + 100 Ohm ── GND  [blinkt wenn getrennt]
+│  GPIO48 ────────────┼── LED RGB onboard (FAULT)                   [rot blinkt bei Fehler]
+│                     │
+│  USB-C ─────────────┼── PC (Flash / ArduinoOTA)
+└─────────────────────┘
+
+         │ MQTT (WiFi)
+         ▼
+    Mosquitto (Pi Zero 2W, Port 1883)
+         │
+    ┌────┼────┐
+    │    │    │
+ Dashboard  MCP   api.php
+ (Browser)  (Claude)
 ```
 
 ## Datenfluss
@@ -75,24 +106,36 @@ BNO055 #1 (Unterarm) ─┼── I2C ── PCA9548A ── I2C ── ESP32-S3
 BNO055 #2 (Hand) ─────┘                                    │ ADC
                                                     Flex-Sensor
                                                             │
-                                             ┌── GPIO4  Gruen  (Hand kalibriert)
-                                             ├── GPIO5  Gelb   (Unterarm kalibriert)
-                                             ├── GPIO6  Rot    (Oberarm kalibriert)
-                                             ├── GPIO7  Blau   (COMMS ok)
-                                             ├── GPIO10 Weiss  (FAULT)
+                                             ┌── GPIO4  Gruen  (S2 Problem)
+                                             ├── GPIO5  Gelb   (S1 Problem)
+                                             ├── GPIO6  Gelb   (S0 Problem)
+                                             ├── GPIO7  Blau   (COMMS Problem)
+                                             ├── GPIO48 RGB    (FAULT)
                                              │
-                                       ESP-NOW (Unicast, ImuPaket v3)
+                                       ESP-NOW (Kanal 6, Unicast, ImuPaket v3)
                                              │
-                                    ESP32-S3 (Receiver)
-                                             │
-                              ┌── GPIO4  Gruen  (LINK aktiv)
-                              ├── GPIO5  Blau   (UART, spaeter)
-                              ├── GPIO6  Gelb   (FAULT/Timeout)
-                              │
-                        UART (geplant)
-                              │
-                      Arduino (geplant)
+                                    ┌────────┴────────┐
+                                    │                 │
+                           ESP32-S3 (Receiver)   ESP32-S3 (Bridge)
+                                    │                 │
+                     ┌── GPIO4  Gruen  (UART)    ┌── GPIO4  Gruen  (WiFi)
+                     ├── GPIO5  Blau   (ESP-NOW) ├── GPIO5  Blau   (ESP-NOW)
+                     ├── GPIO48 RGB    (FAULT)   ├── GPIO7  Weiss  (MQTT)
+                     │                           ├── GPIO48 RGB    (FAULT)
+                UART (geplant)                   │
+                     │                      MQTT (WiFi)
+                Arduino (geplant)                │
+                                         Mosquitto (Pi)
 ```
+
+## WiFi-Kanal-Alignment
+
+Alle drei ESPs muessen auf dem gleichen WiFi-Kanal laufen fuer ESP-NOW/WiFi-Koexistenz:
+
+- **Router:** Kanal 6
+- **Controller:** ESP-NOW auf Kanal 6 (per `esp_wifi_set_channel(6)`)
+- **Receiver:** ESP-NOW auf Kanal 6 (per `esp_wifi_set_channel(6)`)
+- **Bridge:** WiFi STA + ESP-NOW Empfang auf Kanal 6 (automatisch durch WiFi-Verbindung zum Router)
 
 ## Paketstatus
 
@@ -100,23 +143,30 @@ BNO055 #2 (Hand) ─────┘                                    │ ADC
 - Inhalt: 3x Euler-Daten (H/R/P), 3x Kalibrierungsstatus (S/G/A/M), Flex-Prozent
 - Pruefsumme: XOR, `__attribute__((packed))`
 - Frische-Check: Frame-Zaehler
-- Sendeintervall: 50ms (20Hz)
+- Sendeintervall: 50ms (20Hz) — aktuell ~1-2 PPS durch Multi-Peer Timing
 - Kalibrierungsoffsets: persistent im ESP32-NVS, automatisches Laden beim Boot
 
-## LED-Verhalten
+## LED-Verhalten (invertiert: aus = OK, blinken = Problem)
 
 ### Controller
-- IMU-LEDs (Gruen/Gelb/Rot): an wenn Sensor bereit UND Gyro kalibriert (>=3)
-- COMMS (Blau): an bei erfolgreichem ESP-NOW Senden
-- FAULT (Weiss): an bei IMU-Ausfall oder Flex-Sensor-Ausfall (Live-Erkennung im Betrieb)
-- Beim Boot: alle 5 LEDs blitzen kurz auf (Starttest)
+- IMU-LEDs (Gruen/Gelb/Gelb): blinken wenn Sensor NICHT bereit oder NICHT kalibriert
+- COMMS (Blau): blinkt wenn ESP-NOW Send fehlschlaegt
+- FAULT (RGB rot): blinkt bei IMU-Ausfall oder Flex-Sensor-Ausfall (Live-Erkennung im Betrieb)
+- Beim Boot: alle LEDs blitzen kurz auf (Starttest)
 - Im Kalibrierungsmodus (CAL0/1/2): jeweilige Sensor-LED blinkt
 
 ### Receiver
-- LINK (Gruen): an bei erfolgreichem Paketempfang
-- UART (Blau): reserviert fuer spaetere UART-Weiterleitung
-- FAULT (Gelb): an bei Validierungsfehler oder Empfangs-Timeout (>2s)
-- Beim Boot: alle 3 LEDs blitzen kurz auf (Starttest)
+- UART (Gruen): reserviert fuer spaetere UART-Weiterleitung
+- ESP-NOW (Blau): blinkt bei Empfangs-Timeout (>2s)
+- FAULT (RGB rot): blinkt bei Validierungsfehler oder Timeout
+- Beim Boot: alle LEDs blitzen kurz auf (Starttest)
+
+### Bridge
+- WiFi (Gruen): blinkt wenn WiFi getrennt
+- ESP-NOW (Blau): blinkt wenn kein Paket seit 2s
+- MQTT (Weiss): blinkt wenn MQTT getrennt
+- FAULT (RGB rot): blinkt wenn irgendein Problem vorliegt
+- Beim Boot: alle LEDs blitzen kurz auf (Starttest)
 
 ## Sensorausfallerkennung (Live)
 

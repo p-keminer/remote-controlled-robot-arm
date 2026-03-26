@@ -6,15 +6,19 @@ Dieser Ordner ist fuer die Receiver-Firmware des zweiten ESP32 reserviert.
 
 ## Aktueller Stand
 
-Der Bereich ist als Bench-Firmware vorhanden.
-`esp32_receiver.ino` empfaengt `ESP-NOW`-Pakete, prueft Paketgroesse, Protokollversion, XOR-Pruefsumme und Frische; UART, Safety-Reaktionen und Security-Uplift sind noch offen.
-Der serielle Minimalrahmen fuer die naechste Ausbaustufe ist bereits in `../UART_FRAME_V1.md` dokumentiert, wird aber erst nach drittem IMU und realer Grundkette bench-validiert.
+Der Bereich ist als Bench-Firmware vorhanden und bench-validiert.
+`esp32_receiver.ino` empfaengt `ESP-NOW`-Pakete auf WiFi-Kanal 6, prueft Paketgroesse, Protokollversion, XOR-Pruefsumme und Frische.
+Der Receiver ist der kritische Steuerpfad zum Arduino und funktioniert unabhaengig von der Bridge.
+LED-Schema invertiert: aus = OK, blinken = Problem. RGB auf GPIO48 als FAULT.
+UART, Safety-Reaktionen und Security-Uplift sind noch offen.
+Der serielle Minimalrahmen fuer die naechste Ausbaustufe ist bereits in `../UART_FRAME_V1.md` dokumentiert.
 
 ## Inhalt
 
-- ESP-NOW-Empfangslogik fuer den Bench-Pfad
-- Paketvalidierung und erste Frischepruefung
-- UART-Weitergabe an das Adeept-Arduino-Board
+- ESP-NOW-Empfangslogik auf WiFi-Kanal 6 (koexistent mit Bridge-WiFi)
+- Paketvalidierung und Frischepruefung (ImuPaket v3)
+- LED-Debugging invertiert: GPIO4 Gruen(UART), GPIO5 Blau(ESP-NOW), GPIO48 RGB(FAULT)
+- UART-Weitergabe an das Adeept-Arduino-Board (noch offen)
 - Fehlerreaktion bei ungueltigen oder fehlenden Daten
 
 ## Regeln
