@@ -2,8 +2,9 @@
 # secret_scan.sh — Scannt getrackte Dateien auf Secrets, IPs, Passwoerter und Pfade
 #
 # Nutzung:
-#   bash scripts/secret_scan.sh          # Scannt alle getrackten Dateien
-#   bash scripts/secret_scan.sh --staged  # Scannt nur gestagede Dateien (fuer Pre-Commit)
+#   bash scripts/secret_scan.sh            # Scannt ALLES (komplett, lokal + getrackt)
+#   bash scripts/secret_scan.sh --staged   # Nur gestagede Dateien (Pre-Commit Hook)
+#   bash scripts/secret_scan.sh --tracked  # Nur getrackte Dateien (Pre-Push Hook)
 #
 # Exit-Code:
 #   0 = sauber
@@ -21,12 +22,17 @@ RESET='\033[0m'
 FEHLER=0
 MODUS="all"
 [ "${1:-}" = "--staged" ] && MODUS="staged"
+[ "${1:-}" = "--tracked" ] && MODUS="tracked"
 
-# Dateien ermitteln — ALLE Dateien im Repo-Verzeichnis (nicht nur getrackte)
+# Dateien ermitteln
 if [ "$MODUS" = "staged" ]; then
+    # Nur gestagede Dateien (Pre-Commit)
     DATEIEN=$(git diff --cached --name-only --diff-filter=ACM 2>/dev/null)
+elif [ "$MODUS" = "tracked" ]; then
+    # Nur von Git getrackte Dateien (Pre-Push)
+    DATEIEN=$(git ls-files 2>/dev/null)
 else
-    # Getrackte UND ungetrackte Dateien (alles ausser .git/)
+    # ALLES — getrackt + ungetrackt + lokale Dateien (manueller Vollscan)
     DATEIEN=$( (git ls-files 2>/dev/null; git ls-files --others --exclude-standard 2>/dev/null; find . -maxdepth 8 -type f 2>/dev/null | sed 's|^\./||') | sort -u)
 fi
 

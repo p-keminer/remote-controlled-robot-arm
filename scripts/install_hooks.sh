@@ -37,18 +37,19 @@ echo "  [OK] pre-commit Hook installiert"
 # Pre-Push Hook
 cat > "$HOOK_DIR/pre-push" << 'HOOK'
 #!/bin/bash
-# Pre-Push Hook: Vollstaendiger Secret-Scan auf alle getrackten Dateien
+# Pre-Push Hook: Secret-Scan auf alle getrackten Dateien
+# Scannt NUR Dateien die wirklich im Git liegen (nicht lokale .local-Dateien)
 # Installiert von scripts/install_hooks.sh
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 
 echo ""
-echo "=== Pre-Push Secret-Scan (vollstaendig) ==="
+echo "=== Pre-Push Secret-Scan (getrackte Dateien) ==="
 echo ""
 
-if ! bash "$REPO_ROOT/scripts/secret_scan.sh"; then
+if ! bash "$REPO_ROOT/scripts/secret_scan.sh" --tracked; then
     echo ""
-    echo "PUSH ABGEBROCHEN: Secrets gefunden!"
+    echo "PUSH ABGEBROCHEN: Secrets in getrackten Dateien gefunden!"
     echo "Behebe die Treffer bevor du pushst."
     exit 1
 fi
@@ -60,4 +61,5 @@ echo "  [OK] pre-push Hook installiert"
 echo ""
 echo "Fertig! Hooks sind aktiv."
 echo "  - Pre-Commit: scannt gestagede Dateien"
-echo "  - Pre-Push:   scannt alle getrackten Dateien"
+echo "  - Pre-Push:   scannt getrackte Dateien (die wirklich ins Repo gehen)"
+echo "  - Manuell:    bash scripts/secret_scan.sh (scannt ALLES inkl. lokale Dateien)"
