@@ -123,7 +123,7 @@ Unautorisierter Firmware-Upload bedeutet volle Kontrolle ueber den ESP32.
 
 ```
 robotarm/
-  imu              # ImuPaket v3 als JSON (20Hz, QoS 0, retained)
+  imu              # ImuPaket v4 als JSON (20Hz, QoS 0, retained)
   status           # Bridge-Status: WiFi RSSI, Uptime, Fehlerrate (1Hz, QoS 1, retained)
   kalib            # Kalibrierungsstatus separat (bei Aenderung, QoS 1, retained)
   ota/log          # OTA-Versuchsprotokoll (bei jedem Versuch, QoS 1, nicht retained)

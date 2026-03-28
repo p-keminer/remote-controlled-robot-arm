@@ -24,7 +24,7 @@ Die Implementierung der Views und des MCP-Servers steht als naechstes an.
 
 - das Dashboard ist rein beobachtend und darf keine Steuerbefehle senden
 - MQTT-Credentials gehoeren in gitignorierte lokale Konfigurationsdateien
-- die Paketstruktur muss mit `ImuPaket v3` aus `COMMUNICATION_FRAMEWORK.md` uebereinstimmen
+- die Paketstruktur muss mit `ImuPaket v4` aus `COMMUNICATION_FRAMEWORK.md` uebereinstimmen
 - neue Views muessen dem bestehenden Dark-Theme und der CSP-Policy des IoT Dashboards folgen
 - kein `onclick` in HTML — stattdessen `data-click` Attribute (CSP-Kompatibilitaet)
 

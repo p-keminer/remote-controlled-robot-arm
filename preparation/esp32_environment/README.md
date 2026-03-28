@@ -106,7 +106,7 @@ Adafruit-spezifische Schaltungshinweise aus der Adafruit-Doku gelten jedoch nur 
 - [x] N16R8-Parameter eingefroren: qio_opi + BOARD_HAS_PSRAM (siehe firmware/esp32_controller/platformio.ini)
 - [x] USB-Bridging WSL2 via usbipd-win eingerichtet (usbipd-win v5.3.0)
 - [x] ESP-NOW Hello-World zwischen zwei Boards uebertragen
-- [x] ESP-NOW Unicast mit `ImuPaket v3` bench-validiert (drei IMUs, KalibStatus, NVS-Persistenz)
+- [x] ESP-NOW Unicast mit `ImuPaket v4` bench-validiert (drei IMUs, KalibStatus, NVS-Persistenz)
 - [x] BNO055-Einzeltest, Mux und Triple-IMU-Pfad (Kanaele 0/1/2) bench-validiert
 - [x] LED-Debugging bench-validiert: Controller 5 LEDs (GPIO4/5/6/7/10), Receiver 3 LEDs (GPIO4/5/6)
 - [x] Flex-Sensor ADC-Pfad auf GPIO1 bench-validiert

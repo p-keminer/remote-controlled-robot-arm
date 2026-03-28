@@ -79,7 +79,7 @@ Der Hauptbuzzer sitzt auf der Receiver- oder Robotikseite, weil dort die letzte 
 
 - drei IMU-Status-LEDs am Controller sind gesetzt
 - Buzzer entfaellt vorerst — LEDs und RGB reichen fuer Debugging
-- **LED-Schema invertiert:** aus = OK, blinken = Problem (weniger Strom, klare Fehlererkennung)
+- **LED-Schema invertiert:** aus = OK, an = Problem (weniger Strom, klare Fehlererkennung)
 - **RGB-LED auf GPIO48** ist primaerer FAULT-Indikator auf allen drei ESPs (Controller, Receiver, Bridge)
 - externe LEDs sind weiterhin primaer fuer kanalspezifische Statusanzeige (WiFi, ESP-NOW, MQTT, Kalibrierung)
 - Bridge hat zusaetzlich weisse LED fuer MQTT-Status

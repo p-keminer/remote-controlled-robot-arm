@@ -38,6 +38,7 @@ Onboard Komfortfunktionen werden nicht als kritischer Primaerpfad eingeplant —
 | `LED Hand/Wrist-IMU` | `GPIO6` | einfache, gut sichtbare Debugleitung |
 | `LED COMMS optional` | `GPIO7` | zusaetzlicher Sender-Status moeglich |
 | `LED FAULT optional` | `GPIO10` | zusaetzlicher Fehlerpfad moeglich |
+| `Notaus-Schalter` | `GPIO21` | Toggle-Button nach GND, INPUT_PULLUP, 50ms Entprellung, jeder Tastendruck toggelt Notaus |
 | `Buzzer optional` | `GPIO21` | getrennt von den IMU-LEDs und nicht an revisionsabhaengige Komfortfunktionen gebunden |
 
 ## Bevorzugter Receiver-Pinplan

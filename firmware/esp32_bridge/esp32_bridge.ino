@@ -29,7 +29,10 @@
 // ============================================================
 
 #define ANZAHL_SENSOREN   3
-#define PROTOKOLL_VERSION 3
+#define PROTOKOLL_VERSION 4
+
+// Flags-Bitfeld (ImuPaket v4)
+#define FLAG_NOTAUS       (1 << 0)   // Bit 0: Notaus aktiv
 
 typedef struct {
     float heading;
@@ -49,7 +52,8 @@ typedef struct __attribute__((packed)) {
     SensorDaten sensoren[ANZAHL_SENSOREN];
     KalibStatus kalib[ANZAHL_SENSOREN];
     float       flex_prozent;
-    uint8_t     protokoll_version;
+    uint8_t     flags;               // Bitfeld: Bit 0 = Notaus
+    uint8_t     protokoll_version;   // 4
     uint8_t     pruefsumme;
 } ImuPaket;
 
@@ -85,6 +89,9 @@ static unsigned long letzte_status_ms = 0;
 static float pps = 0.0f;
 static uint32_t pps_zaehler = 0;
 static unsigned long pps_start_ms = 0;
+
+// Notaus-Status (vom Controller empfangen)
+static bool notaus_empfangen = false;
 
 // OTA
 static bool ota_aktiv = false;
@@ -141,7 +148,7 @@ void beiEmpfang(const esp_now_recv_info_t* info, const uint8_t* daten, int laeng
 // ============================================================
 
 void mqtt_imu_senden(const ImuPaket* p) {
-    char json[384];
+    char json[420];
     int n = snprintf(json, sizeof(json),
         "{\"z\":%lu,"
         "\"s\":["
@@ -152,7 +159,7 @@ void mqtt_imu_senden(const ImuPaket* p) {
           "{\"s\":%d,\"g\":%d,\"a\":%d,\"m\":%d},"
           "{\"s\":%d,\"g\":%d,\"a\":%d,\"m\":%d},"
           "{\"s\":%d,\"g\":%d,\"a\":%d,\"m\":%d}],"
-        "\"f\":%.1f,\"v\":%d}",
+        "\"f\":%.1f,\"fl\":%d,\"notaus\":%s,\"v\":%d}",
         (unsigned long)p->zaehler,
         p->sensoren[0].heading, p->sensoren[0].roll, p->sensoren[0].pitch,
         p->sensoren[1].heading, p->sensoren[1].roll, p->sensoren[1].pitch,
@@ -160,7 +167,9 @@ void mqtt_imu_senden(const ImuPaket* p) {
         p->kalib[0].sys, p->kalib[0].gyro, p->kalib[0].accel, p->kalib[0].mag,
         p->kalib[1].sys, p->kalib[1].gyro, p->kalib[1].accel, p->kalib[1].mag,
         p->kalib[2].sys, p->kalib[2].gyro, p->kalib[2].accel, p->kalib[2].mag,
-        p->flex_prozent, p->protokoll_version);
+        p->flex_prozent, p->flags,
+        (p->flags & FLAG_NOTAUS) ? "true" : "false",
+        p->protokoll_version);
 
     if (n > 0 && n < (int)sizeof(json)) {
         mqtt.publish(TOPIC_IMU, json);
@@ -180,20 +189,22 @@ void mqtt_status_senden() {
         ? (float)fehler_gesamt / (pakete_gesamt + fehler_gesamt)
         : 0.0f;
 
-    char json[192];
+    char json[224];
     snprintf(json, sizeof(json),
         "{\"wifi_rssi\":%d,"
         "\"uptime_s\":%lu,"
         "\"pakete_gesamt\":%lu,"
         "\"fehler_gesamt\":%lu,"
         "\"fehlerrate\":%.4f,"
-        "\"pps\":%.1f}",
+        "\"pps\":%.1f,"
+        "\"notaus\":%s}",
         WiFi.RSSI(),
         (unsigned long)((jetzt - boot_zeit_ms) / 1000),
         (unsigned long)pakete_gesamt,
         (unsigned long)fehler_gesamt,
         fehlerrate,
-        pps);
+        pps,
+        notaus_empfangen ? "true" : "false");
 
     mqtt.publish(TOPIC_STATUS, json, true);
 }
@@ -374,9 +385,11 @@ void leds_aktualisieren() {
     bool mqtt_problem = !mqtt.connected();
     digitalWrite(LED_MQTT, (mqtt_problem && blink) ? HIGH : LOW);
 
-    // RGB: rot blinkend wenn irgendein Problem
+    // RGB: Notaus = orange blinkend (hoechste Prio), Fehler = rot blinkend, OK = aus
     bool fault = wifi_problem || espnow_timeout || mqtt_problem;
-    if (fault) {
+    if (notaus_empfangen) {
+        rgb.setPixelColor(0, blink ? rgb.Color(255, 80, 0) : rgb.Color(0, 0, 0));
+    } else if (fault) {
         rgb.setPixelColor(0, blink ? rgb.Color(255, 0, 0) : rgb.Color(0, 0, 0));
     } else {
         rgb.clear();
@@ -441,6 +454,17 @@ void loop() {
 
         ImuPaket lokale_kopie;
         memcpy(&lokale_kopie, (void*)&empfangenes_paket, sizeof(ImuPaket));
+
+        // Notaus-Flag auswerten und loggen
+        bool neuer_notaus = (lokale_kopie.flags & FLAG_NOTAUS) != 0;
+        if (neuer_notaus != notaus_empfangen) {
+            notaus_empfangen = neuer_notaus;
+            if (notaus_empfangen) {
+                Serial.println("[NOTAUS] *** NOTAUS vom Controller empfangen ***");
+            } else {
+                Serial.println("[NOTAUS] Controller-Notaus aufgehoben");
+            }
+        }
 
         if (mqtt.connected()) {
             mqtt_imu_senden(&lokale_kopie);

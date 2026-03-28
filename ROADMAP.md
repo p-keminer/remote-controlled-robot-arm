@@ -128,6 +128,7 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 - [x] Bench-Paketlayout v1 mit zwei IMUs abgeschlossen — historisch, abgeloest durch ImuPaket v3 (2026-03-26)
 - [x] minimalen UART-Frame v1 zwischen Receiver und Arduino dokumentieren — festes Binaerformat mit Startbytes, Version, Sequenz, Flags, 5 Achs-Sollwerten und CRC8
 - [x] Bench-Variante auf dritten IMU erweitert — ImuPaket v3 mit drei Sensoren und KalibStatus, Protokollversion 3 (bestaetigt 2026-03-26)
+- [x] ImuPaket v4 mit Notaus-Flag (Bit 0 im `flags`-Feld), Toggle-Button an GPIO21, alle drei Firmwares aktualisiert (bestaetigt 2026-03-28)
 - [ ] erste Arduino-Grundkette per UART aufbauen und validieren
 - [ ] Kommunikationsrahmen danach von der Bench-Variante auf die dokumentierte Security-Baseline mit `session_id`, applikationsseitigem Authentisierungstag und Advisory-gepruefter Stack-Basis anheben
 

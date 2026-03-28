@@ -24,13 +24,13 @@ Die aktuelle Phase konzentriert sich auf:
 - UART-Pfad Receiver → Arduino in Betrieb nehmen
 - Security-Uplift nach erster UART-Grundkette
 
-Abgeschlossen (Stand 2026-03-27):
+Abgeschlossen (Stand 2026-03-28):
 
 - Toolchain vollstaendig eingerichtet: Arduino IDE 3.3.7 als Hauptumgebung, PlatformIO als lokaler Fallback
 - 3x BNO055 ueber PCA9548A-Mux bench-validiert, Flex-Sensor ADC-Pfad kalibriert
-- `ImuPaket v3` per ESP-NOW Unicast: drei IMUs, Kalibrierungsstatus, XOR-Pruefsumme, Frische-Check
+- `ImuPaket v4` per ESP-NOW Unicast: drei IMUs, Kalibrierungsstatus, Notaus-Flag, XOR-Pruefsumme, Frische-Check
 - BNO055-Kalibrierungspersistenz im NVS mit Einzelkalibrierung (CAL0/CAL1/CAL2)
-- LED-Schema invertiert (aus=OK, blinken=Problem) mit RGB GPIO48 als FAULT auf allen ESPs
+- LED-Schema invertiert (aus=OK, an=Problem) mit RGB GPIO48 als FAULT auf allen ESPs
 - Live-Sensorausfallerkennung fuer IMUs und Flex-Sensor
 - Multi-Peer ESP-NOW: Controller sendet an Receiver (Steuerpfad) und Bridge (Debug-Pfad)
 - Bridge-ESP32: ESP-NOW Empfang → WiFi/MQTT → Mosquitto (Pi) mit OTA und Passwort-Auth
@@ -38,6 +38,7 @@ Abgeschlossen (Stand 2026-03-27):
 - MQTT MCP Server fuer Claude Live-Sensorzugriff (6 Tools)
 - Kompletter Datenpfad validiert: Controller → ESP-NOW → Bridge → MQTT → Pi → MCP → Claude
 - Secret-Scanner mit 10 Kategorien, Pre-Commit/Pre-Push Hooks, GitHub Actions
+- Notaus-Schalter (Emergency Stop): Toggle-Button an GPIO21, jeder Tastendruck toggelt Notaus, propagiert per ImuPaket v4 an Receiver und Bridge
 - Adeept 5-DOF Roboterarm mechanisch im Stock-Zustand aufgebaut (noch nicht eingeschaltet/getestet)
 
 ## Leitdokumente
@@ -84,10 +85,10 @@ Nicht-repotaugliche lokale Werte wie Schluessel, Peer-Listen, lokale Identitaets
 
 Dokumentations- und Prozessbasis ist angelegt und wird nach jedem Meilenstein synchronisiert.
 Toolchain steht: Arduino IDE 3.3.7 als Hauptumgebung, PlatformIO als Fallback.
-Sensorpfad vollstaendig bench-validiert: drei BNO055 ueber PCA9548A-Mux, Flex-Sensor und `ESP-NOW` Unicast mit `ImuPaket v3` (Kalibrierungspersistenz im NVS).
+Sensorpfad vollstaendig bench-validiert: drei BNO055 ueber PCA9548A-Mux, Flex-Sensor und `ESP-NOW` Unicast mit `ImuPaket v4` (Kalibrierungspersistenz im NVS, Notaus-Flag).
 Kommunikation: Controller sendet per ESP-NOW an Receiver (Steuerpfad) und Bridge (Debug-Pfad) gleichzeitig auf Kanal 1.
 Debug-Infrastruktur: Bridge-ESP32 leitet Daten per WiFi/MQTT an Mosquitto (Pi); MQTT MCP Server erlaubt Claude direkten Live-Sensorzugriff.
-LED-Schema invertiert (aus=OK, blinken=Problem) mit RGB GPIO48 als FAULT auf allen ESPs.
+LED-Schema invertiert (aus=OK, an=Problem) mit RGB GPIO48 als FAULT auf allen ESPs.
 Secret-Scanner mit 10 Kategorien und automatischen Git-Hooks schuetzt vor versehentlichem Secret-Push.
 Die Security-Baseline wird bewusst erst nach erster UART-Grundkette aktiviert.
 Naechste Schritte: Stock-Baseline-Test, Dashboard-Views, UART-Inbetriebnahme zum Arduino.

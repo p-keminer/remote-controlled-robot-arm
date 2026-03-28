@@ -32,7 +32,7 @@ Dieses Dokument ist die kanonische Quelle fuer alle Kommunikationsregeln zwische
 
 - Standardpfad ist lokales `ESP-NOW`.
 - Der Steuerpfad soll nicht als offener Broadcast-Standardpfad behandelt werden.
-- Der aktuelle Bench-Pfad beruecksichtigt bereits Protokollversion, Integritaet und Frischeannahmen und bildet drei IMUs mit Kalibrierungsstatus ab (ImuPaket v3).
+- Der aktuelle Bench-Pfad beruecksichtigt bereits Protokollversion, Integritaet, Frischeannahmen und Notaus-Flag und bildet drei IMUs mit Kalibrierungsstatus ab (ImuPaket v4).
 - Der Produktivpfad fuer Realbetrieb muss zusaetzlich einen Session-Bezug und einen applikationsseitigen Authentisierungstag tragen.
 - Unbekannte, veraltete oder ungueltige Frames duerfen nicht in Bewegung uebergehen.
 - MAC-seitiger Sendeerfolg reicht nicht; der Projektpfad braucht Anwendungs-ACK und definierte Duplicate-Logik.
@@ -64,10 +64,10 @@ typedef struct __attribute__((packed)) {
 } ImuPaketV1Bench;
 ```
 
-- Abgeloest durch ImuPaket v3 (siehe unten)
+- Abgeloest durch ImuPaket v4 (siehe unten)
 - Archiviert unter `firmware/espnow_imu_v1/` und `firmware/espnow_receiver_v1/`
 
-## ImuPaket v3 - aktueller Bench-Stand fuer ESP-NOW (Stand 2026-03-26)
+## ImuPaket v4 - aktueller Bench-Stand fuer ESP-NOW (Stand 2026-03-28)
 
 ```c
 typedef struct {
@@ -88,12 +88,13 @@ typedef struct __attribute__((packed)) {
     SensorDaten sensoren[3];        // Oberarm, Unterarm, Hand/Wrist
     KalibStatus kalib[3];           // Kalibrierungsstatus pro Sensor (0-3 je Achse)
     float       flex_prozent;       // -1.0 wenn Sensor unplausibel
-    uint8_t     protokoll_version;  // 3
+    uint8_t     flags;              // Bitfeld: Bit 0 = FLAG_NOTAUS
+    uint8_t     protokoll_version;  // 4
     uint8_t     pruefsumme;
-} ImuPaketV3Bench;
+} ImuPaketV4Bench;
 ```
 
-- Paketgroesse: `sizeof(ImuPaketV3Bench)` — Receiver verwirft Pakete anderer Groesse
+- Paketgroesse: `sizeof(ImuPaketV4Bench)` — Receiver verwirft Pakete anderer Groesse
 - Integritaet im Bench-Pfad: XOR-Pruefsumme ueber alle Bytes bis auf das Pruefsummenfeld
 - Frische: Pakete mit `zaehler <= letzter_zaehler` werden verworfen
 - Sendeintervall: 50ms (20Hz)
@@ -101,27 +102,28 @@ typedef struct __attribute__((packed)) {
 - Kalibrierungsoffsets persistent im ESP32-NVS, automatisches Laden beim Boot
 - Einzelkalibrierung per Serial-Befehl (CAL0/CAL1/CAL2, RECAL, STOP)
 - Live-Sensorausfallerkennung fuer IMUs und Flex-Sensor mit automatischer Wiederherstellung
-- LED-Debugging invertiert (aus=OK, blinken=Problem): 4 LEDs + RGB am Controller, 2 LEDs + RGB am Receiver, 3 LEDs + RGB an Bridge
+- LED-Debugging invertiert (aus=OK, an=Problem): 4 LEDs + RGB am Controller, 2 LEDs + RGB am Receiver, 3 LEDs + RGB an Bridge
 - Multi-Peer ESP-NOW: Controller sendet an Receiver (Steuerpfad) und Bridge (Debug-Pfad) gleichzeitig
 - Bridge validiert Pakete (Groesse, Absender-MAC, Pruefsumme, Protokollversion) und publiziert als JSON per MQTT
+- **Notaus (Emergency Stop):** Bit 0 im `flags`-Feld signalisiert Notaus. Der Controller liest einen Toggle-Button an GPIO21 (INPUT_PULLUP, 50ms Entprellung). Jeder Tastendruck toggelt den Notaus-Zustand. Receiver und Bridge werten das Flag aus und zeigen Notaus visuell an (RGB orange blinkend).
 - Dieser Stand ist als Bench-Zwischenstufe fuer Sensor- und Funkvalidierung zulaessig, aber nicht als fertige Security-Baseline fuer Realbetrieb
 - Archiviert unter `firmware/espnow_imu_v2/` (ohne Persistenz) und aktuell in `firmware/esp32_controller/`
 
 ## Debug-Bridge-Pfad (Entwicklungswerkzeug)
 
-Die Bridge empfaengt identische ImuPaket v3 Frames wie der Receiver, validiert sie und konvertiert sie zu kompaktem JSON fuer MQTT.
+Die Bridge empfaengt identische ImuPaket v4 Frames wie der Receiver, validiert sie und konvertiert sie zu kompaktem JSON fuer MQTT.
 
 - **Protokoll:** MQTT ueber WiFi (PubSubClient), Mosquitto-Broker auf dem Pi (Port 1883)
 - **Authentifizierung:** Passwortgeschuetzt (`allow_anonymous false`), eigener MQTT-User fuer Bridge
 - **Topics:** `robotarm/imu` (20Hz, QoS 0), `robotarm/status` (1Hz, retained), `robotarm/kalib` (bei Aenderung, retained), `robotarm/ota/log`
 - **Kanal-Alignment:** Alle ESPs (Controller, Receiver, Bridge) muessen auf dem gleichen WiFi-Kanal laufen (aktuell Kanal 1)
 - **Sicherheit:** Die Bridge ist rein beobachtend. Sie kann keine Steuerbefehle senden. Ein Ausfall der Bridge hat keinen Einfluss auf den Steuerpfad.
-- **JSON-Format:** Kompakte Schluessel (`z`=zaehler, `s`=sensoren, `h`=heading, `r`=roll, `p`=pitch, `k`=kalib, `f`=flex_prozent, `v`=protokoll_version)
+- **JSON-Format:** Kompakte Schluessel (`z`=zaehler, `s`=sensoren, `h`=heading, `r`=roll, `p`=pitch, `k`=kalib, `f`=flex_prozent, `fl`=flags, `notaus`=Notaus-Status, `v`=protokoll_version)
 - **Detaillierte Topic-Struktur:** Siehe `dashboard/DASHBOARD_CONCEPT.md`
 
 ## Naechste Paketrevision vor dem Security-Uplift
 
-- `flags` und eine Sensor-Gueltigkeits- oder Quellenmaske sollen ab der naechsten Paketrevision sichtbar mitgefuehrt werden
+- `flags` Bitfeld ist seit v4 vorhanden (Bit 0 = Notaus); weitere Bits fuer Sensor-Gueltigkeits- oder Quellenmasken koennen ergaenzt werden
 - wenn das Paket erneut angefasst wird, soll ein klar reservierter Erweiterungsbereich fuer spaetere Security-Felder mitgeplant werden
 - der eigentliche Security-Uplift wird erst nach erster `Receiver -> Arduino`-Grundkette aktiviert
 
@@ -158,7 +160,7 @@ typedef struct {
 Hinweis:
 
 - Einfache XOR- oder CRC-Felder koennen zusaetzlich fuer Debug oder Korruptionserkennung existieren, ersetzen aber nicht den applikationsseitigen Authentisierungstag.
-- Das aktuell implementierte `ImuPaket v3` bleibt bis zum Security-Uplift ein Bench-Artefakt und ist kein Produktivfreigabekriterium.
+- Das aktuell implementierte `ImuPaket v4` bleibt bis zum Security-Uplift ein Bench-Artefakt und ist kein Produktivfreigabekriterium.
 
 ## UART-Frame v1 - Minimaler Startstand fuer Receiver -> Arduino
 

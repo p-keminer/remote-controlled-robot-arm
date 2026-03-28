@@ -3,9 +3,9 @@
 Dieses Dokument zeigt ausschliesslich **bestaetigte, real getestete** GPIO-Belegungen.
 Planungsannahmen und Recherchegrundlagen stehen in `PIN_MAPPING_RESEARCH.md`.
 
-**LED-Schema:** Invertiert — aus = OK, blinken = Problem. RGB auf GPIO48 als FAULT auf allen ESPs.
+**LED-Schema:** Invertiert — aus = OK, an = Problem. RGB auf GPIO48 als FAULT auf allen ESPs.
 
-## Controller (ESP32-S3-WROOM-1-N16R8) — Stand 2026-03-26
+## Controller (ESP32-S3-WROOM-1-N16R8) — Stand 2026-03-28
 
 | GPIO | Funktion | Bestaetigt | Anmerkung |
 | --- | --- | --- | --- |
@@ -16,30 +16,31 @@ Planungsannahmen und Recherchegrundlagen stehen in `PIN_MAPPING_RESEARCH.md`.
 | GPIO5 | LED Gelb (Unterarm S1) | ja | 100 Ohm, blinkt wenn S1 nicht kalibriert |
 | GPIO6 | LED Gelb (Oberarm S0) | ja | 100 Ohm, blinkt wenn S0 nicht kalibriert |
 | GPIO7 | LED Blau (COMMS) | ja | 100 Ohm, blinkt wenn ESP-NOW Send fehlschlaegt |
-| GPIO48 | LED RGB onboard (FAULT) | ja | NeoPixel, rot blinkend bei Sensorausfall oder Flex-Fehler |
+| GPIO21 | Notaus-Schalter | ja | Toggle-Button nach GND, INPUT_PULLUP, 50ms Entprellung, toggelt Notaus |
+| GPIO48 | LED RGB onboard (FAULT) | ja | NeoPixel, rot blinkend bei Sensorausfall/Flex-Fehler, orange blinkend bei Notaus |
 | GPIO21 | Buzzer | nein | entfaellt vorerst, LEDs reichen fuer Debugging |
 
-## Receiver (ESP32-S3-WROOM-1-N16R8) — Stand 2026-03-26
+## Receiver (ESP32-S3-WROOM-1-N16R8) — Stand 2026-03-28
 
 | GPIO | Funktion | Bestaetigt | Anmerkung |
 | --- | --- | --- | --- |
-| — | ESP-NOW (WiFi intern, Kanal 1) | ja | Unicast, ImuPaket v3, drei IMUs + KalibStatus, Pruefsumme und Frische-Check |
+| — | ESP-NOW (WiFi intern, Kanal 1) | ja | Unicast, ImuPaket v4, drei IMUs + KalibStatus + Notaus-Flag, Pruefsumme und Frische-Check |
 | GPIO4 | LED Gruen (UART) | ja | 100 Ohm, reserviert fuer spaetere UART-Weiterleitung |
 | GPIO5 | LED Blau (ESP-NOW) | ja | 100 Ohm, blinkt wenn ESP-NOW Empfangs-Timeout (>2s) |
-| GPIO48 | LED RGB onboard (FAULT) | ja | NeoPixel, rot blinkend bei Fehler oder Empfangs-Timeout |
+| GPIO48 | LED RGB onboard (FAULT) | ja | NeoPixel, rot blinkend bei Fehler/Timeout, orange blinkend bei Notaus |
 | GPIO15 | UART TX → Arduino RX | nein | geplant, noch nicht getestet |
 | GPIO16 | UART RX ← Arduino TX | nein | geplant, noch nicht getestet |
 
-## Bridge (ESP32-S3-WROOM-1-N16R8) — Stand 2026-03-26
+## Bridge (ESP32-S3-WROOM-1-N16R8) — Stand 2026-03-28
 
 | GPIO | Funktion | Bestaetigt | Anmerkung |
 | --- | --- | --- | --- |
 | — | WiFi STA (Kanal 1) | ja | Verbindung zum Router, MQTT an Mosquitto auf Pi |
-| — | ESP-NOW Empfang (Kanal 1) | ja | Empfaengt ImuPaket v3 vom Controller als 2. Peer |
+| — | ESP-NOW Empfang (Kanal 1) | ja | Empfaengt ImuPaket v4 vom Controller als 2. Peer |
 | GPIO4 | LED Gruen (WiFi) | ja | 100 Ohm, blinkt wenn WiFi getrennt |
 | GPIO5 | LED Blau (ESP-NOW) | ja | 100 Ohm, blinkt wenn ESP-NOW Timeout (>2s) |
 | GPIO7 | LED Weiss (MQTT) | ja | 100 Ohm, blinkt wenn MQTT getrennt |
-| GPIO48 | LED RGB onboard (FAULT) | ja | NeoPixel, rot blinkend bei irgendwelchem Problem |
+| GPIO48 | LED RGB onboard (FAULT/NOTAUS) | ja | NeoPixel, orange blinkend bei Notaus (hoechste Prio), rot blinkend bei Fehler, aus wenn OK |
 
 ## WiFi-Kanal
 

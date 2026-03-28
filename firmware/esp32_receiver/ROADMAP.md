@@ -13,7 +13,9 @@ Den Receiver-ESP32 als nachvollziehbare und sichere Funk-zu-UART-Bruecke vorbere
 - [x] Paketintegritaet fuer den Bench-Pfad konkretisieren
 - [x] Dritten IMU ueber den Funkpfad bis zum Receiver sauber mitgezogen und bench-validiert
 - [x] WiFi-Kanal 1 Koexistenz mit Bridge validiert
-- [x] LED-Schema invertiert (aus=OK, blinken=Problem) mit RGB GPIO48 als FAULT
+- [x] LED-Schema invertiert (aus=OK, an=Problem) mit RGB GPIO48 als FAULT
+- [x] ImuPaket v4 Empfang mit flags-Bitfeld (59 Bytes)
+- [x] Notaus-Flag-Empfang mit RGB-Anzeige (orange blinkend bei Notaus)
 
 ### Offen
 

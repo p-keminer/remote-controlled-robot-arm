@@ -9,7 +9,7 @@ Beim Sitzungsstart oder nach Kontextkomprimierung ist dieses Dokument zu lesen.
 ## Projektstand (Stand 2026-03-26)
 
 - Toolchain vollstaendig eingerichtet: Arduino IDE 3.3.7 + boards.local.txt als Hauptumgebung, PlatformIO als lokaler Fallback und Gegencheck
-- ESP-NOW Unicast laeuft: Controller → Receiver per MAC, ImuPaket v3 mit drei IMUs, Kalibrierungsstatus und NVS-Persistenz (bestaetigt 2026-03-26)
+- ESP-NOW Unicast laeuft: Controller → Receiver per MAC, ImuPaket v4 mit drei IMUs, Kalibrierungsstatus und NVS-Persistenz (bestaetigt 2026-03-26)
 - BNO055 validiert: drei Sensoren (Oberarm/Unterarm/Hand) ueber PCA9548A-Mux Kanaele 0/1/2, Kalibrierungsoffsets persistent im NVS
 - Einzelkalibrierungsmodus per Serial: CAL0/CAL1/CAL2, RECAL, STOP
 - Flex-Sensor validiert: GPIO1 ADC1, Spannungsteiler 10kOhm Pull-Down, gerade=1108, maximal gebogen=940, Live-Plausibilitaetspruefung (200-3800)

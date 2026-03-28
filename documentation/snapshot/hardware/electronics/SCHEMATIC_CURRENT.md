@@ -1,9 +1,9 @@
 # Schematic Current
 
-Aktueller Bench-Aufbau — Stand 2026-03-26.
+Aktueller Bench-Aufbau — Stand 2026-03-28.
 Nur bestaetigte und getestete Verbindungen. Geplante aber noch nicht getestete Pfade sind als `(geplant)` markiert.
 
-**LED-Schema:** Invertiert — aus = OK, blinken = Problem. RGB auf GPIO48 als FAULT auf allen ESPs.
+**LED-Schema:** Invertiert — aus = OK, an = Problem. RGB auf GPIO48 als FAULT auf allen ESPs.
 
 ## Controller-Seite
 
@@ -39,11 +39,12 @@ ESP32-S3-WROOM-1-N16R8                  │  │
 │                     │  │
 │                     │  └── 10kOhm ── GND
 │                     │
-│  GPIO4  ────────────┼── LED Gruen (Hand S2)    + 100 Ohm ── GND  [blinkt bei Problem]
-│  GPIO5  ────────────┼── LED Gelb (Unterarm S1) + 100 Ohm ── GND  [blinkt bei Problem]
-│  GPIO6  ────────────┼── LED Gelb (Oberarm S0)  + 100 Ohm ── GND  [blinkt bei Problem]
-│  GPIO7  ────────────┼── LED Blau (COMMS)       + 100 Ohm ── GND  [blinkt bei Problem]
-│  GPIO48 ────────────┼── LED RGB onboard (FAULT)                   [rot blinkt bei Fehler]
+│  GPIO4  ────────────┼── LED Gruen (Hand S2)    + 100 Ohm ── GND  [leuchtet bei Problem]
+│  GPIO5  ────────────┼── LED Gelb (Unterarm S1) + 100 Ohm ── GND  [leuchtet bei Problem]
+│  GPIO6  ────────────┼── LED Gelb (Oberarm S0)  + 100 Ohm ── GND  [leuchtet bei Problem]
+│  GPIO7  ────────────┼── LED Blau (COMMS)       + 100 Ohm ── GND  [leuchtet bei Problem]
+│  GPIO21 ────────────┼── Toggle-Button ── GND  (Notaus, INPUT_PULLUP, Toggle-Notaus)
+│  GPIO48 ────────────┼── LED RGB onboard (FAULT/NOTAUS)             [rot/orange blinkt]
 │                     │
 │  WiFi (intern) ─────┼──)) ESP-NOW Kanal 1 → Receiver + Bridge
 │                     │
@@ -112,7 +113,7 @@ BNO055 #2 (Hand) ─────┘                                    │ ADC
                                              ├── GPIO7  Blau   (COMMS Problem)
                                              ├── GPIO48 RGB    (FAULT)
                                              │
-                                       ESP-NOW (Kanal 1, Unicast, ImuPaket v3)
+                                       ESP-NOW (Kanal 1, Unicast, ImuPaket v4)
                                              │
                                     ┌────────┴────────┐
                                     │                 │
@@ -139,18 +140,19 @@ Alle drei ESPs muessen auf dem gleichen WiFi-Kanal laufen fuer ESP-NOW/WiFi-Koex
 
 ## Paketstatus
 
-- ESP-NOW Paketformat: `ImuPaket v3` (siehe `COMMUNICATION_FRAMEWORK.md`)
-- Inhalt: 3x Euler-Daten (H/R/P), 3x Kalibrierungsstatus (S/G/A/M), Flex-Prozent
+- ESP-NOW Paketformat: `ImuPaket v4` (siehe `COMMUNICATION_FRAMEWORK.md`)
+- Inhalt: 3x Euler-Daten (H/R/P), 3x Kalibrierungsstatus (S/G/A/M), Flex-Prozent, Flags (Bit 0 = Notaus)
 - Pruefsumme: XOR, `__attribute__((packed))`
 - Frische-Check: Frame-Zaehler
 - Sendeintervall: 50ms (20Hz) — aktuell ~1-2 PPS durch Multi-Peer Timing
 - Kalibrierungsoffsets: persistent im ESP32-NVS, automatisches Laden beim Boot
 
-## LED-Verhalten (invertiert: aus = OK, blinken = Problem)
+## LED-Verhalten (invertiert: aus = OK, an = Problem)
 
 ### Controller
 - IMU-LEDs (Gruen/Gelb/Gelb): blinken wenn Sensor NICHT bereit oder NICHT kalibriert
 - COMMS (Blau): blinkt wenn ESP-NOW Send fehlschlaegt
+- FAULT (RGB orange): blinkt bei Notaus (hoechste Prioritaet)
 - FAULT (RGB rot): blinkt bei IMU-Ausfall oder Flex-Sensor-Ausfall (Live-Erkennung im Betrieb)
 - Beim Boot: alle LEDs blitzen kurz auf (Starttest)
 - Im Kalibrierungsmodus (CAL0/1/2): jeweilige Sensor-LED blinkt
@@ -158,6 +160,7 @@ Alle drei ESPs muessen auf dem gleichen WiFi-Kanal laufen fuer ESP-NOW/WiFi-Koex
 ### Receiver
 - UART (Gruen): reserviert fuer spaetere UART-Weiterleitung
 - ESP-NOW (Blau): blinkt bei Empfangs-Timeout (>2s)
+- NOTAUS (RGB orange): blinkt bei empfangenem Notaus-Flag (hoechste Prioritaet)
 - FAULT (RGB rot): blinkt bei Validierungsfehler oder Timeout
 - Beim Boot: alle LEDs blitzen kurz auf (Starttest)
 
@@ -165,7 +168,8 @@ Alle drei ESPs muessen auf dem gleichen WiFi-Kanal laufen fuer ESP-NOW/WiFi-Koex
 - WiFi (Gruen): blinkt wenn WiFi getrennt
 - ESP-NOW (Blau): blinkt wenn kein Paket seit 2s
 - MQTT (Weiss): blinkt wenn MQTT getrennt
-- FAULT (RGB rot): blinkt wenn irgendein Problem vorliegt
+- NOTAUS (RGB orange): blinkt bei empfangenem Notaus-Flag (hoechste Prioritaet)
+- FAULT (RGB): orange blinkend bei Notaus (hoechste Prio), rot blinkend bei Fehler, aus wenn OK
 - Beim Boot: alle LEDs blitzen kurz auf (Starttest)
 
 ## Sensorausfallerkennung (Live)

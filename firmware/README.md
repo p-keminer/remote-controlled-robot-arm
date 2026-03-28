@@ -7,9 +7,9 @@ Dieser Ordner enthaelt die gesamte Laufzeitlogik fuer Controller, Receiver, Serv
 ## Aktueller Stand
 
 Controller, Receiver und Bridge sind als Bench-Firmware vorhanden und bench-validiert.
-Controller sendet ImuPaket v3 per ESP-NOW an Receiver (Steuerpfad) und Bridge (Debug-Pfad) gleichzeitig.
-Alle drei ESPs laufen auf WiFi-Kanal 1 (Router-Kanal) fuer ESP-NOW/WiFi-Koexistenz.
-LED-Schema ist invertiert: aus = OK, blinken = Problem, RGB auf GPIO48 = FAULT.
+Controller sendet ImuPaket v4 (59 Bytes, mit flags-Bitfeld) per ESP-NOW an Receiver (Steuerpfad) und Bridge (Debug-Pfad) gleichzeitig.
+Notaus-Toggle-Button am Controller (GPIO21) propagiert das Notaus-Flag per ImuPaket an alle Peers.
+LED-Schema ist invertiert: aus = OK, an = Problem. RGB auf GPIO48: orange blinkend bei Notaus, rot blinkend bei Fehler, aus wenn OK.
 Arduino-Servoebene, Security-Uplift und finale Trennung der Laufzeitpfade sind noch offen.
 Firmware-Archive frueherer Versionen liegen unter `espnow_imu_v1/`, `espnow_imu_v2/`, `espnow_receiver_v1/`, `espnow_receiver_v2/`.
 
@@ -22,20 +22,6 @@ Firmware-Archive frueherer Versionen liegen unter `espnow_imu_v1/`, `espnow_imu_
 - `UART_FRAME_V1.md` fuer das minimale serielle Startformat zwischen Receiver und Arduino
 - `espnow_imu_v1/`, `espnow_imu_v2/` — archivierte Controller-Firmware-Versionen
 - `espnow_receiver_v1/`, `espnow_receiver_v2/` — archivierte Receiver-Firmware-Versionen
-
-## Board- und Flash-Konfiguration
-
-Alle drei ESP32-S3-WROOM-1-N16R8 muessen mit dem Custom Board geflasht werden:
-
-```
-FQBN: esp32:esp32:robotic_arm_s3n16r8
-```
-
-**NIEMALS** das generische Board `esp32:esp32:esp32s3` verwenden — `CDCOnBoot` ist dort deaktiviert, was bei diesen Boards einen permanenten Reset-Loop verursacht.
-
-Die Board-Definition liegt in `boards.local.txt` im lokalen Arduino-Paketordner (siehe `../preparation/esp32_environment/README.md`).
-
-Kritische Einstellungen: `cdc_on_boot=1`, `flash_size=16MB`, `psram_type=opi`, `partitions=app3M_fat9M_16MB`.
 
 ## Regeln
 

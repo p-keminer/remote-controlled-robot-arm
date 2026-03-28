@@ -14,7 +14,7 @@ Dieses Dokument ist fuer Menschen und KI gleichermassen verbindlich.
 - `dashboard/` enthaelt nur Entwicklungs-Dashboard-Views, MQTT MCP Server und Debug-Tooling (Bench-Werkzeug, nicht Teil des v1-Steuerpfads).
 - `future/` enthaelt nur Zukunftsausbau, Post-v1-Ideen und spaeter zu aktivierende Erweiterungslinien.
 - `official_downloads/` enthaelt nur importierte Herstellerstaende, Vendor-Artefakte und projektrelevante Auswertungen dazu.
-- `documentation/` ist ausschliesslich generierter Snapshot-Inhalt und wird nicht manuell gepflegt.
+- `documentation/` ist ausschliesslich generierter Snapshot-Inhalt und wird nicht manuell gepflegt. Nach jedem grossen Dokumentationsdurchlauf muss `documentation/snapshot/` komplett neu aus den Live-Dateien generiert werden.
 
 ## Code-Qualitaet und Portabilitaet
 

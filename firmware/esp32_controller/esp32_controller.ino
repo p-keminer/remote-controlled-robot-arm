@@ -6,6 +6,7 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
 #include <Preferences.h>
+#include <Adafruit_NeoPixel.h>
 
 // Controller: IMU-Daten lesen und per ESP-NOW senden
 // I2C: SDA GPIO8 / SCL GPIO9 | Mux: 0x70 | Sensoren: 0x29
@@ -26,6 +27,12 @@
 //   GPIO6  Rot    — Oberarm-IMU (S0) kalibriert
 //   GPIO7  Blau   — COMMS (blinkt bei erfolgreichem Senden)
 //   GPIO10 Weiss  — FAULT (leuchtet bei Fehler)
+//
+// Notaus-Schalter (GPIO21):
+//   Toggle-Button nach GND mit internem Pull-Up.
+//   Jeder Tastendruck toggelt den Notaus-Zustand.
+//   Entprellung: 50ms, Zustandswechsel wird geloggt und per FAULT-LED angezeigt.
+//   LED-Schema: AUS = OK, AN = Problem/Notaus.
 
 #include "peer_config.local.h"
 
@@ -35,7 +42,10 @@
 #define BNO_ADRESSE       0x29
 #define ANZAHL_SENSOREN   3
 #define SENDE_INTERVALL   50    // ms
-#define PROTOKOLL_VERSION 3
+#define PROTOKOLL_VERSION 4
+
+#define NOTAUS_PIN       21     // Toggle-Button nach GND, interner Pull-Up
+#define NOTAUS_ENTPRELL   50    // ms Entprellzeit
 
 #define FLEX_PIN          1
 #define FLEX_GERADE       1108
@@ -51,8 +61,16 @@
 #define LED_OBERARM       6   // Rot    — S0 Oberarm
 #define LED_COMMS         7   // Blau   — Kommunikation
 #define LED_FAULT        10   // Weiss  — Fehler
+#define RGB_PIN          48   // Interne RGB-LED
+#define RGB_ANZAHL        1
+
+// Flags-Bitfeld (ImuPaket v4)
+#define FLAG_NOTAUS       (1 << 0)   // Bit 0: Notaus aktiv
+// Bits 1-7: reserviert fuer spaetere Erweiterung (Sensor-Gueltigkeit, Auth, etc.)
 
 // Zuordnung: LED-Pin pro Sensor-Index (S0=Oberarm, S1=Unterarm, S2=Hand)
+Adafruit_NeoPixel rgb(RGB_ANZAHL, RGB_PIN, NEO_GRB + NEO_KHZ800);
+
 static const uint8_t led_sensor_pin[ANZAHL_SENSOREN] = {
     LED_OBERARM,    // S0
     LED_UNTERARM,   // S1
@@ -77,7 +95,8 @@ typedef struct __attribute__((packed)) {
     SensorDaten sensoren[ANZAHL_SENSOREN];
     KalibStatus kalib[ANZAHL_SENSOREN];
     float       flex_prozent;
-    uint8_t     protokoll_version;
+    uint8_t     flags;               // Bitfeld: Bit 0 = Notaus, Bits 1-7 reserviert
+    uint8_t     protokoll_version;   // 4
     uint8_t     pruefsumme;
 } ImuPaket;
 
@@ -97,6 +116,12 @@ static bool flex_bereit = true;
 #if BRIDGE_AKTIV
 static bool bridge_registriert = false;
 #endif
+
+// Notaus-Zustand (Toggle-Button, entprellt)
+static bool notaus_aktiv = false;
+static bool notaus_letzter_pegel = HIGH;       // Pull-Up: Ruhezustand = HIGH
+static bool notaus_pegel_stabil = HIGH;        // letzter stabiler Pegel
+static unsigned long notaus_letzte_aenderung_ms = 0;
 
 // Debug-Ausgabe Intervall
 #define DEBUG_INTERVALL 2000  // ms
@@ -172,6 +197,43 @@ bool kalib_gut_genug(const KalibStatus* k) {
         && k->mag >= KALIB_SCHWELLE_MAG;
 }
 
+// Notaus: Toggle-Button nach GND mit Pull-Up.
+// Jeder Tastendruck (fallende Flanke HIGH->LOW) toggelt notaus_aktiv.
+void notaus_init() {
+    pinMode(NOTAUS_PIN, INPUT_PULLUP);
+    notaus_letzter_pegel = digitalRead(NOTAUS_PIN);
+    notaus_pegel_stabil = notaus_letzter_pegel;
+    notaus_aktiv = false;
+    notaus_letzte_aenderung_ms = millis();
+    Serial.println("[NOTAUS] Toggle-Button bereit — Betrieb freigegeben");
+}
+
+// Toggle-Button: Fallende Flanke (HIGH->LOW) toggelt Notaus
+void notaus_lesen() {
+    // Pin-Konfiguration sicherstellen (kann durch WiFi/I2C ueberschrieben werden)
+    pinMode(NOTAUS_PIN, INPUT_PULLUP);
+    bool pegel = digitalRead(NOTAUS_PIN);
+    unsigned long jetzt = millis();
+
+    if (pegel != notaus_letzter_pegel) {
+        notaus_letzte_aenderung_ms = jetzt;
+        notaus_letzter_pegel = pegel;
+    }
+
+    if ((jetzt - notaus_letzte_aenderung_ms) >= NOTAUS_ENTPRELL) {
+        // Fallende Flanke erkennen: stabiler Pegel war HIGH, jetzt stabil LOW
+        if (notaus_pegel_stabil == HIGH && pegel == LOW) {
+            notaus_aktiv = !notaus_aktiv;
+            if (notaus_aktiv) {
+                Serial.println("[NOTAUS] *** NOTAUS AKTIVIERT (Toggle) ***");
+            } else {
+                Serial.println("[NOTAUS] Notaus DEAKTIVIERT (Toggle) — Betrieb freigegeben");
+            }
+        }
+        notaus_pegel_stabil = pegel;
+    }
+}
+
 void leds_init() {
     pinMode(LED_HAND, OUTPUT);
     pinMode(LED_UNTERARM, OUTPUT);
@@ -179,31 +241,41 @@ void leds_init() {
     pinMode(LED_COMMS, OUTPUT);
     pinMode(LED_FAULT, OUTPUT);
 
+    rgb.begin();
+    rgb.setBrightness(30);
+    rgb.clear();
+    rgb.show();
+
     // Starttest: alle LEDs kurz an
     digitalWrite(LED_HAND, HIGH);
     digitalWrite(LED_UNTERARM, HIGH);
     digitalWrite(LED_OBERARM, HIGH);
     digitalWrite(LED_COMMS, HIGH);
     digitalWrite(LED_FAULT, HIGH);
+    rgb.setPixelColor(0, rgb.Color(255, 0, 0));
+    rgb.show();
     delay(300);
     digitalWrite(LED_HAND, LOW);
     digitalWrite(LED_UNTERARM, LOW);
     digitalWrite(LED_OBERARM, LOW);
     digitalWrite(LED_COMMS, LOW);
     digitalWrite(LED_FAULT, LOW);
+    rgb.clear();
+    rgb.show();
 }
 
 void leds_aktualisieren(const KalibStatus kalib[]) {
-    // IMU-LEDs: an wenn Sensor bereit UND Gyro kalibriert (>=3)
+    // LED-Schema: AUS = OK, AN = Problem
+    // IMU-LEDs: AUS wenn Sensor bereit UND kalibriert, AN wenn Problem
     for (uint8_t i = 0; i < ANZAHL_SENSOREN; i++) {
         bool ok = sensor_bereit[i] && kalib[i].gyro >= KALIB_SCHWELLE_GYRO;
-        digitalWrite(led_sensor_pin[i], ok ? HIGH : LOW);
+        digitalWrite(led_sensor_pin[i], ok ? LOW : HIGH);
     }
 
-    // COMMS: an wenn letztes Senden erfolgreich
-    digitalWrite(LED_COMMS, letzter_tx_ok ? HIGH : LOW);
+    // COMMS: AUS wenn letztes Senden erfolgreich
+    digitalWrite(LED_COMMS, letzter_tx_ok ? LOW : HIGH);
 
-    // FAULT: an wenn ein IMU-Sensor fehlt oder Flex-Sensor unplausibel
+    // FAULT: AN wenn Sensorausfall oder Flex-Fehler
     fehler_aktiv = !flex_bereit;
     for (uint8_t i = 0; i < ANZAHL_SENSOREN; i++) {
         if (!sensor_bereit[i]) {
@@ -212,12 +284,24 @@ void leds_aktualisieren(const KalibStatus kalib[]) {
         }
     }
     digitalWrite(LED_FAULT, fehler_aktiv ? HIGH : LOW);
+
+    // RGB: Notaus = orange blinkend (hoechste Prio), Fehler = rot blinkend, OK = aus
+    static bool blink = false;
+    blink = !blink;
+    if (notaus_aktiv) {
+        rgb.setPixelColor(0, blink ? rgb.Color(255, 80, 0) : rgb.Color(0, 0, 0));
+    } else if (fehler_aktiv) {
+        rgb.setPixelColor(0, blink ? rgb.Color(255, 0, 0) : rgb.Color(0, 0, 0));
+    } else {
+        rgb.clear();
+    }
+    rgb.show();
 }
 
 void beiBesendung(const wifi_tx_info_t* tx_info, esp_now_send_status_t status) {
     // Bridge-Fehler ignorieren: COMMS-LED nur bei Receiver-Fehler ausschalten
 #if BRIDGE_AKTIV
-    if (memcmp(tx_info->dst_addr, bridge_adresse, 6) == 0) {
+    if (memcmp(tx_info->des_addr, bridge_adresse, 6) == 0) {
         // Bridge-Send — Fehler sind unkritisch, nicht auf COMMS-LED auswirken
         return;
     }
@@ -233,6 +317,7 @@ void setup() {
     delay(1000);
 
     leds_init();
+    notaus_init();
 
     prefs.begin("imu_kalib", false);
 
@@ -416,8 +501,12 @@ void loop_einzelkalibrierung() {
 }
 
 void loop_normal() {
+    notaus_lesen();
+
     ImuPaket paket;
     paket.protokoll_version = PROTOKOLL_VERSION;
+    paket.flags = 0;
+    if (notaus_aktiv) paket.flags |= FLAG_NOTAUS;
     paket.zaehler = sende_zaehler++;
 
     for (uint8_t i = 0; i < ANZAHL_SENSOREN; i++) {
@@ -492,6 +581,8 @@ void loop_normal() {
 #if BRIDGE_AKTIV
         Serial.printf("  TX-Bridge: %s", (rc_bridge == ESP_OK) ? "OK" : "FEHLER");
 #endif
+        Serial.printf("  GPIO%d=%d notaus=%d", NOTAUS_PIN, digitalRead(NOTAUS_PIN), notaus_aktiv);
+        if (notaus_aktiv) Serial.print("  *** NOTAUS ***");
         Serial.println();
     }
 

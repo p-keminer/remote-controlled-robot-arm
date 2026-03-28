@@ -36,6 +36,18 @@ Dieses Dokument definiert die verbindlichen Sicherheitsregeln fuer Bewegungsfrei
 - manuelle Korrekturen oder mechanische Neuorientierungen erfolgen nur in dokumentiert sicherem Zustand
 - Herstellerwarnungen zu Handhabung und Stromversorgung werden in Bringup- und Aufbaupfaden mitgezogen
 
+### Notaus (Emergency Stop)
+
+- Der Controller besitzt einen physischen Notaus-Schalter an GPIO21
+- Beschaltung: Toggle-Button zwischen GPIO21 und GND, interner Pull-Up aktiv
+- Jeder Tastendruck toggelt den Notaus-Zustand. Entprellung 50ms, Zustandswechsel wird geloggt.
+- Entprellung: 50ms Software-Debounce
+- Signalweg: Controller setzt Bit 0 (`FLAG_NOTAUS`) im `flags`-Feld des ImuPaket v4
+- Receiver wertet das Flag aus und sperrt Bewegung bei aktivem Notaus
+- Bridge leitet den Notaus-Status per MQTT weiter (`notaus` Feld im JSON)
+- LED-Anzeige: RGB orange blinkend (255, 80, 0) auf allen ESPs bei Notaus (hoechste Prioritaet)
+- Ohne angeschlossenen Schalter: GPIO21 floating mit Pull-Up = HIGH = Notaus als sicherer Default
+
 ### Freigabe
 
 - eine spaetere Totmann- oder Bewegungsfreigabelogik wird als eigenes Sicherheitsfeature behandelt

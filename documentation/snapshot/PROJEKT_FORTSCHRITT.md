@@ -8,7 +8,7 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - Projektmodus: bench-validierte Sensor-, Kommunikations- und Elektronikbasis mit MQTT-Bridge und Live-Dashboard-Infrastruktur
 - Aktive Hauptphasen: Phase 6 - Sensorvalidierung, Phase 8 - Kommunikation und Safety, Phase 10 - Entwicklungs-Dashboard (als Bench-Werkzeug)
 - Parallel gepflegt: Phase 1 - Dokumentationsfundament, Phase 2 - Security-Grundlage, Phase 3 - Vorbereitung und Toolchain, Phase 4 - Hardware-Readiness
-- Entwicklungsrealitaet: Controller → Receiver + Bridge per ESP-NOW auf Kanal 1; Bridge → Mosquitto (Pi) per WiFi/MQTT; MQTT MCP Server fuer Claude Live-Debugging; LED-Schema invertiert mit RGB GPIO48; Secret-Scanner mit Git-Hooks integriert
+- Entwicklungsrealitaet: Controller → Receiver + Bridge per ESP-NOW auf Kanal 1 mit ImuPaket v4 (Notaus-Flag); Bridge → Mosquitto (Pi) per WiFi/MQTT; MQTT MCP Server fuer Claude Live-Debugging; LED-Schema invertiert mit RGB GPIO48; Notaus-Toggle-Button an GPIO21; Secret-Scanner mit Git-Hooks integriert
 - Naechste Schritte: Stock-Baseline-Test, UART-Grundkette, Dashboard-Views, Security-Uplift
 
 ## Aktuelle Phasenampel
@@ -63,16 +63,23 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - [x] Einzelkalibrierungsmodus eingefuehrt: CAL0/CAL1/CAL2 per Serial fuer fokussierte Sensor-Kalibrierung, RECAL zum Zuruecksetzen (bestaetigt 2026-03-26)
 - [x] Firmware-Versionsarchiv angelegt: espnow_imu_v1, espnow_receiver_v1, espnow_imu_v2, espnow_receiver_v2 als Bench-Snapshots unter firmware/ (bestaetigt 2026-03-26)
 - [x] Adeept 5-DOF Roboterarm mechanisch im Stock-Zustand aufgebaut — Fotos unter docs/photos/ (bestaetigt 2026-03-24)
-- [x] LED-Debugging invertiert (aus=OK, blinken=Problem) mit RGB GPIO48 als FAULT auf allen ESPs (bestaetigt 2026-03-26)
+- [x] LED-Debugging invertiert (aus=OK, an=Problem) mit RGB GPIO48 als FAULT/NOTAUS auf allen ESPs (bestaetigt 2026-03-26, aktualisiert 2026-03-28)
 - [x] Live-Sensorausfallerkennung und Flex-Sensor-Plausibilitaetspruefung im Controller (bestaetigt 2026-03-26)
 - [x] Bridge-ESP32 Firmware: ESP-NOW Empfang, MQTT-Weiterleitung (PubSubClient), OTA (ArduinoOTA), NeoPixel RGB (bestaetigt 2026-03-26)
-- [x] Controller Multi-Peer: sendet ImuPaket v3 an Receiver (Steuerpfad) und Bridge (Debug-Pfad) gleichzeitig (bestaetigt 2026-03-26)
+- [x] Controller Multi-Peer: sendet ImuPaket v4 an Receiver (Steuerpfad) und Bridge (Debug-Pfad) gleichzeitig (bestaetigt 2026-03-26)
 - [x] WiFi-Kanal 1 auf allen ESPs fuer ESP-NOW/WiFi-Koexistenz mit Router (bestaetigt 2026-03-26)
 - [x] Mosquitto MQTT-Broker auf Pi konfiguriert: Passwort-Auth, WebSocket-Listener auf 9001, Nginx Reverse Proxy auf /mqtt/ (bestaetigt 2026-03-26)
 - [x] MQTT MCP Server (dashboard/mcp/mqtt_mcp_server.py) mit 6 Tools fuer Claude Live-Sensorzugriff (bestaetigt 2026-03-26)
 - [x] Secret-Scanner (scripts/secret_scan.sh) mit 10 Kategorien, Pre-Commit/Pre-Push Hooks und GitHub Actions Workflow (bestaetigt 2026-03-26)
 - [x] Bidirektionale Sync-Skripte Windows/WSL ohne absolute Pfade (bestaetigt 2026-03-26)
 - [x] Live-IMU-Daten ueber kompletten Pfad validiert: Controller → ESP-NOW → Bridge → WiFi/MQTT → Pi → MCP → Claude (bestaetigt 2026-03-26)
+- [x] ImuPaket auf Protokollversion 4 angehoben: Notaus-Flag (Bit 0) im neuen `flags`-Feld, Toggle-Button an GPIO21, alle drei Firmwares aktualisiert (bestaetigt 2026-03-28)
+- [x] Notaus-Toggle-Button auf GPIO21 am Controller: jeder Tastendruck toggelt Notaus-Zustand, interner Pull-Up, 50ms Entprellung, kein externer Pull-Up noetig (bestaetigt 2026-03-28)
+- [x] RGB-LED GPIO48 auf allen drei ESPs: orange blinkend bei Notaus (hoechste Prio), rot blinkend bei Fehler, aus wenn OK (bestaetigt 2026-03-28)
+- [x] LED-Schema am Controller von blinken auf an/aus umgestellt: aus = OK, an = Problem (bestaetigt 2026-03-28)
+- [x] Notaus-Kette end-to-end validiert: Controller (Toggle-Button GPIO21) → ImuPaket v4 flags → Receiver (RGB orange) + Bridge (RGB orange, MQTT `"notaus":true/false`) (bestaetigt 2026-03-28)
+- [x] Alle Dokumentation auf GPIO21, Toggle-Button, Kanal 1 und LED-Schema an=Problem durchgezogen (bestaetigt 2026-03-28)
+- [x] Foto des aktuellen Bench-Aufbaus unter docs/photos/2026-03-28_bench_aufbau_aktuell.jpg abgelegt (2026-03-28)
 
 ## Noch offen im aktuellen Schwerpunkt
 

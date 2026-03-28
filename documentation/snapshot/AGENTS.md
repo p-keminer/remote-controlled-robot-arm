@@ -18,7 +18,7 @@ Aktuell befindet sich das Projekt in Phase 6/8 — Sensor- und Kommunikations-Be
 - Toolchain steht: Arduino IDE 3.3.7 als Hauptumgebung, PlatformIO als Fallback und Gegencheck (bestaetigt 2026-03-22)
 - BNO055 drei Sensoren (Oberarm/Unterarm/Hand) via PCA9548A-Mux validiert, Kalibrierungsoffsets im NVS persistent (bestaetigt 2026-03-26)
 - Flex-Sensor ADC-Pfad ausgelesen und kalibriert mit Live-Plausibilitaetspruefung (bestaetigt 2026-03-26)
-- ESP-NOW Unicast mit `ImuPaket v3` (drei IMUs, KalibStatus, NVS-Persistenz) laeuft (bestaetigt 2026-03-26)
+- ESP-NOW Unicast mit `ImuPaket v4` (drei IMUs, KalibStatus, NVS-Persistenz) laeuft (bestaetigt 2026-03-26)
 - LED-Debugging bench-validiert: Controller Ampelsystem + COMMS + FAULT, Receiver LINK + UART + FAULT (bestaetigt 2026-03-26)
 - Bridge-ESP32: ESP-NOW Empfang → WiFi/MQTT → Mosquitto (Pi) mit OTA und Passwort-Auth (bestaetigt 2026-03-27)
 - WiFi-Kanal 1 auf allen ESPs fuer ESP-NOW/WiFi-Koexistenz (bestaetigt 2026-03-28)

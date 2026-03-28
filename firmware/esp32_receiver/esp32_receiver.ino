@@ -11,7 +11,7 @@
 //   GPIO5  Blau   — blinkt wenn ESP-NOW Timeout
 //   GPIO48 RGB    — rot blinkend bei FAULT (Pruefsumme, Version)
 
-#define PROTOKOLL_VERSION 3
+#define PROTOKOLL_VERSION 4
 #define ANZAHL_SENSOREN   3
 
 #define LED_UART          4   // Gruen — UART-Problem
@@ -20,6 +20,9 @@
 #define RGB_ANZAHL        1
 
 #define EMPFANGS_TIMEOUT  2000  // ms ohne Paket = Verbindung verloren
+
+// Flags-Bitfeld (ImuPaket v4)
+#define FLAG_NOTAUS       (1 << 0)   // Bit 0: Notaus aktiv
 
 Adafruit_NeoPixel rgb(RGB_ANZAHL, RGB_PIN, NEO_GRB + NEO_KHZ800);
 
@@ -41,13 +44,15 @@ typedef struct __attribute__((packed)) {
     SensorDaten sensoren[ANZAHL_SENSOREN];
     KalibStatus kalib[ANZAHL_SENSOREN];
     float       flex_prozent;
-    uint8_t     protokoll_version;
+    uint8_t     flags;               // Bitfeld: Bit 0 = Notaus
+    uint8_t     protokoll_version;   // 4
     uint8_t     pruefsumme;
 } ImuPaket;
 
 static uint32_t letzter_zaehler = UINT32_MAX;
 static unsigned long letzter_empfang_ms = 1;  // >0 damit Timeout ab Boot greift
 static bool fehler_flag = false;
+static bool notaus_empfangen = false;
 
 uint8_t pruefsumme_berechnen(const ImuPaket* paket) {
     const uint8_t* bytes = (const uint8_t*)paket;
@@ -88,7 +93,20 @@ void beiEmpfang(const esp_now_recv_info_t* empfangs_info, const uint8_t* daten, 
     letzter_empfang_ms = millis();
     fehler_flag = false;
 
-    Serial.printf("#%lu\n", paket.zaehler);
+    // Notaus-Flag auswerten
+    bool neuer_notaus = (paket.flags & FLAG_NOTAUS) != 0;
+    if (neuer_notaus != notaus_empfangen) {
+        notaus_empfangen = neuer_notaus;
+        if (notaus_empfangen) {
+            Serial.println("[NOTAUS] *** NOTAUS vom Controller empfangen — Bewegung gesperrt ***");
+        } else {
+            Serial.println("[NOTAUS] Controller-Notaus aufgehoben — Betrieb freigegeben");
+        }
+    }
+
+    Serial.printf("#%lu", paket.zaehler);
+    if (notaus_empfangen) Serial.print(" [NOTAUS]");
+    Serial.println();
     for (uint8_t i = 0; i < ANZAHL_SENSOREN; i++) {
         Serial.printf("  S%d | H:%6.1f  R:%6.1f  P:%6.1f  [S%d G%d A%d M%d]\n", i,
             paket.sensoren[i].heading,
@@ -154,9 +172,11 @@ void loop() {
     bool espnow_timeout = (letzter_empfang_ms > 0 && (jetzt - letzter_empfang_ms) > EMPFANGS_TIMEOUT);
     digitalWrite(LED_LINK, (espnow_timeout && blink) ? HIGH : LOW);
 
-    // FAULT: RGB rot blinkend bei Validierungsfehler oder Timeout
-    bool fault = fehler_flag || espnow_timeout;
-    if (fault) {
+    // FAULT/NOTAUS: RGB-Anzeige
+    // Notaus = orange blinkend (hoechste Prio), Fehler = rot blinkend, OK = aus
+    if (notaus_empfangen) {
+        rgb.setPixelColor(0, blink ? rgb.Color(255, 80, 0) : rgb.Color(0, 0, 0));
+    } else if (fehler_flag || espnow_timeout) {
         rgb.setPixelColor(0, blink ? rgb.Color(255, 0, 0) : rgb.Color(0, 0, 0));
     } else {
         rgb.clear();
