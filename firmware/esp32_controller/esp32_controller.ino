@@ -1,11 +1,11 @@
 #include <WiFi.h>
 #include <esp_now.h>
 #include <esp_wifi.h>
+#include <esp_mac.h>
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
 #include <Preferences.h>
-#include <Adafruit_NeoPixel.h>
 
 // Controller: IMU-Daten lesen und per ESP-NOW senden
 // I2C: SDA GPIO8 / SCL GPIO9 | Mux: 0x70 | Sensoren: 0x29
@@ -20,12 +20,12 @@
 //   CAL2     — Einzelkalibrierung Sensor 2
 //   STOP     — Einzelkalibrierung abbrechen, Normalbetrieb
 //
-// LED-Debugging (invertiert: aus = OK, blinken = Problem):
-//   GPIO4  Gruen  — blinkt wenn S2 (Hand/Wrist) nicht kalibriert
-//   GPIO5  Gelb   — blinkt wenn S1 (Unterarm) nicht kalibriert
-//   GPIO6  Gelb   — blinkt wenn S0 (Oberarm) nicht kalibriert
-//   GPIO7  Blau   — blinkt wenn ESP-NOW Send fehlschlaegt
-//   GPIO48 RGB    — rot blinkend bei FAULT (Sensorausfall, Flex-Fehler)
+// LED-Debugging (alle mit 100 Ohm Vorwiderstand):
+//   GPIO4  Gruen  — Hand/Wrist-IMU (S2) kalibriert
+//   GPIO5  Gelb   — Unterarm-IMU (S1) kalibriert
+//   GPIO6  Rot    — Oberarm-IMU (S0) kalibriert
+//   GPIO7  Blau   — COMMS (blinkt bei erfolgreichem Senden)
+//   GPIO10 Weiss  — FAULT (leuchtet bei Fehler)
 
 #include "peer_config.local.h"
 
@@ -45,13 +45,12 @@
 #define KALIB_SCHWELLE_ACCEL 2
 #define KALIB_SCHWELLE_MAG   2
 
-// LED-Pins (invertiert: aus = OK, blinken = Problem)
-#define LED_HAND          4   // Gruen  — S2 Hand/Wrist nicht kalibriert
-#define LED_UNTERARM      5   // Gelb   — S1 Unterarm nicht kalibriert
-#define LED_OBERARM       6   // Gelb   — S0 Oberarm nicht kalibriert
-#define LED_COMMS         7   // Blau   — ESP-NOW Send fehlgeschlagen
-#define RGB_PIN          48   // Interne RGB-LED
-#define RGB_ANZAHL        1
+// LED-Pins: Ampelsystem Hand(gruen)->Unterarm(gelb)->Oberarm(rot)
+#define LED_HAND          4   // Gruen  — S2 Hand/Wrist
+#define LED_UNTERARM      5   // Gelb   — S1 Unterarm
+#define LED_OBERARM       6   // Rot    — S0 Oberarm
+#define LED_COMMS         7   // Blau   — Kommunikation
+#define LED_FAULT        10   // Weiss  — Fehler
 
 // Zuordnung: LED-Pin pro Sensor-Index (S0=Oberarm, S1=Unterarm, S2=Hand)
 static const uint8_t led_sensor_pin[ANZAHL_SENSOREN] = {
@@ -59,8 +58,6 @@ static const uint8_t led_sensor_pin[ANZAHL_SENSOREN] = {
     LED_UNTERARM,   // S1
     LED_HAND        // S2
 };
-
-Adafruit_NeoPixel rgb(RGB_ANZAHL, RGB_PIN, NEO_GRB + NEO_KHZ800);
 
 typedef struct {
     float heading;
@@ -100,6 +97,10 @@ static bool flex_bereit = true;
 #if BRIDGE_AKTIV
 static bool bridge_registriert = false;
 #endif
+
+// Debug-Ausgabe Intervall
+#define DEBUG_INTERVALL 2000  // ms
+static unsigned long letzter_debug_ms = 0;
 
 // Einzelkalibrierungsmodus: -1 = aus, 0/1/2 = aktiver Sensor
 static int8_t kalib_einzeln = -1;
@@ -176,46 +177,33 @@ void leds_init() {
     pinMode(LED_UNTERARM, OUTPUT);
     pinMode(LED_OBERARM, OUTPUT);
     pinMode(LED_COMMS, OUTPUT);
-    digitalWrite(LED_HAND, LOW);
-    digitalWrite(LED_UNTERARM, LOW);
-    digitalWrite(LED_OBERARM, LOW);
-    digitalWrite(LED_COMMS, LOW);
-
-    rgb.begin();
-    rgb.setBrightness(30);
-    rgb.clear();
-    rgb.show();
+    pinMode(LED_FAULT, OUTPUT);
 
     // Starttest: alle LEDs kurz an
     digitalWrite(LED_HAND, HIGH);
     digitalWrite(LED_UNTERARM, HIGH);
     digitalWrite(LED_OBERARM, HIGH);
     digitalWrite(LED_COMMS, HIGH);
-    rgb.setPixelColor(0, rgb.Color(255, 0, 0));
-    rgb.show();
+    digitalWrite(LED_FAULT, HIGH);
     delay(300);
     digitalWrite(LED_HAND, LOW);
     digitalWrite(LED_UNTERARM, LOW);
     digitalWrite(LED_OBERARM, LOW);
     digitalWrite(LED_COMMS, LOW);
-    rgb.clear();
-    rgb.show();
+    digitalWrite(LED_FAULT, LOW);
 }
 
 void leds_aktualisieren(const KalibStatus kalib[]) {
-    unsigned long jetzt = millis();
-    bool blink = (jetzt / 500) % 2;  // 1Hz Blinktakt
-
-    // IMU-LEDs: blinken wenn Sensor NICHT kalibriert oder NICHT bereit (invertiert)
+    // IMU-LEDs: an wenn Sensor bereit UND Gyro kalibriert (>=3)
     for (uint8_t i = 0; i < ANZAHL_SENSOREN; i++) {
         bool ok = sensor_bereit[i] && kalib[i].gyro >= KALIB_SCHWELLE_GYRO;
-        digitalWrite(led_sensor_pin[i], (!ok && blink) ? HIGH : LOW);
+        digitalWrite(led_sensor_pin[i], ok ? HIGH : LOW);
     }
 
-    // COMMS: blinkt wenn letztes Senden fehlgeschlagen (invertiert)
-    digitalWrite(LED_COMMS, (!letzter_tx_ok && blink) ? HIGH : LOW);
+    // COMMS: an wenn letztes Senden erfolgreich
+    digitalWrite(LED_COMMS, letzter_tx_ok ? HIGH : LOW);
 
-    // FAULT: RGB rot blinkend wenn ein IMU-Sensor fehlt oder Flex-Sensor unplausibel
+    // FAULT: an wenn ein IMU-Sensor fehlt oder Flex-Sensor unplausibel
     fehler_aktiv = !flex_bereit;
     for (uint8_t i = 0; i < ANZAHL_SENSOREN; i++) {
         if (!sensor_bereit[i]) {
@@ -223,18 +211,13 @@ void leds_aktualisieren(const KalibStatus kalib[]) {
             break;
         }
     }
-    if (fehler_aktiv) {
-        rgb.setPixelColor(0, blink ? rgb.Color(255, 0, 0) : rgb.Color(0, 0, 0));
-    } else {
-        rgb.clear();
-    }
-    rgb.show();
+    digitalWrite(LED_FAULT, fehler_aktiv ? HIGH : LOW);
 }
 
 void beiBesendung(const wifi_tx_info_t* tx_info, esp_now_send_status_t status) {
     // Bridge-Fehler ignorieren: COMMS-LED nur bei Receiver-Fehler ausschalten
 #if BRIDGE_AKTIV
-    if (memcmp(tx_info->des_addr, bridge_adresse, 6) == 0) {
+    if (memcmp(tx_info->dst_addr, bridge_adresse, 6) == 0) {
         // Bridge-Send — Fehler sind unkritisch, nicht auf COMMS-LED auswirken
         return;
     }
@@ -276,12 +259,29 @@ void setup() {
 
     WiFi.mode(WIFI_STA);
     WiFi.disconnect();
+
+    // Echte MAC per eFuse (WiFi.macAddress() gibt 00:00:00:00:00:00 auf ESP32-S3)
+    uint8_t eigene_mac[6];
+    esp_efuse_mac_get_default(eigene_mac);
+    Serial.printf("[INFO] Echte MAC (eFuse): %02X:%02X:%02X:%02X:%02X:%02X\n",
+        eigene_mac[0], eigene_mac[1], eigene_mac[2],
+        eigene_mac[3], eigene_mac[4], eigene_mac[5]);
+
+    // Kanal explizit setzen fuer ESP-NOW
+    esp_wifi_set_channel(1, WIFI_SECOND_CHAN_NONE);
+    uint8_t primaer_kanal = 0;
+    wifi_second_chan_t sekundaer_kanal;
+    esp_wifi_get_channel(&primaer_kanal, &sekundaer_kanal);
+    Serial.printf("[INFO] WiFi-Kanal: %d\n", primaer_kanal);
+
+    Serial.printf("[INFO] Empfaenger-MAC: %02X:%02X:%02X:%02X:%02X:%02X\n",
+        empfaenger_adresse[0], empfaenger_adresse[1], empfaenger_adresse[2],
+        empfaenger_adresse[3], empfaenger_adresse[4], empfaenger_adresse[5]);
 #if BRIDGE_AKTIV
-    // Alle ESPs muessen auf dem gleichen Kanal sein wie die Bridge (= Router-Kanal)
-    esp_wifi_set_channel(6, WIFI_SECOND_CHAN_NONE);
-    Serial.println("[BRIDGE] WiFi-Kanal auf 6 gesetzt (Router-Kanal)");
+    Serial.printf("[INFO] Bridge-MAC: %02X:%02X:%02X:%02X:%02X:%02X\n",
+        bridge_adresse[0], bridge_adresse[1], bridge_adresse[2],
+        bridge_adresse[3], bridge_adresse[4], bridge_adresse[5]);
 #endif
-    Serial.printf("MAC: %s\n", WiFi.macAddress().c_str());
 
     if (esp_now_init() != ESP_OK) {
         Serial.println("FEHLER: ESP-NOW init");
@@ -292,7 +292,7 @@ void setup() {
 
     esp_now_peer_info_t gegenstelle = {};
     memcpy(gegenstelle.peer_addr, empfaenger_adresse, 6);
-    gegenstelle.channel = 0;  // 0 = gleicher Kanal wie lokal (jetzt 6)
+    gegenstelle.channel = 0;
     gegenstelle.encrypt = false;
 
     if (esp_now_add_peer(&gegenstelle) != ESP_OK) {
@@ -303,7 +303,7 @@ void setup() {
 #if BRIDGE_AKTIV
     esp_now_peer_info_t bridge_peer = {};
     memcpy(bridge_peer.peer_addr, bridge_adresse, 6);
-    bridge_peer.channel = 0;  // 0 = gleicher Kanal wie lokal (jetzt 6)
+    bridge_peer.channel = 0;
     bridge_peer.encrypt = false;
 
     if (esp_now_add_peer(&bridge_peer) != ESP_OK) {
@@ -465,13 +465,35 @@ void loop_normal() {
 
     paket.flex_prozent = flex_lesen();
     paket.pruefsumme = pruefsumme_berechnen(&paket);
-    esp_now_send(empfaenger_adresse, (uint8_t*)&paket, sizeof(paket));
+
+    esp_err_t rc_empf = esp_now_send(empfaenger_adresse, (uint8_t*)&paket, sizeof(paket));
 
 #if BRIDGE_AKTIV
+    esp_err_t rc_bridge = ESP_OK;
     if (bridge_registriert) {
-        esp_now_send(bridge_adresse, (uint8_t*)&paket, sizeof(paket));
+        rc_bridge = esp_now_send(bridge_adresse, (uint8_t*)&paket, sizeof(paket));
     }
 #endif
+
+    // Periodische Debug-Ausgabe alle 2 Sekunden
+    unsigned long jetzt = millis();
+    if (jetzt - letzter_debug_ms >= DEBUG_INTERVALL) {
+        letzter_debug_ms = jetzt;
+        Serial.printf("\n--- Status #%lu (%.1fs) ---\n", paket.zaehler, jetzt / 1000.0f);
+        for (uint8_t i = 0; i < ANZAHL_SENSOREN; i++) {
+            Serial.printf("  S%d | H:%6.1f R:%6.1f P:%6.1f  [S%d G%d A%d M%d] %s\n", i,
+                paket.sensoren[i].heading, paket.sensoren[i].roll, paket.sensoren[i].pitch,
+                paket.kalib[i].sys, paket.kalib[i].gyro,
+                paket.kalib[i].accel, paket.kalib[i].mag,
+                sensor_bereit[i] ? "OK" : "FEHLT");
+        }
+        Serial.printf("  Flex: %5.1f%%  TX-Recv: %s", paket.flex_prozent,
+            (rc_empf == ESP_OK) ? "OK" : "FEHLER");
+#if BRIDGE_AKTIV
+        Serial.printf("  TX-Bridge: %s", (rc_bridge == ESP_OK) ? "OK" : "FEHLER");
+#endif
+        Serial.println();
+    }
 
     delay(SENDE_INTERVALL);
 }

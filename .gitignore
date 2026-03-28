@@ -4,6 +4,10 @@ Thumbs.db
 .idea/
 .vscode/
 
+# Claude Code lokale Einstellungen (enthalten Permissions mit Secrets/IPs/Passwoertern)
+.claude/settings.local.json
+.claude/*.local.*
+
 # Build- und Tooling-Artefakte
 build/
 out/

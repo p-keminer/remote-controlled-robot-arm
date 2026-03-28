@@ -8,7 +8,7 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - Projektmodus: bench-validierte Sensor-, Kommunikations- und Elektronikbasis mit MQTT-Bridge und Live-Dashboard-Infrastruktur
 - Aktive Hauptphasen: Phase 6 - Sensorvalidierung, Phase 8 - Kommunikation und Safety, Phase 10 - Entwicklungs-Dashboard (als Bench-Werkzeug)
 - Parallel gepflegt: Phase 1 - Dokumentationsfundament, Phase 2 - Security-Grundlage, Phase 3 - Vorbereitung und Toolchain, Phase 4 - Hardware-Readiness
-- Entwicklungsrealitaet: Controller → Receiver + Bridge per ESP-NOW auf Kanal 6; Bridge → Mosquitto (Pi) per WiFi/MQTT; MQTT MCP Server fuer Claude Live-Debugging; LED-Schema invertiert mit RGB GPIO48; Secret-Scanner mit Git-Hooks integriert
+- Entwicklungsrealitaet: Controller → Receiver + Bridge per ESP-NOW auf Kanal 1; Bridge → Mosquitto (Pi) per WiFi/MQTT; MQTT MCP Server fuer Claude Live-Debugging; LED-Schema invertiert mit RGB GPIO48; Secret-Scanner mit Git-Hooks integriert
 - Naechste Schritte: Stock-Baseline-Test, UART-Grundkette, Dashboard-Views, Security-Uplift
 
 ## Aktuelle Phasenampel
@@ -67,7 +67,7 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - [x] Live-Sensorausfallerkennung und Flex-Sensor-Plausibilitaetspruefung im Controller (bestaetigt 2026-03-26)
 - [x] Bridge-ESP32 Firmware: ESP-NOW Empfang, MQTT-Weiterleitung (PubSubClient), OTA (ArduinoOTA), NeoPixel RGB (bestaetigt 2026-03-26)
 - [x] Controller Multi-Peer: sendet ImuPaket v3 an Receiver (Steuerpfad) und Bridge (Debug-Pfad) gleichzeitig (bestaetigt 2026-03-26)
-- [x] WiFi-Kanal 6 auf allen ESPs fuer ESP-NOW/WiFi-Koexistenz mit Router (bestaetigt 2026-03-26)
+- [x] WiFi-Kanal 1 auf allen ESPs fuer ESP-NOW/WiFi-Koexistenz mit Router (bestaetigt 2026-03-26)
 - [x] Mosquitto MQTT-Broker auf Pi konfiguriert: Passwort-Auth, WebSocket-Listener auf 9001, Nginx Reverse Proxy auf /mqtt/ (bestaetigt 2026-03-26)
 - [x] MQTT MCP Server (dashboard/mcp/mqtt_mcp_server.py) mit 6 Tools fuer Claude Live-Sensorzugriff (bestaetigt 2026-03-26)
 - [x] Secret-Scanner (scripts/secret_scan.sh) mit 10 Kategorien, Pre-Commit/Pre-Push Hooks und GitHub Actions Workflow (bestaetigt 2026-03-26)

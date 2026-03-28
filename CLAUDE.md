@@ -20,13 +20,17 @@ Der Kern des Systems besteht aus mehreren grossen Saeulen:
 - noch keine vollstaendige Firmwarekette bis zum Servo
 - kein WLAN-, Cloud- oder Web-Interface-Projekt
 
-## Was bereits steht (Stand 2026-03-26)
+## Was bereits steht (Stand 2026-03-28)
 
 - Toolchain: Arduino IDE 3.3.7 als Hauptumgebung, PlatformIO als lokaler Fallback und Gegencheck
 - BNO055 Einzel, Dual und Triple (3x) via PCA9548A-Mux validiert (Kanaele 0/1/2)
 - Flex-Sensor ADC-Pfad ausgelesen und kalibriert
 - ESP-NOW Unicast als Bench-Pfad laeuft; `ImuPaket v3` mit drei IMUs, Kalibrierungsstatus, XOR-Pruefsumme und Frische-Check ist bestaetigt
 - BNO055-Kalibrierungsoffsets werden im NVS persistent gespeichert und beim Boot geladen; Einzelkalibrierung per CAL0/CAL1/CAL2
+- Bridge-ESP32 leitet Daten per WiFi/MQTT an Mosquitto (Pi); MQTT MCP Server erlaubt Claude Live-Sensorzugriff
+- Kompletter Datenpfad validiert: Controller → ESP-NOW → Bridge → MQTT → Pi → MCP → Claude
+- WiFi-Kanal 1 auf allen ESPs (Router-Kanal) fuer ESP-NOW/WiFi-Koexistenz
+- Custom Board FQBN `esp32:esp32:robotic_arm_s3n16r8` — nie generisches Board verwenden (siehe `GLOBAL_RULES.md`)
 - Security-Haertung mit `session_id`, Authentisierungstag und Advisory-gepruefter Stack-Basis ist dokumentiert, aber noch nicht umgesetzt
 
 ## Kein Hartcodieren — gilt fuer Firmware UND Skripte

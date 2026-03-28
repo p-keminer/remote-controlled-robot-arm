@@ -20,18 +20,24 @@ Die erste Version wird als lokal betriebenes Embedded-System vorbereitet: `ESP-N
 Die aktuelle Phase konzentriert sich auf:
 
 - Stock-Baseline-Test des aufgebauten Adeept-Arms durchfuehren und dokumentieren
+- Dashboard-Views im bestehenden IoT Control Center auf dem Pi implementieren
 - UART-Pfad Receiver → Arduino in Betrieb nehmen
-- Bench-Kommunikation nach erster UART-Grundkette von `ImuPaket v3` auf die dokumentierte Security-Baseline mit Session- und Authentisierungsschicht anheben
+- Security-Uplift nach erster UART-Grundkette
 
-Abgeschlossen (Stand 2026-03-26):
+Abgeschlossen (Stand 2026-03-27):
 
-- Toolchain vollstaendig eingerichtet: Arduino IDE 3.3.7 als Hauptumgebung, PlatformIO als lokaler Fallback- und Gegencheckpfad
-- BNO055 Einzelsensor, PCA9548A-Mux und drei simultane Sensoren validiert (Mux-Kanaele 0/1/2)
-- Flex-Sensor ADC-Pfad ausgelesen und Rohwerte dokumentiert
-- IMU-Daten per ESP-NOW Unicast uebertragen: `ImuPaket v3` mit drei IMUs, Kalibrierungsstatus, XOR-Pruefsumme und Frische-Check
-- BNO055-Kalibrierungsoffsets persistent im NVS gespeichert mit Einzelkalibrierungsmodus (CAL0/CAL1/CAL2)
-- LED-Debugging bench-validiert: Controller Ampelsystem (Gruen/Gelb/Rot + Blau COMMS + Weiss FAULT), Receiver (Gruen LINK + Blau UART + Gelb FAULT)
-- Live-Sensorausfallerkennung fuer IMUs und Flex-Sensor mit automatischer Wiederherstellung
+- Toolchain vollstaendig eingerichtet: Arduino IDE 3.3.7 als Hauptumgebung, PlatformIO als lokaler Fallback
+- 3x BNO055 ueber PCA9548A-Mux bench-validiert, Flex-Sensor ADC-Pfad kalibriert
+- `ImuPaket v3` per ESP-NOW Unicast: drei IMUs, Kalibrierungsstatus, XOR-Pruefsumme, Frische-Check
+- BNO055-Kalibrierungspersistenz im NVS mit Einzelkalibrierung (CAL0/CAL1/CAL2)
+- LED-Schema invertiert (aus=OK, blinken=Problem) mit RGB GPIO48 als FAULT auf allen ESPs
+- Live-Sensorausfallerkennung fuer IMUs und Flex-Sensor
+- Multi-Peer ESP-NOW: Controller sendet an Receiver (Steuerpfad) und Bridge (Debug-Pfad)
+- Bridge-ESP32: ESP-NOW Empfang → WiFi/MQTT → Mosquitto (Pi) mit OTA und Passwort-Auth
+- WiFi-Kanal 1 auf allen ESPs fuer ESP-NOW/WiFi-Koexistenz
+- MQTT MCP Server fuer Claude Live-Sensorzugriff (6 Tools)
+- Kompletter Datenpfad validiert: Controller → ESP-NOW → Bridge → MQTT → Pi → MCP → Claude
+- Secret-Scanner mit 10 Kategorien, Pre-Commit/Pre-Push Hooks, GitHub Actions
 - Adeept 5-DOF Roboterarm mechanisch im Stock-Zustand aufgebaut (noch nicht eingeschaltet/getestet)
 
 ## Leitdokumente
@@ -76,11 +82,12 @@ Nicht-repotaugliche lokale Werte wie Schluessel, Peer-Listen, lokale Identitaets
 
 ## Aktueller Entwicklungsstand
 
-Dokumentations- und Prozessbasis ist angelegt.
-Toolchain steht: Arduino IDE 3.3.7 ist die Hauptumgebung, PlatformIO bleibt als lokaler Fallback und Gegencheck erhalten.
-Sensorpfad ist bench-validiert: drei BNO055 ueber PCA9548A-Mux, Flex-Sensor und `ESP-NOW` Unicast mit `ImuPaket v3` (Kalibrierungsstatus und NVS-Persistenz).
-Der offizielle Adeept-V4.0-Download mit Tutorial-PDFs, Schaltplan und Originalcode liegt jetzt strukturiert unter `official_downloads/` und ist gegen Produktbasis, Servoannahmen und Stromversorgung ausgewertet.
-Als aktuelle Beschaffungsbasis fuer den Stock- und Projekt-Strompfad sind `4x Molicel INR-18650-M35A` ohne Loetfahne plus `1x XTAR VC4SL` dokumentiert.
-Die dokumentierte Security-Baseline mit `session_id`, applikationsseitigem Authentisierungstag und Advisory-gepruefter Stack-Basis ist vorbereitet, wird aber bewusst erst nach drittem IMU und erster UART-Grundkette aktiviert.
-Naechster Schritt: dritten IMU anbinden, LED-Debugging und Buzzer pruefen, Roboterarm aufbauen und UART-Inbetriebnahme zum Arduino.
-Zusaetzliche Post-v1-Ausbaurichtungen werden gesammelt unter `future/FUTURE_WORK.md`.
+Dokumentations- und Prozessbasis ist angelegt und wird nach jedem Meilenstein synchronisiert.
+Toolchain steht: Arduino IDE 3.3.7 als Hauptumgebung, PlatformIO als Fallback.
+Sensorpfad vollstaendig bench-validiert: drei BNO055 ueber PCA9548A-Mux, Flex-Sensor und `ESP-NOW` Unicast mit `ImuPaket v3` (Kalibrierungspersistenz im NVS).
+Kommunikation: Controller sendet per ESP-NOW an Receiver (Steuerpfad) und Bridge (Debug-Pfad) gleichzeitig auf Kanal 1.
+Debug-Infrastruktur: Bridge-ESP32 leitet Daten per WiFi/MQTT an Mosquitto (Pi); MQTT MCP Server erlaubt Claude direkten Live-Sensorzugriff.
+LED-Schema invertiert (aus=OK, blinken=Problem) mit RGB GPIO48 als FAULT auf allen ESPs.
+Secret-Scanner mit 10 Kategorien und automatischen Git-Hooks schuetzt vor versehentlichem Secret-Push.
+Die Security-Baseline wird bewusst erst nach erster UART-Grundkette aktiviert.
+Naechste Schritte: Stock-Baseline-Test, Dashboard-Views, UART-Inbetriebnahme zum Arduino.

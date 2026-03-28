@@ -37,6 +37,8 @@ rsync -av --delete $EXTRA \
     --exclude='.cache/' \
     --exclude='*.local.sh' \
     --exclude='*.local.h' \
+    --exclude='*.local.py' \
+    --exclude='*.local.json' \
     --exclude='*.local.txt' \
     --exclude='*.local.md' \
     --exclude='security/local/' \

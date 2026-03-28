@@ -131,10 +131,10 @@ void setup() {
 
     WiFi.mode(WIFI_STA);
     WiFi.disconnect();
-    // Kanal 6 = Router-Kanal, muss gleich sein wie Controller und Bridge
-    esp_wifi_set_channel(6, WIFI_SECOND_CHAN_NONE);
+    // Kanal 1 = Router-Kanal, muss gleich sein wie Controller und Bridge
+    esp_wifi_set_channel(1, WIFI_SECOND_CHAN_NONE);
 
-    Serial.println("=== Receiver: IMU-Daten (Kanal 6) ===");
+    Serial.println("=== Receiver: IMU-Daten (Kanal 1) ===");
     Serial.printf("MAC: %s\n", WiFi.macAddress().c_str());
 
     if (esp_now_init() != ESP_OK) {

@@ -101,7 +101,7 @@ pruefe "1/10" "Private IPs" "$T"
 # 2. MAC-Adressen (XX:XX:XX:XX:XX:XX)
 T=$(echo "$DATEIEN" | xargs grep -HnEi \
     '([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}' \
-    2>/dev/null | grep -vE 'PLATZHALTER|HIER_EINTRAGEN|BEISPIEL|example|placeholder|0xAA.*0xBB|0x11.*0x22|template' || true)
+    2>/dev/null | grep -vE 'PLATZHALTER|HIER_EINTRAGEN|BEISPIEL|example|placeholder|0xAA.*0xBB|0x11.*0x22|template|00:00:00:00:00:00|FF:FF:FF:FF:FF:FF|ff:ff:ff:ff:ff:ff' || true)
 pruefe "2/10" "MAC-Adressen" "$T"
 
 # 3. Hex-MAC-Arrays ({0x80, 0xB5, ...})

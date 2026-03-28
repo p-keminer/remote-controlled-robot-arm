@@ -18,7 +18,7 @@ Den Controller-ESP32 als robuste Quelle fuer Sensorwerte, Kalibrierbezug und Fun
 - [x] LED-Debugging invertiert (aus=OK, blinken=Problem) mit RGB GPIO48 als FAULT
 - [x] Live-Sensorausfallerkennung und Flex-Sensor-Plausibilitaetspruefung
 - [x] Multi-Peer ESP-NOW: Controller sendet an Receiver und Bridge gleichzeitig
-- [x] WiFi-Kanal 6 per esp_wifi_set_channel() fuer Bridge-Koexistenz
+- [x] WiFi-Kanal 1 per esp_wifi_set_channel() fuer Bridge-Koexistenz
 
 ### Offen
 

@@ -23,7 +23,7 @@ Planungsannahmen und Recherchegrundlagen stehen in `PIN_MAPPING_RESEARCH.md`.
 
 | GPIO | Funktion | Bestaetigt | Anmerkung |
 | --- | --- | --- | --- |
-| — | ESP-NOW (WiFi intern, Kanal 6) | ja | Unicast, ImuPaket v3, drei IMUs + KalibStatus, Pruefsumme und Frische-Check |
+| — | ESP-NOW (WiFi intern, Kanal 1) | ja | Unicast, ImuPaket v3, drei IMUs + KalibStatus, Pruefsumme und Frische-Check |
 | GPIO4 | LED Gruen (UART) | ja | 100 Ohm, reserviert fuer spaetere UART-Weiterleitung |
 | GPIO5 | LED Blau (ESP-NOW) | ja | 100 Ohm, blinkt wenn ESP-NOW Empfangs-Timeout (>2s) |
 | GPIO48 | LED RGB onboard (FAULT) | ja | NeoPixel, rot blinkend bei Fehler oder Empfangs-Timeout |
@@ -34,8 +34,8 @@ Planungsannahmen und Recherchegrundlagen stehen in `PIN_MAPPING_RESEARCH.md`.
 
 | GPIO | Funktion | Bestaetigt | Anmerkung |
 | --- | --- | --- | --- |
-| — | WiFi STA (Kanal 6) | ja | Verbindung zum Router, MQTT an Mosquitto auf Pi |
-| — | ESP-NOW Empfang (Kanal 6) | ja | Empfaengt ImuPaket v3 vom Controller als 2. Peer |
+| — | WiFi STA (Kanal 1) | ja | Verbindung zum Router, MQTT an Mosquitto auf Pi |
+| — | ESP-NOW Empfang (Kanal 1) | ja | Empfaengt ImuPaket v3 vom Controller als 2. Peer |
 | GPIO4 | LED Gruen (WiFi) | ja | 100 Ohm, blinkt wenn WiFi getrennt |
 | GPIO5 | LED Blau (ESP-NOW) | ja | 100 Ohm, blinkt wenn ESP-NOW Timeout (>2s) |
 | GPIO7 | LED Weiss (MQTT) | ja | 100 Ohm, blinkt wenn MQTT getrennt |
@@ -43,8 +43,8 @@ Planungsannahmen und Recherchegrundlagen stehen in `PIN_MAPPING_RESEARCH.md`.
 
 ## WiFi-Kanal
 
-Alle drei ESPs muessen auf dem gleichen WiFi-Kanal laufen (aktuell Kanal 6 = Router-Kanal).
-Controller und Receiver setzen den Kanal per `esp_wifi_set_channel(6)`.
+Alle drei ESPs muessen auf dem gleichen WiFi-Kanal laufen (aktuell Kanal 1 = Router-Kanal).
+Controller und Receiver setzen den Kanal per `esp_wifi_set_channel(1)`.
 Die Bridge uebernimmt den Kanal automatisch bei WiFi-Verbindung zum Router.
 
 ## Naechste Validierungsschritte

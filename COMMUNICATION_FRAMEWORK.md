@@ -10,7 +10,7 @@ Dieses Dokument ist die kanonische Quelle fuer alle Kommunikationsregeln zwische
 - Controller und Bridge tauschen die gleichen Daten parallel per `ESP-NOW` aus (Debug-Pfad, 2. Peer).
 - Bridge und Pi kommunizieren per WiFi und MQTT (Mosquitto, Port 1883, passwortgeschuetzt).
 - Receiver und Arduino kommunizieren ueber UART.
-- Alle drei ESPs laufen auf WiFi-Kanal 6 (Router-Kanal) fuer ESP-NOW/WiFi-Koexistenz.
+- Alle drei ESPs laufen auf WiFi-Kanal 1 (Router-Kanal) fuer ESP-NOW/WiFi-Koexistenz.
 
 ## Grundregeln
 
@@ -114,7 +114,7 @@ Die Bridge empfaengt identische ImuPaket v3 Frames wie der Receiver, validiert s
 - **Protokoll:** MQTT ueber WiFi (PubSubClient), Mosquitto-Broker auf dem Pi (Port 1883)
 - **Authentifizierung:** Passwortgeschuetzt (`allow_anonymous false`), eigener MQTT-User fuer Bridge
 - **Topics:** `robotarm/imu` (20Hz, QoS 0), `robotarm/status` (1Hz, retained), `robotarm/kalib` (bei Aenderung, retained), `robotarm/ota/log`
-- **Kanal-Alignment:** Alle ESPs (Controller, Receiver, Bridge) muessen auf dem gleichen WiFi-Kanal laufen (aktuell Kanal 6)
+- **Kanal-Alignment:** Alle ESPs (Controller, Receiver, Bridge) muessen auf dem gleichen WiFi-Kanal laufen (aktuell Kanal 1)
 - **Sicherheit:** Die Bridge ist rein beobachtend. Sie kann keine Steuerbefehle senden. Ein Ausfall der Bridge hat keinen Einfluss auf den Steuerpfad.
 - **JSON-Format:** Kompakte Schluessel (`z`=zaehler, `s`=sensoren, `h`=heading, `r`=roll, `p`=pitch, `k`=kalib, `f`=flex_prozent, `v`=protokoll_version)
 - **Detaillierte Topic-Struktur:** Siehe `dashboard/DASHBOARD_CONCEPT.md`

@@ -16,7 +16,7 @@ Eine klar getrennte Firmwarebasis fuer Controller, Receiver, Arduino und Bridge 
 - [x] ImuPaket v3 mit drei IMUs, Kalibrierungsstatus, XOR-Pruefsumme und Frische-Check
 - [x] Multi-Peer ESP-NOW: Controller sendet an Receiver und Bridge gleichzeitig
 - [x] Bridge-ESP32 Firmware mit ESP-NOW Empfang, MQTT-Weiterleitung, OTA
-- [x] WiFi-Kanal 6 auf allen ESPs fuer ESP-NOW/WiFi-Koexistenz
+- [x] WiFi-Kanal 1 auf allen ESPs fuer ESP-NOW/WiFi-Koexistenz
 - [x] LED-Schema invertiert (aus=OK, blinken=Problem) mit RGB GPIO48 als FAULT
 - [x] Live-Sensorausfallerkennung und Flex-Sensor-Plausibilitaetspruefung
 - [x] Firmware-Archive gesichert (espnow_imu_v1/v2, espnow_receiver_v1/v2)

@@ -45,7 +45,7 @@ ESP32-S3-WROOM-1-N16R8                  │  │
 │  GPIO7  ────────────┼── LED Blau (COMMS)       + 100 Ohm ── GND  [blinkt bei Problem]
 │  GPIO48 ────────────┼── LED RGB onboard (FAULT)                   [rot blinkt bei Fehler]
 │                     │
-│  WiFi (intern) ─────┼──)) ESP-NOW Kanal 6 → Receiver + Bridge
+│  WiFi (intern) ─────┼──)) ESP-NOW Kanal 1 → Receiver + Bridge
 │                     │
 │  USB-C ─────────────┼── PC (Flash / Serial Monitor)
 └─────────────────────┘
@@ -57,7 +57,7 @@ ESP32-S3-WROOM-1-N16R8                  │  │
 ESP32-S3-WROOM-1-N16R8
 ┌─────────────────────┐
 │                     │
-│  WiFi (intern) ─────┼──)) ESP-NOW Kanal 6 ← Controller
+│  WiFi (intern) ─────┼──)) ESP-NOW Kanal 1 ← Controller
 │                     │
 │  GPIO4  ────────────┼── LED Gruen (UART)       + 100 Ohm ── GND  [reserviert, spaeter]
 │  GPIO5  ────────────┼── LED Blau (ESP-NOW)     + 100 Ohm ── GND  [blinkt bei Timeout]
@@ -75,8 +75,8 @@ ESP32-S3-WROOM-1-N16R8
 ESP32-S3-WROOM-1-N16R8
 ┌─────────────────────┐
 │                     │
-│  WiFi (intern, STA) ┼──)) WiFi zu Router auf Kanal 6
-│  ESP-NOW (intern) ──┼──)) ESP-NOW Kanal 6 ← Controller
+│  WiFi (intern, STA) ┼──)) WiFi zu Router auf Kanal 1
+│  ESP-NOW (intern) ──┼──)) ESP-NOW Kanal 1 ← Controller
 │                     │
 │  GPIO4  ────────────┼── LED Gruen (WiFi)       + 100 Ohm ── GND  [blinkt wenn getrennt]
 │  GPIO5  ────────────┼── LED Blau (ESP-NOW)     + 100 Ohm ── GND  [blinkt bei Timeout]
@@ -112,7 +112,7 @@ BNO055 #2 (Hand) ─────┘                                    │ ADC
                                              ├── GPIO7  Blau   (COMMS Problem)
                                              ├── GPIO48 RGB    (FAULT)
                                              │
-                                       ESP-NOW (Kanal 6, Unicast, ImuPaket v3)
+                                       ESP-NOW (Kanal 1, Unicast, ImuPaket v3)
                                              │
                                     ┌────────┴────────┐
                                     │                 │
@@ -132,10 +132,10 @@ BNO055 #2 (Hand) ─────┘                                    │ ADC
 
 Alle drei ESPs muessen auf dem gleichen WiFi-Kanal laufen fuer ESP-NOW/WiFi-Koexistenz:
 
-- **Router:** Kanal 6
-- **Controller:** ESP-NOW auf Kanal 6 (per `esp_wifi_set_channel(6)`)
-- **Receiver:** ESP-NOW auf Kanal 6 (per `esp_wifi_set_channel(6)`)
-- **Bridge:** WiFi STA + ESP-NOW Empfang auf Kanal 6 (automatisch durch WiFi-Verbindung zum Router)
+- **Router:** Kanal 1
+- **Controller:** ESP-NOW auf Kanal 1 (per `esp_wifi_set_channel(1)`)
+- **Receiver:** ESP-NOW auf Kanal 1 (per `esp_wifi_set_channel(1)`)
+- **Bridge:** WiFi STA + ESP-NOW Empfang auf Kanal 1 (automatisch durch WiFi-Verbindung zum Router)
 
 ## Paketstatus
 

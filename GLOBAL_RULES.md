@@ -40,12 +40,21 @@ Dieses Dokument ist fuer Menschen und KI gleichermassen verbindlich.
 - Ausnahmen: Arduino/ESP-IDF-API-Bezeichner, Bibliothekstypen und erzwungene Konventionen externer Frameworks bleiben unveraendert.
 - Bestehender Code muss nicht rueckwirkend umbenannt werden — die Regel gilt fuer alle neuen und geaenderten Dateien.
 
+## Board- und Flash-Konfiguration
+
+- Alle drei ESP32-S3-WROOM-1-N16R8 muessen mit dem Custom Board `esp32:esp32:robotic_arm_s3n16r8` geflasht werden.
+- Die Board-Definition liegt in `boards.local.txt` im lokalen Arduino-Paketordner (nicht im Repo — wird bei Toolchain-Setup einmalig eingerichtet, siehe `preparation/esp32_environment/README.md`).
+- **NIEMALS** das generische Board `esp32:esp32:esp32s3` verwenden — dort ist `CDCOnBoot` deaktiviert, was bei diesen Boards einen permanenten Reset-Loop verursacht.
+- Kritische Einstellungen im Custom Board: `cdc_on_boot=1`, `flash_size=16MB`, `psram_type=opi`, `memory_type=qio_opi`, `partitions=app3M_fat9M_16MB`.
+- Vor jedem Flash-Vorgang die FQBN pruefen. Bei Unsicherheit die `boards.local.txt` konsultieren.
+- COM-Port-Zuordnungen sind nicht fest und koennen sich bei jedem Einstecken aendern; immer per `arduino-cli board list` oder Geraete-Manager pruefen.
+
 ## Kommunikations- und Systemregeln
 
 - `ESP-NOW` ist in v1 der einzige vorgesehene Funkpfad im Steuerpfad (Controller → Receiver → Arduino).
 - WiFi wird ausschliesslich zwischen Bridge-ESP32 und Pi fuer das Entwicklungs-Dashboard genutzt.
 - WLAN, Cloud und Web-Interfaces sind im Steuerpfad kein Zielpfad.
-- Alle ESPs muessen auf dem gleichen WiFi-Kanal laufen (aktuell Kanal 6 = Router-Kanal).
+- Alle ESPs muessen auf dem gleichen WiFi-Kanal laufen (aktuell Kanal 1 = Router-Kanal).
 - Receiver-Firmware validiert und uebergibt Bewegungsdaten, enthaelt aber keine offene Fernsteuer- oder Serviceschnittstelle.
 - Arduino-Firmware ist fuer Servoausfuehrung, Limits, Rampen und Neutralverhalten zustaendig.
 - Paket- und Protokollaenderungen muessen immer auch in `COMMUNICATION_FRAMEWORK.md` dokumentiert werden.

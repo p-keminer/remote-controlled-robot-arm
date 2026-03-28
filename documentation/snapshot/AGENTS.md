@@ -20,6 +20,11 @@ Aktuell befindet sich das Projekt in Phase 6/8 — Sensor- und Kommunikations-Be
 - Flex-Sensor ADC-Pfad ausgelesen und kalibriert mit Live-Plausibilitaetspruefung (bestaetigt 2026-03-26)
 - ESP-NOW Unicast mit `ImuPaket v3` (drei IMUs, KalibStatus, NVS-Persistenz) laeuft (bestaetigt 2026-03-26)
 - LED-Debugging bench-validiert: Controller Ampelsystem + COMMS + FAULT, Receiver LINK + UART + FAULT (bestaetigt 2026-03-26)
+- Bridge-ESP32: ESP-NOW Empfang → WiFi/MQTT → Mosquitto (Pi) mit OTA und Passwort-Auth (bestaetigt 2026-03-27)
+- WiFi-Kanal 1 auf allen ESPs fuer ESP-NOW/WiFi-Koexistenz (bestaetigt 2026-03-28)
+- MQTT MCP Server fuer Claude Live-Sensorzugriff mit 6 Tools (bestaetigt 2026-03-28)
+- Kompletter Datenpfad validiert: Controller → ESP-NOW → Bridge → MQTT → Pi → MCP → Claude
+- Secret-Scanner mit 10 Kategorien, Pre-Commit/Pre-Push Hooks (bestaetigt 2026-03-27)
 - Adeept 5-DOF Roboterarm mechanisch im Stock-Zustand aufgebaut (bestaetigt 2026-03-24)
 - Naechste Schritte: Stock-Baseline-Test, UART-Pfad Receiver → Arduino, Security-Uplift
 
@@ -60,6 +65,21 @@ Nach jeder Kontextkomprimierung oder beim Sitzungsstart ohne vollstaendigen Verl
 - Relative Winkel zwischen Armsegmenten sind der bevorzugte fachliche Ausgangspunkt fuer das Gelenkmapping.
 - Security und Safety werden als getrennte Dokumentations- und Entscheidungsbereiche behandelt.
 - Der reale Aufbau wird in dieser Ausbaustufe nur als Ablauf, Checklisten- und Nachweisstruktur dokumentiert.
+- Die Bridge (ESP-NOW → WiFi → MQTT → Pi) ist reines Entwicklungswerkzeug, nicht Teil des Steuerpfads.
+
+## Board- und Flash-Konfiguration (KRITISCH)
+
+Alle drei ESP32-S3-WROOM-1-N16R8 muessen mit dem Custom Board geflasht werden:
+
+```
+FQBN: esp32:esp32:robotic_arm_s3n16r8
+```
+
+**NIEMALS** das generische Board `esp32:esp32:esp32s3` verwenden — `CDCOnBoot` ist dort deaktiviert, was einen permanenten Reset-Loop verursacht.
+
+Die Board-Definition liegt in `boards.local.txt` im lokalen Arduino-Paketordner (siehe `preparation/esp32_environment/README.md`). Kritische Einstellungen: `cdc_on_boot=1`, `flash_size=16MB`, `psram_type=opi`, `partitions=app3M_fat9M_16MB`.
+
+Vor jedem Flash-Vorgang die FQBN pruefen. COM-Ports koennen sich bei jedem Einstecken aendern — immer per `arduino-cli board list` pruefen.
 
 ## Prioritaeten
 

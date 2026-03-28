@@ -1,6 +1,6 @@
 # Dokumentationsindex
 
-Erzeugt am: 2026-03-26 13:34:38    
+Erzeugt am: 2026-03-28 06:50:35 CET
 
 ## Gesammelte Dokumente
 
@@ -29,6 +29,9 @@ Erzeugt am: 2026-03-26 13:34:38
 - [calibration/imu/README.md](snapshot/calibration/imu/README.md)
 - [calibration/reference_poses/README.md](snapshot/calibration/reference_poses/README.md)
 - [calibration/servo_limits/README.md](snapshot/calibration/servo_limits/README.md)
+- [dashboard/DASHBOARD_CONCEPT.md](snapshot/dashboard/DASHBOARD_CONCEPT.md)
+- [dashboard/README.md](snapshot/dashboard/README.md)
+- [dashboard/ROADMAP.md](snapshot/dashboard/ROADMAP.md)
 - [docs/README.md](snapshot/docs/README.md)
 - [docs/ROADMAP.md](snapshot/docs/ROADMAP.md)
 - [docs/measurement_logs/README.md](snapshot/docs/measurement_logs/README.md)
@@ -46,6 +49,8 @@ Erzeugt am: 2026-03-26 13:34:38
 - [firmware/UART_FRAME_V1.md](snapshot/firmware/UART_FRAME_V1.md)
 - [firmware/arduino_arm/README.md](snapshot/firmware/arduino_arm/README.md)
 - [firmware/arduino_arm/ROADMAP.md](snapshot/firmware/arduino_arm/ROADMAP.md)
+- [firmware/esp32_bridge/README.md](snapshot/firmware/esp32_bridge/README.md)
+- [firmware/esp32_bridge/ROADMAP.md](snapshot/firmware/esp32_bridge/ROADMAP.md)
 - [firmware/esp32_controller/README.md](snapshot/firmware/esp32_controller/README.md)
 - [firmware/esp32_controller/ROADMAP.md](snapshot/firmware/esp32_controller/ROADMAP.md)
 - [firmware/esp32_receiver/README.md](snapshot/firmware/esp32_receiver/README.md)

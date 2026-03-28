@@ -12,7 +12,7 @@ Den Receiver-ESP32 als nachvollziehbare und sichere Funk-zu-UART-Bruecke vorbere
 - [x] ESP-NOW-Empfangsablauf fuer den Bench-Pfad festlegen und validieren
 - [x] Paketintegritaet fuer den Bench-Pfad konkretisieren
 - [x] Dritten IMU ueber den Funkpfad bis zum Receiver sauber mitgezogen und bench-validiert
-- [x] WiFi-Kanal 6 Koexistenz mit Bridge validiert
+- [x] WiFi-Kanal 1 Koexistenz mit Bridge validiert
 - [x] LED-Schema invertiert (aus=OK, blinken=Problem) mit RGB GPIO48 als FAULT
 
 ### Offen

@@ -6,8 +6,11 @@ Dieses Dokument ist die kanonische Quelle fuer alle Kommunikationsregeln zwische
 
 - IMUs und Multiplexer kommunizieren lokal ueber I2C mit dem Controller-ESP32.
 - Der Flex-Sensor wird lokal ueber ADC am Controller erfasst.
-- Controller und Receiver tauschen Bewegungsdaten lokal drahtlos ueber `ESP-NOW` aus.
+- Controller und Receiver tauschen Bewegungsdaten lokal drahtlos ueber `ESP-NOW` aus (Steuerpfad).
+- Controller und Bridge tauschen die gleichen Daten parallel per `ESP-NOW` aus (Debug-Pfad, 2. Peer).
+- Bridge und Pi kommunizieren per WiFi und MQTT (Mosquitto, Port 1883, passwortgeschuetzt).
 - Receiver und Arduino kommunizieren ueber UART.
+- Alle drei ESPs laufen auf WiFi-Kanal 1 (Router-Kanal) fuer ESP-NOW/WiFi-Koexistenz.
 
 ## Grundregeln
 
@@ -20,8 +23,10 @@ Dieses Dokument ist die kanonische Quelle fuer alle Kommunikationsregeln zwische
 
 ## V1-Entscheidung
 
-- `ESP-NOW` ist der einzige vorgesehene Funkpfad fuer v1.
-- WLAN, Web-API, Cloud und allgemeine Fernverbindungen sind nicht Teil der v1-Kommunikation.
+- `ESP-NOW` ist der einzige vorgesehene Funkpfad fuer den v1-Steuerpfad.
+- WiFi wird ausschliesslich zwischen Bridge-ESP32 und Pi fuer das Entwicklungs-Dashboard genutzt.
+- WiFi ist nicht Teil des sicherheitskritischen Steuerpfads (Controller → Receiver → Arduino).
+- Web-API, Cloud und allgemeine Fernverbindungen sind nicht Teil der v1-Kommunikation.
 
 ## Funkstrecke Controller -> Receiver
 
@@ -96,9 +101,23 @@ typedef struct __attribute__((packed)) {
 - Kalibrierungsoffsets persistent im ESP32-NVS, automatisches Laden beim Boot
 - Einzelkalibrierung per Serial-Befehl (CAL0/CAL1/CAL2, RECAL, STOP)
 - Live-Sensorausfallerkennung fuer IMUs und Flex-Sensor mit automatischer Wiederherstellung
-- LED-Debugging: 5 LEDs am Controller (Ampelsystem + COMMS + FAULT), 3 am Receiver (LINK + UART + FAULT)
+- LED-Debugging invertiert (aus=OK, blinken=Problem): 4 LEDs + RGB am Controller, 2 LEDs + RGB am Receiver, 3 LEDs + RGB an Bridge
+- Multi-Peer ESP-NOW: Controller sendet an Receiver (Steuerpfad) und Bridge (Debug-Pfad) gleichzeitig
+- Bridge validiert Pakete (Groesse, Absender-MAC, Pruefsumme, Protokollversion) und publiziert als JSON per MQTT
 - Dieser Stand ist als Bench-Zwischenstufe fuer Sensor- und Funkvalidierung zulaessig, aber nicht als fertige Security-Baseline fuer Realbetrieb
 - Archiviert unter `firmware/espnow_imu_v2/` (ohne Persistenz) und aktuell in `firmware/esp32_controller/`
+
+## Debug-Bridge-Pfad (Entwicklungswerkzeug)
+
+Die Bridge empfaengt identische ImuPaket v3 Frames wie der Receiver, validiert sie und konvertiert sie zu kompaktem JSON fuer MQTT.
+
+- **Protokoll:** MQTT ueber WiFi (PubSubClient), Mosquitto-Broker auf dem Pi (Port 1883)
+- **Authentifizierung:** Passwortgeschuetzt (`allow_anonymous false`), eigener MQTT-User fuer Bridge
+- **Topics:** `robotarm/imu` (20Hz, QoS 0), `robotarm/status` (1Hz, retained), `robotarm/kalib` (bei Aenderung, retained), `robotarm/ota/log`
+- **Kanal-Alignment:** Alle ESPs (Controller, Receiver, Bridge) muessen auf dem gleichen WiFi-Kanal laufen (aktuell Kanal 1)
+- **Sicherheit:** Die Bridge ist rein beobachtend. Sie kann keine Steuerbefehle senden. Ein Ausfall der Bridge hat keinen Einfluss auf den Steuerpfad.
+- **JSON-Format:** Kompakte Schluessel (`z`=zaehler, `s`=sensoren, `h`=heading, `r`=roll, `p`=pitch, `k`=kalib, `f`=flex_prozent, `v`=protokoll_version)
+- **Detaillierte Topic-Struktur:** Siehe `dashboard/DASHBOARD_CONCEPT.md`
 
 ## Naechste Paketrevision vor dem Security-Uplift
 

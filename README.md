@@ -34,7 +34,7 @@ Abgeschlossen (Stand 2026-03-27):
 - Live-Sensorausfallerkennung fuer IMUs und Flex-Sensor
 - Multi-Peer ESP-NOW: Controller sendet an Receiver (Steuerpfad) und Bridge (Debug-Pfad)
 - Bridge-ESP32: ESP-NOW Empfang → WiFi/MQTT → Mosquitto (Pi) mit OTA und Passwort-Auth
-- WiFi-Kanal 6 auf allen ESPs fuer ESP-NOW/WiFi-Koexistenz
+- WiFi-Kanal 1 auf allen ESPs fuer ESP-NOW/WiFi-Koexistenz
 - MQTT MCP Server fuer Claude Live-Sensorzugriff (6 Tools)
 - Kompletter Datenpfad validiert: Controller → ESP-NOW → Bridge → MQTT → Pi → MCP → Claude
 - Secret-Scanner mit 10 Kategorien, Pre-Commit/Pre-Push Hooks, GitHub Actions
@@ -85,7 +85,7 @@ Nicht-repotaugliche lokale Werte wie Schluessel, Peer-Listen, lokale Identitaets
 Dokumentations- und Prozessbasis ist angelegt und wird nach jedem Meilenstein synchronisiert.
 Toolchain steht: Arduino IDE 3.3.7 als Hauptumgebung, PlatformIO als Fallback.
 Sensorpfad vollstaendig bench-validiert: drei BNO055 ueber PCA9548A-Mux, Flex-Sensor und `ESP-NOW` Unicast mit `ImuPaket v3` (Kalibrierungspersistenz im NVS).
-Kommunikation: Controller sendet per ESP-NOW an Receiver (Steuerpfad) und Bridge (Debug-Pfad) gleichzeitig auf Kanal 6.
+Kommunikation: Controller sendet per ESP-NOW an Receiver (Steuerpfad) und Bridge (Debug-Pfad) gleichzeitig auf Kanal 1.
 Debug-Infrastruktur: Bridge-ESP32 leitet Daten per WiFi/MQTT an Mosquitto (Pi); MQTT MCP Server erlaubt Claude direkten Live-Sensorzugriff.
 LED-Schema invertiert (aus=OK, blinken=Problem) mit RGB GPIO48 als FAULT auf allen ESPs.
 Secret-Scanner mit 10 Kategorien und automatischen Git-Hooks schuetzt vor versehentlichem Secret-Push.

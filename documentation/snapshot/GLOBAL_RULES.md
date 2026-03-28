@@ -6,11 +6,12 @@ Dieses Dokument ist fuer Menschen und KI gleichermassen verbindlich.
 
 - `preparation/` enthaelt nur vorbereitende Ablaufe, Checklisten und Toolchain-Dokumentation.
 - `security/` enthaelt nur Security-Dokumentation, Bedrohungsmodell und Regeln fuer Schnittstellen, Provisioning und lokale Identitaeten.
-- `firmware/` enthaelt nur Laufzeitlogik fuer Controller, Receiver und Arduino-Ausfuehrung.
+- `firmware/` enthaelt nur Laufzeitlogik fuer Controller, Receiver, Bridge und Arduino-Ausfuehrung.
 - `hardware/` enthaelt nur Schaltplaene, Verdrahtung, Aufbauablauf, Bringup und Stuecklisten.
 - `calibration/` enthaelt nur Kalibrierregeln, Referenzdaten und Grenzwerte.
 - `tests/` enthaelt Testablaeufe, Bench-Skripte und Nachweise fuer Security, Safety und Verhalten.
 - `docs/` bleibt manuell gepflegte Arbeits-, Nachweis- und Template-Dokumentation.
+- `dashboard/` enthaelt nur Entwicklungs-Dashboard-Views, MQTT MCP Server und Debug-Tooling (Bench-Werkzeug, nicht Teil des v1-Steuerpfads).
 - `future/` enthaelt nur Zukunftsausbau, Post-v1-Ideen und spaeter zu aktivierende Erweiterungslinien.
 - `official_downloads/` enthaelt nur importierte Herstellerstaende, Vendor-Artefakte und projektrelevante Auswertungen dazu.
 - `documentation/` ist ausschliesslich generierter Snapshot-Inhalt und wird nicht manuell gepflegt.
@@ -39,10 +40,21 @@ Dieses Dokument ist fuer Menschen und KI gleichermassen verbindlich.
 - Ausnahmen: Arduino/ESP-IDF-API-Bezeichner, Bibliothekstypen und erzwungene Konventionen externer Frameworks bleiben unveraendert.
 - Bestehender Code muss nicht rueckwirkend umbenannt werden — die Regel gilt fuer alle neuen und geaenderten Dateien.
 
+## Board- und Flash-Konfiguration
+
+- Alle drei ESP32-S3-WROOM-1-N16R8 muessen mit dem Custom Board `esp32:esp32:robotic_arm_s3n16r8` geflasht werden.
+- Die Board-Definition liegt in `boards.local.txt` im lokalen Arduino-Paketordner (nicht im Repo — wird bei Toolchain-Setup einmalig eingerichtet, siehe `preparation/esp32_environment/README.md`).
+- **NIEMALS** das generische Board `esp32:esp32:esp32s3` verwenden — dort ist `CDCOnBoot` deaktiviert, was bei diesen Boards einen permanenten Reset-Loop verursacht.
+- Kritische Einstellungen im Custom Board: `cdc_on_boot=1`, `flash_size=16MB`, `psram_type=opi`, `memory_type=qio_opi`, `partitions=app3M_fat9M_16MB`.
+- Vor jedem Flash-Vorgang die FQBN pruefen. Bei Unsicherheit die `boards.local.txt` konsultieren.
+- COM-Port-Zuordnungen sind nicht fest und koennen sich bei jedem Einstecken aendern; immer per `arduino-cli board list` oder Geraete-Manager pruefen.
+
 ## Kommunikations- und Systemregeln
 
-- `ESP-NOW` ist in v1 der einzige vorgesehene Funkpfad zwischen den ESP32.
-- WLAN, Cloud und Web-Interfaces sind in v1 kein Zielpfad.
+- `ESP-NOW` ist in v1 der einzige vorgesehene Funkpfad im Steuerpfad (Controller → Receiver → Arduino).
+- WiFi wird ausschliesslich zwischen Bridge-ESP32 und Pi fuer das Entwicklungs-Dashboard genutzt.
+- WLAN, Cloud und Web-Interfaces sind im Steuerpfad kein Zielpfad.
+- Alle ESPs muessen auf dem gleichen WiFi-Kanal laufen (aktuell Kanal 1 = Router-Kanal).
 - Receiver-Firmware validiert und uebergibt Bewegungsdaten, enthaelt aber keine offene Fernsteuer- oder Serviceschnittstelle.
 - Arduino-Firmware ist fuer Servoausfuehrung, Limits, Rampen und Neutralverhalten zustaendig.
 - Paket- und Protokollaenderungen muessen immer auch in `COMMUNICATION_FRAMEWORK.md` dokumentiert werden.
@@ -54,10 +66,10 @@ Dieses Dokument ist fuer Menschen und KI gleichermassen verbindlich.
 - Diese lokalen Dateien muessen ueber `.gitignore` blockiert bleiben.
 - Echte Secrets, produktive IDs oder Peer-Werte duerfen nicht in Dokumente oder Beispielkonfigurationen eingecheckt werden.
 - Debug- und Servicezugaenge muessen als lokale Entwicklungswege behandelt und klar vom Zielbetrieb getrennt werden.
-- In Firmware-Dateien darf nichts hartcodiert werden, was nicht zwingend eine Compile-Zeitkonstante sein muss. MACs, Schluessel, Peer-Adressen und Geraete-IDs gehoeren in gitignorierte lokale Konfigurationsdateien (z.B. `peer_config.local.h`). Die `.gitignore`-Muster fuer Firmware-Konfigurationen decken `firmware/**/peer_config.local.*`, `firmware/**/credentials.local.*`, `firmware/**/device_identity.local.*` und `firmware/**/packet_auth.local.*` ab.
+- In Firmware-Dateien darf nichts hartcodiert werden, was nicht zwingend eine Compile-Zeitkonstante sein muss. MACs, Schluessel, Peer-Adressen, WiFi-Zugangsdaten und Geraete-IDs gehoeren in gitignorierte lokale Konfigurationsdateien (z.B. `peer_config.local.h`, `wifi_config.local.h`). Die `.gitignore`-Muster decken `firmware/**/peer_config.local.*`, `firmware/**/credentials.local.*`, `firmware/**/device_identity.local.*`, `firmware/**/packet_auth.local.*` und `firmware/**/wifi_config.local.*` ab. MQTT- und OTA-Credentials gehoeren in `dashboard/mcp/*.local.*`.
 - Die committed Zielbasis fuer den Stack wird in `preparation/esp32_environment/README.md` gepflegt; lokal geflashte Ist-Versionen und Freigabenotizen gehoeren nach `security/local/stack_versions.local.md` oder vergleichbare gitignorierte Dateien.
 - Skripte duerfen keine nutzer- oder systemspezifischen absoluten Pfade enthalten. Konfigurierbare Pfade gehoeren in gitignorierte lokale Konfigurationsdateien (z.B. `sync_config.local.sh`). Committed werden nur Templates mit generischen Platzhaltern wie `/PFAD/ZUM/REPO/` — kein Hinweis auf Betriebssystem, Benutzername, Verzeichnisstruktur oder Toolchain.
-- Vor jedem `git push` muss geprueft werden, ob in getrackte Dateien Secrets, Schluessel, MACs, IP-Adressen, API-Schluessel, absolute lokale Pfade (egal ob Linux, WSL oder Windows), Passwoerter oder sonstige sensible Werte eingeflossen sind, die nicht durch `.gitignore` geblockt werden. Dazu zaehlen ausdruecklich auch Konfigurationsdateien, Skripte und Kommentare. Ein Push darf erst erfolgen, wenn diese Pruefung abgeschlossen ist.
+- Vor jedem `git push` muss `bash scripts/secret_scan.sh --tracked` ausgefuehrt werden. Der Scanner prueft 10 Kategorien: private IPs, MAC-Adressen, Hex-MAC-Arrays, Passwoerter, WiFi-SSIDs, absolute Pfade, SSH-Daten, private Keys, hartcodierte Ports und getrackte .local-Dateien. Pre-Commit und Pre-Push Git-Hooks fuehren den Scan automatisch aus. Ein Push darf erst erfolgen, wenn alle Kategorien sauber sind.
 - Vor jedem `git push` muss geprueft werden, ob alle abgehakten Punkte `[x]` konsistent ueber alle Dokumente stimmen. `ROADMAP.md`, `PROJEKT_FORTSCHRITT.md`, `PROJEKT_ABLAUFPLAN.md` und lokale Roadmaps duerfen sich nicht widersprechen.
 - Vor jedem `git push` muessen `README.md`-Abschnitte `Aktueller Fokus` und `Aktueller Entwicklungsstand` den echten Projektstand widerspiegeln.
 

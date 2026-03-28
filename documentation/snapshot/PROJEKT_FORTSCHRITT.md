@@ -5,11 +5,11 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 
 ## Gesamtstatus
 
-- Projektmodus: bench-validierte Sensor-, Kommunikations- und Elektronikbasis mit laufender Dokumentationssynchronisierung
-- Aktive Hauptphasen: Phase 6 - Sensorvalidierung und Phase 8 - Kommunikation, Servoausfuehrung und Safety-Vorbereitung
+- Projektmodus: bench-validierte Sensor-, Kommunikations- und Elektronikbasis mit MQTT-Bridge und Live-Dashboard-Infrastruktur
+- Aktive Hauptphasen: Phase 6 - Sensorvalidierung, Phase 8 - Kommunikation und Safety, Phase 10 - Entwicklungs-Dashboard (als Bench-Werkzeug)
 - Parallel gepflegt: Phase 1 - Dokumentationsfundament, Phase 2 - Security-Grundlage, Phase 3 - Vorbereitung und Toolchain, Phase 4 - Hardware-Readiness
-- Entwicklungsrealitaet: Arduino IDE 3.3.7 als Hauptumgebung und PlatformIO als Fallback stehen; Controller -> Receiver laeuft per `ESP-NOW` mit `ImuPaket v3` (drei IMUs, Kalibrierungsstatus, NVS-Persistenz), waehrend UART, Arduino-Servoebene, Security-Uplift und realer Arm-Aufbau noch offen sind
-- Kommunikationsreihenfolge: dritter IMU ist bench-validiert; naechste Schritte sind LED-Debugging, Buzzer und dann UART-Grundkette vor dem Security-Uplift
+- Entwicklungsrealitaet: Controller → Receiver + Bridge per ESP-NOW auf Kanal 1; Bridge → Mosquitto (Pi) per WiFi/MQTT; MQTT MCP Server fuer Claude Live-Debugging; LED-Schema invertiert mit RGB GPIO48; Secret-Scanner mit Git-Hooks integriert
+- Naechste Schritte: Stock-Baseline-Test, UART-Grundkette, Dashboard-Views, Security-Uplift
 
 ## Aktuelle Phasenampel
 
@@ -63,25 +63,36 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - [x] Einzelkalibrierungsmodus eingefuehrt: CAL0/CAL1/CAL2 per Serial fuer fokussierte Sensor-Kalibrierung, RECAL zum Zuruecksetzen (bestaetigt 2026-03-26)
 - [x] Firmware-Versionsarchiv angelegt: espnow_imu_v1, espnow_receiver_v1, espnow_imu_v2, espnow_receiver_v2 als Bench-Snapshots unter firmware/ (bestaetigt 2026-03-26)
 - [x] Adeept 5-DOF Roboterarm mechanisch im Stock-Zustand aufgebaut — Fotos unter docs/photos/ (bestaetigt 2026-03-24)
+- [x] LED-Debugging invertiert (aus=OK, blinken=Problem) mit RGB GPIO48 als FAULT auf allen ESPs (bestaetigt 2026-03-26)
+- [x] Live-Sensorausfallerkennung und Flex-Sensor-Plausibilitaetspruefung im Controller (bestaetigt 2026-03-26)
+- [x] Bridge-ESP32 Firmware: ESP-NOW Empfang, MQTT-Weiterleitung (PubSubClient), OTA (ArduinoOTA), NeoPixel RGB (bestaetigt 2026-03-26)
+- [x] Controller Multi-Peer: sendet ImuPaket v3 an Receiver (Steuerpfad) und Bridge (Debug-Pfad) gleichzeitig (bestaetigt 2026-03-26)
+- [x] WiFi-Kanal 1 auf allen ESPs fuer ESP-NOW/WiFi-Koexistenz mit Router (bestaetigt 2026-03-26)
+- [x] Mosquitto MQTT-Broker auf Pi konfiguriert: Passwort-Auth, WebSocket-Listener auf 9001, Nginx Reverse Proxy auf /mqtt/ (bestaetigt 2026-03-26)
+- [x] MQTT MCP Server (dashboard/mcp/mqtt_mcp_server.py) mit 6 Tools fuer Claude Live-Sensorzugriff (bestaetigt 2026-03-26)
+- [x] Secret-Scanner (scripts/secret_scan.sh) mit 10 Kategorien, Pre-Commit/Pre-Push Hooks und GitHub Actions Workflow (bestaetigt 2026-03-26)
+- [x] Bidirektionale Sync-Skripte Windows/WSL ohne absolute Pfade (bestaetigt 2026-03-26)
+- [x] Live-IMU-Daten ueber kompletten Pfad validiert: Controller → ESP-NOW → Bridge → WiFi/MQTT → Pi → MCP → Claude (bestaetigt 2026-03-26)
 
 ## Noch offen im aktuellen Schwerpunkt
 
 - [ ] Root-Dokumente, lokale Bereichsdokumente und neue Security-/Preparation-Bereiche dauerhaft synchron halten
-- [ ] bevorzugten Pinplan fuer Sender-LEDs, Receiver-LEDs, Buzzer und UART gegen echte Bench-Tests absichern
-- [ ] konkrete `ESP-NOW`-/`ESP-IDF`-Zielbasis fuer Realbetrieb freigeben und in `preparation/esp32_environment/README.md` plus lokalem Stack-Log dokumentieren
+- [ ] konkrete `ESP-NOW`-/`ESP-IDF`-Zielbasis fuer Realbetrieb freigeben
 - [ ] einfache UART-Grundkette `Receiver -> Arduino` bench-validieren
-- [ ] Bench-Protokoll erst nach drittem IMU und erster UART-Grundkette von XOR-/Frische-Check auf die dokumentierte Security-Baseline mit `session_id` und Authentisierungstag anheben
-- [ ] Stock-Baseline-Test des aufgebauten Adeept-Arms durchfuehren und dokumentieren (Arm ist aufgebaut, Test steht noch aus)
-- [ ] ausgewaehlte Akkus und das Ladegeraet beschaffen und gegen reales Batteriefach sowie Ladealltag pruefen
-- [ ] Arbeitsstand `5 aktive Servos + 1 Reserve/Testservo` gegen den realen Kit-Inhalt und den aufgebauten Arm bestaetigen
-- [ ] reale Hardware-, Inventar- und Aufbauinformationen in die vorbereiteten Vorlagen ueberfuehren
+- [ ] Bench-Protokoll auf die dokumentierte Security-Baseline mit `session_id` und Authentisierungstag anheben
+- [ ] Stock-Baseline-Test des aufgebauten Adeept-Arms durchfuehren und dokumentieren
+- [ ] ausgewaehlte Akkus und das Ladegeraet beschaffen und pruefen
+- [ ] Dashboard-Views im bestehenden IoT Control Center auf dem Pi implementieren
+- [ ] PPS-Optimierung bei Multi-Peer ESP-NOW (aktuell ~1-2 PPS statt 20)
+- [ ] OTA Dual-Partition Rollback bench-validieren
 - [ ] Security-, Safety- und Kommunikationsfaelle in konkrete Test- und Messdokumente herunterbrechen
 
 ## Naechste sinnvolle Arbeitspakete
 
 1. Stock-Baseline-Test des aufgebauten Adeept-Arms durchfuehren (Servo90, Unpacking_test_code)
-2. UART-Pfad Receiver → Arduino in Betrieb nehmen
-3. Security-Uplift erst danach auf die Grundkette aufsetzen
+2. Dashboard-Views im bestehenden IoT Control Center auf dem Pi implementieren (Debug-Konsole, Statistiken, 3D-Simulation)
+3. UART-Pfad Receiver → Arduino in Betrieb nehmen
+4. Security-Uplift erst danach auf die Grundkette aufsetzen
 
 ## Leitende Dokumente fuer den aktuellen Stand
 
