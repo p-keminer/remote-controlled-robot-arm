@@ -1,0 +1,126 @@
+/* ============================================================
+   css/robotarm.css — Roboterarm Dashboard Styles
+   ============================================================
+   Wird an style.css angehaengt oder separat eingebunden.
+   Alle Klassen beginnen mit "ra-" um Kollisionen zu vermeiden.
+   ============================================================ */
+
+/* ============================================================
+   SUB-TAB NAVIGATION (innerhalb Robotarm-Tab)
+   ============================================================ */
+.ra-sub-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 4px;
+}
+
+.ra-sub-tab {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.ra-sub-tab:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.ra-sub-tab.active {
+    background: var(--accent-blue);
+    color: white;
+}
+
+/* ============================================================
+   KALIBRIERUNGS-GRID (4 Zellen pro Sensor-Karte)
+   ============================================================ */
+.ra-kalib-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.ra-kalib-cell {
+    text-align: center;
+    padding: 8px 4px;
+    background: var(--bg-primary);
+    border-radius: 6px;
+}
+
+.ra-kalib-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.ra-kalib-val {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   FLEX-SENSOR FORTSCHRITTSBALKEN
+   ============================================================ */
+.ra-flex-bar-wrap {
+    height: 8px;
+    background: var(--bg-primary);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 12px;
+}
+
+.ra-flex-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-green), var(--accent-blue));
+    border-radius: 4px;
+    transition: width 0.15s ease-out;
+}
+
+/* ============================================================
+   PANEL-CONTAINER
+   ============================================================ */
+.ra-panel {
+    animation: raFadeIn 0.2s ease-out;
+}
+
+@keyframes raFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   RESPONSIVE: Sub-Tabs vertikal stapeln auf kleinen Bildschirmen
+   ============================================================ */
+@media (max-width: 768px) {
+    .ra-sub-tabs {
+        flex-direction: column;
+    }
+
+    .ra-kalib-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

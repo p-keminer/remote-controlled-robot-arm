@@ -8,26 +8,32 @@ Das bestehende IoT Control Center Dashboard um Roboterarm-Views erweitern, die L
 
 ### Mosquitto-Konfiguration
 
-- [ ] MQTT-User fuer Bridge-ESP32 anlegen (Publish-Rechte auf `robotarm/#`)
-- [ ] MQTT-User fuer MCP-Server anlegen (Subscribe-Rechte auf `robotarm/#`)
-- [ ] WebSocket-Listener in Mosquitto konfigurieren
-- [ ] Nginx Reverse Proxy fuer MQTT-WebSocket auf Port 443 einrichten
-- [ ] CSP-Header um `connect-src wss://` erweitern
+- [x] MQTT-User fuer Bridge-ESP32 anlegen (Publish-Rechte auf `robotarm/#`)
+- [x] MQTT-User fuer Dashboard-WebSocket anlegen (Subscribe-Rechte auf `robotarm/#`)
+- [x] WebSocket-Listener in Mosquitto konfigurieren (Port 9001)
+- [x] Nginx Reverse Proxy fuer MQTT-WebSocket auf Port 443 einrichten (`/mqtt` Location)
+- [x] CSP-Header um `connect-src wss://` erweitern
 
 ### Pi Dashboard Views
 
-- [ ] Roboterarm-Tab in `views/dashboard.php` einbinden
-- [ ] Debug-Konsole: scrollende Tabelle mit Sensordaten und Kalibrierungsstatus
-- [ ] Statistiken: Paketrate, Fehlerrate, Kalibrierungsgauges (Chart.js)
-- [ ] 3D-Simulation: Three.js Szene mit vereinfachtem 5-DOF Arm-Modell
-- [ ] MQTT-Client im Browser (`mqtt.js`) fuer Live-Subscribe auf `robotarm/#`
+- [x] Roboterarm-Tab in `views/dashboard.php` einbinden
+- [x] Debug-Konsole: scrollende Tabelle mit Sensordaten und Kalibrierungsstatus
+- [x] Statistiken: Paketrate, Fehlerrate, Kalibrierungsgauges (Chart.js)
+- [x] 3D-Simulation: Three.js Szene mit realistischem 5-DOF Arm-Modell
+- [x] MQTT-Client im Browser (`mqtt.js`) fuer Live-Subscribe auf `robotarm/#`
+- [x] Wandmontage-Toggle (90° Rotation, Hoehen-Anpassung)
+- [x] Kollisionserkennung (Arm vs. Boden, Waende, Tisch, Wandhalterung)
+- [x] Gelenk-Limits basierend auf mechanischen Grenzen
+- [x] Wohnzimmer-Umgebung (TV-Wand, Couch, Lampe, Pflanze, Bilder, Teppich)
+- [x] Interaktive Objekte auf dem Arbeitstisch (Wuerfel, Kugel, Zylinder, etc.)
+- [x] Kamera-Begrenzung innerhalb der Raum-Grenzen
 
 ### MQTT MCP Server
 
-- [ ] Python MCP Server mit MQTT-Subscribe auf `robotarm/#`
-- [ ] Tools: `mqtt_subscribe`, `mqtt_read_latest`, `mqtt_list_topics`
-- [ ] Konfiguration ueber gitignorierte `mqtt_config.local.py`
-- [ ] Integration in Claude Code als lokaler MCP Server
+- [x] Python MCP Server mit MQTT-Subscribe auf `robotarm/#`
+- [x] Tools: `mqtt_subscribe`, `mqtt_read_latest`, `mqtt_list_topics`
+- [x] Konfiguration ueber gitignorierte `mqtt_config.local.py`
+- [x] Integration in Claude Code als lokaler MCP Server
 
 ### OTA-Update (sicherheitskritisch)
 
@@ -39,6 +45,8 @@ Das bestehende IoT Control Center Dashboard um Roboterarm-Views erweitern, die L
 
 ### Integration
 
-- [ ] Vollintegration: Bridge → Mosquitto → Dashboard + MCP gleichzeitig testen
+- [x] Nginx WebSocket Proxy verifiziert (HTTP 101 Upgrade)
+- [x] Pipeline: Controller → Bridge → MQTT → Mosquitto → WSS → Browser
+- [ ] End-to-End Live-Test mit Controller (steht noch aus)
 - [ ] Latenz messen: Controller-Send bis Dashboard-Anzeige
 - [ ] Pi Zero 2W Performance validieren (CPU, RAM bei 20Hz Datenrate)
