@@ -20,6 +20,28 @@ Die Roboterarm-Erweiterung ist implementiert und auf dem Pi deployed:
 - **Gelenk-Limits** basierend auf mechanischen Grenzen des Adeept-Arms
 - **MCP-Server** fuer Claude-Zugriff auf MQTT-Topics
 
+## Screenshots
+
+### Live-Daten
+IMU-Sensorkarten mit Heading/Roll/Pitch, Kalibrierungsstatus (SYS/GYR/ACC/MAG) und Flex-Sensor.
+
+![Live-Daten](web/screenshots/01_live_daten.png)
+
+### Statistiken
+Paketrate, Fehlerrate, WiFi RSSI, Bridge Uptime und Live-Charts.
+
+![Statistiken](web/screenshots/02_statistiken.png)
+
+### 3D-Modell
+Three.js Simulation des Adeept 5-DOF Arms in Wohnzimmer-Umgebung mit Wandmontage-Toggle.
+
+![3D-Modell](web/screenshots/03_3d_modell.png)
+
+### Debug-Konsole
+MQTT Live-Stream aller robotarm/# Topics als Roh-JSON.
+
+![Debug-Konsole](web/screenshots/04_debug_konsole.png)
+
 ## Inhalt
 
 - `DASHBOARD_CONCEPT.md` — Architekturentscheidung, Techstack, MQTT-Topics und Recherchequellen
