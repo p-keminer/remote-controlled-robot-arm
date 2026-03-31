@@ -13,7 +13,7 @@ Sie kann keine Befehle zuruecksenden und hat keinen Einfluss auf die Servobewegu
 
 Die Bridge-Firmware ist implementiert und bench-validiert.
 ESP-NOW Empfang, MQTT-Weiterleitung (PubSubClient), OTA (ArduinoOTA) und RGB-FAULT-LED (NeoPixel) funktionieren.
-Alle ESPs laufen auf WiFi-Kanal 1 (Router-Kanal) fuer ESP-NOW/WiFi-Koexistenz.
+Die Bridge bezieht den WiFi-Kanal vom Router per WiFi.begin(). Controller und Receiver setzen Kanal 1 explizit per esp_wifi_set_channel(). Koexistenz funktioniert solange der Router auf Kanal 1 laeuft.
 LED-Schema invertiert: aus = OK, an = Problem.
 
 ## Inhalt

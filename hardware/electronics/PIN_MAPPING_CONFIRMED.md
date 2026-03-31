@@ -14,7 +14,8 @@ Planungsannahmen und Recherchegrundlagen stehen in `PIN_MAPPING_RESEARCH.md`.
 | GPIO1 | ADC1 Flex-Sensor | ja | Spannungsteiler 10kOhm Pull-Down, Rohwert gerade=1108 gebogen=940, Live-Plausibilitaetspruefung (200-3800) |
 | GPIO4 | LED Gruen (Hand/Wrist S2) | ja | 100 Ohm, blinkt wenn S2 nicht kalibriert |
 | GPIO5 | LED Gelb (Unterarm S1) | ja | 100 Ohm, blinkt wenn S1 nicht kalibriert |
-| GPIO6 | LED Gelb (Oberarm S0) | ja | 100 Ohm, blinkt wenn S0 nicht kalibriert |
+| GPIO6 | LED Rot (Oberarm S0) | ja | 100 Ohm, blinkt wenn S0 nicht kalibriert |
+| GPIO10 | LED Weiss (FAULT) | ja | Leuchtet bei Fehler, 100 Ohm Vorwiderstand |
 | GPIO7 | LED Blau (COMMS) | ja | 100 Ohm, blinkt wenn ESP-NOW Send fehlschlaegt |
 | GPIO21 | Notaus-Schalter | ja | Toggle-Button nach GND, INPUT_PULLUP, 50ms Entprellung, toggelt Notaus |
 | GPIO48 | LED RGB onboard (FAULT) | ja | NeoPixel, rot blinkend bei Sensorausfall/Flex-Fehler, orange blinkend bei Notaus |

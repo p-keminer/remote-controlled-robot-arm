@@ -10,7 +10,7 @@ Dieses Dokument ist die kanonische Quelle fuer alle Kommunikationsregeln zwische
 - Controller und Bridge tauschen die gleichen Daten parallel per `ESP-NOW` aus (Debug-Pfad, 2. Peer).
 - Bridge und Pi kommunizieren per WiFi und MQTT (Mosquitto, Port 1883, passwortgeschuetzt).
 - Receiver und Arduino kommunizieren ueber UART.
-- Alle drei ESPs laufen auf WiFi-Kanal 1 (Router-Kanal) fuer ESP-NOW/WiFi-Koexistenz.
+- Controller und Receiver setzen WiFi-Kanal 1 explizit per esp_wifi_set_channel(). Die Bridge bezieht den Kanal vom Router per WiFi.begin() und laeuft dadurch ebenfalls auf Kanal 1, solange der Router auf Kanal 1 konfiguriert ist.
 
 ## Grundregeln
 
@@ -102,7 +102,7 @@ typedef struct __attribute__((packed)) {
 - Kalibrierungsoffsets persistent im ESP32-NVS, automatisches Laden beim Boot
 - Einzelkalibrierung per Serial-Befehl (CAL0/CAL1/CAL2, RECAL, STOP)
 - Live-Sensorausfallerkennung fuer IMUs und Flex-Sensor mit automatischer Wiederherstellung
-- LED-Debugging invertiert (aus=OK, an=Problem): 4 LEDs + RGB am Controller, 2 LEDs + RGB am Receiver, 3 LEDs + RGB an Bridge
+- LED-Debugging invertiert (aus=OK, an=Problem): 5 LEDs + RGB am Controller, 2 LEDs + RGB am Receiver, 3 LEDs + RGB an Bridge
 - Multi-Peer ESP-NOW: Controller sendet an Receiver (Steuerpfad) und Bridge (Debug-Pfad) gleichzeitig
 - Bridge validiert Pakete (Groesse, Absender-MAC, Pruefsumme, Protokollversion) und publiziert als JSON per MQTT
 - **Notaus (Emergency Stop):** Bit 0 im `flags`-Feld signalisiert Notaus. Der Controller liest einen Toggle-Button an GPIO21 (INPUT_PULLUP, 50ms Entprellung). Jeder Tastendruck toggelt den Notaus-Zustand. Receiver und Bridge werten das Flag aus und zeigen Notaus visuell an (RGB orange blinkend).

@@ -86,7 +86,7 @@ Der Hauptbuzzer sitzt auf der Receiver- oder Robotikseite, weil dort die letzte 
 
 ### Aktuelle LED-Belegung (Stand 2026-03-26)
 
-**Controller:** GPIO4 Gruen(S2), GPIO5 Gelb(S1), GPIO6 Gelb(S0), GPIO7 Blau(COMMS), GPIO48 RGB(FAULT)
+**Controller:** GPIO4 Gruen(S2), GPIO5 Gelb(S1), GPIO6 Rot(S0), GPIO7 Blau(COMMS), GPIO10 Weiss(FAULT), GPIO48 RGB(FAULT)
 **Receiver:** GPIO4 Gruen(UART), GPIO5 Blau(ESP-NOW), GPIO48 RGB(FAULT)
 **Bridge:** GPIO4 Gruen(WiFi), GPIO5 Blau(ESP-NOW), GPIO7 Weiss(MQTT), GPIO48 RGB(FAULT)
 

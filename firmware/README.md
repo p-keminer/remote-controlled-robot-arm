@@ -29,7 +29,7 @@ Firmware-Archive frueherer Versionen liegen unter `espnow_imu_v1/`, `espnow_imu_
 - die Bridge darf nicht in den Steuerpfad (Receiver → Arduino) eingreifen; der Steuerpfad muss ohne Bridge funktionieren
 - Protokollaenderungen immer in `COMMUNICATION_FRAMEWORK.md` dokumentieren
 - Limits und Neutralverhalten immer auch mit `SAFETY_FRAMEWORK.md` und `calibration/` abstimmen
-- alle ESPs muessen auf dem gleichen WiFi-Kanal laufen (aktuell Kanal 1)
+- Controller und Receiver setzen WiFi-Kanal 1 explizit per esp_wifi_set_channel(); die Bridge bezieht den Kanal vom Router per WiFi.begin()
 
 ## Schnittstellen/Abhaengigkeiten
 

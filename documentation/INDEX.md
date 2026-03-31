@@ -1,9 +1,11 @@
 # Dokumentationsindex
 
-Erzeugt am: 2026-03-28 17:43:00 CET
+Erzeugt am: 2026-03-31 17:49:48 CEST
 
 ## Gesammelte Dokumente
 
+- [.claude/commands/doc-sync.md](snapshot/.claude/commands/doc-sync.md)
+- [.claude/skills/doc-sync/SKILL.md](snapshot/.claude/skills/doc-sync/SKILL.md)
 - [AGENTS.md](snapshot/AGENTS.md)
 - [ARCHITECTURE.md](snapshot/ARCHITECTURE.md)
 - [CALIBRATION_FRAMEWORK.md](snapshot/CALIBRATION_FRAMEWORK.md)

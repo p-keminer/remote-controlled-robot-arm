@@ -19,7 +19,7 @@ Der serielle Minimalrahmen fuer die naechste Ausbaustufe ist bereits in `../UART
 - ESP-NOW-Empfangslogik auf WiFi-Kanal 1 (koexistent mit Bridge-WiFi)
 - Paketvalidierung und Frischepruefung (ImuPaket v4)
 - Notaus-Flag-Empfang mit RGB-Anzeige (orange blinkend bei Notaus)
-- LED-Debugging invertiert: GPIO4 Gruen(UART), GPIO5 Blau(ESP-NOW), GPIO48 RGB(FAULT)
+- LED-Debugging invertiert: GPIO4 Gruen(UART), GPIO5 Blau(LINK), GPIO48 RGB(FAULT)
 - UART-Weitergabe an das Adeept-Arduino-Board (noch offen)
 - Fehlerreaktion bei ungueltigen oder fehlenden Daten
 

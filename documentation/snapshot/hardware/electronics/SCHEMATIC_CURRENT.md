@@ -41,8 +41,9 @@ ESP32-S3-WROOM-1-N16R8                  │  │
 │                     │
 │  GPIO4  ────────────┼── LED Gruen (Hand S2)    + 100 Ohm ── GND  [leuchtet bei Problem]
 │  GPIO5  ────────────┼── LED Gelb (Unterarm S1) + 100 Ohm ── GND  [leuchtet bei Problem]
-│  GPIO6  ────────────┼── LED Gelb (Oberarm S0)  + 100 Ohm ── GND  [leuchtet bei Problem]
+│  GPIO6  ────────────┼── LED Rot  (Oberarm S0)  + 100 Ohm ── GND  [leuchtet bei Problem]
 │  GPIO7  ────────────┼── LED Blau (COMMS)       + 100 Ohm ── GND  [leuchtet bei Problem]
+│  GPIO10 ────────────┼── LED Weiss (FAULT)      + 100 Ohm ── GND  [leuchtet bei Fehler]
 │  GPIO21 ────────────┼── Toggle-Button ── GND  (Notaus, INPUT_PULLUP, Toggle-Notaus)
 │  GPIO48 ────────────┼── LED RGB onboard (FAULT/NOTAUS)             [rot/orange blinkt]
 │                     │
@@ -109,8 +110,9 @@ BNO055 #2 (Hand) ─────┘                                    │ ADC
                                                             │
                                              ┌── GPIO4  Gruen  (S2 Problem)
                                              ├── GPIO5  Gelb   (S1 Problem)
-                                             ├── GPIO6  Gelb   (S0 Problem)
+                                             ├── GPIO6  Rot    (S0 Problem)
                                              ├── GPIO7  Blau   (COMMS Problem)
+                                             ├── GPIO10 Weiss  (FAULT LED)
                                              ├── GPIO48 RGB    (FAULT)
                                              │
                                        ESP-NOW (Kanal 1, Unicast, ImuPaket v4)
@@ -150,7 +152,7 @@ Alle drei ESPs muessen auf dem gleichen WiFi-Kanal laufen fuer ESP-NOW/WiFi-Koex
 ## LED-Verhalten (invertiert: aus = OK, an = Problem)
 
 ### Controller
-- IMU-LEDs (Gruen/Gelb/Gelb): blinken wenn Sensor NICHT bereit oder NICHT kalibriert
+- IMU-LEDs (Gruen/Gelb/Rot): blinken wenn Sensor NICHT bereit oder NICHT kalibriert
 - COMMS (Blau): blinkt wenn ESP-NOW Send fehlschlaegt
 - FAULT (RGB orange): blinkt bei Notaus (hoechste Prioritaet)
 - FAULT (RGB rot): blinkt bei IMU-Ausfall oder Flex-Sensor-Ausfall (Live-Erkennung im Betrieb)
