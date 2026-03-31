@@ -141,10 +141,10 @@
 
         label.textContent = text;
         banner.className = 'alert';
-        if (state === 'online')     banner.className += ' alert-info';
-        else if (state === 'error') banner.className += ' alert-danger';
-        else if (state === 'offline') banner.className += ' alert-warning';
-        else                        banner.className += ' alert-info';
+        if (state === 'online')       banner.className += ' alert-success';
+        else if (state === 'error')   banner.className += ' alert-danger';
+        else if (state === 'offline') banner.className += ' alert-danger';
+        else                          banner.className += ' alert-info';
 
         // MQTT-Nachrichtenzaehler aktualisieren
         var el = document.getElementById('ra-stat-mqttcount');
