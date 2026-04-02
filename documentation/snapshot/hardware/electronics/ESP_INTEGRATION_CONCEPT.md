@@ -73,7 +73,7 @@ Bestaetigte Boarddetails (2026-03-22):
 - `ESP32-S3 DevKitC-1 N16R8` offen am Bench
 - I2C-Verbindung zum Arduino (GPIO13 SDA, GPIO14 SCL → Arduino A4/A5, Slave 0x42)
 - Link-, I2C- und Fehleranzeige sichtbar
-- Hauptbuzzer auf der Roboter- oder Receiver-Seite
+- Status-LEDs und RGB-Anzeige auf der Receiver-Seite
 
 ### Spaeterer Betrieb
 
@@ -115,7 +115,7 @@ Das dauerbetriebsnahe Sender-Gehaeuse soll:
 
 Das dauerbetriebsnahe Receiver-Gehaeuse soll:
 
-- das DevKit, die Statusanzeigen und den Buzzer aufnehmen
+- das DevKit und die Statusanzeigen aufnehmen
 - oeffenbare Wartung erlauben
 - I2C-, Strom- und Debugzugang geordnet herausfuehren
 - an Sockel, Grundplatte oder Tragrahmen des Roboterarms befestigbar sein
@@ -134,7 +134,7 @@ Roboterseite
 
   (( ESP-NOW ))  Receiver-ESP ---- I2C (GPIO13/14) ---- Arduino (A4/A5, 0x42) ---- Servos
                       |
-                 LEDs + Buzzer
+                 LEDs + RGB
 ```
 
 ## Verbindliche Projektentscheidungen aus diesem Konzept
@@ -142,7 +142,7 @@ Roboterseite
 - Breadboard bleibt auf die offene Bench-Phase begrenzt.
 - Der erste tragbare Sender darf provisorisch sein, soll aber schnell auf eine robustere Traegerloesung wechseln.
 - IMU-Halterung und groessere Elektronik werden bewusst getrennt gehalten.
-- Debug und Warnung werden verteilt gedacht: segmentnahe LEDs am Sender, Hauptwarnung ueber Buzzer am Receiver.
+- Debug und Warnung werden verteilt gedacht: segmentnahe LEDs am Sender, RGB-FAULT-Anzeige am Receiver.
 
 ## Offene Punkte
 

@@ -43,4 +43,4 @@
 ## Naechster Schritt
 
 - Security-Uplift mit Session- und Authentisierungsschicht
-- LED- und Buzzer-Pfade gegen bestaetigten Pinplan validieren
+- LED-Pfade gegen bestaetigten Pinplan validieren (Buzzer gestrichen)

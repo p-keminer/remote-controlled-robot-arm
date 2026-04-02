@@ -19,7 +19,6 @@ Planungsannahmen und Recherchegrundlagen stehen in `PIN_MAPPING_RESEARCH.md`.
 | GPIO7 | LED Blau (COMMS) | ja | 100 Ohm, blinkt wenn ESP-NOW Send fehlschlaegt |
 | GPIO21 | Notaus-Schalter | ja | Toggle-Button nach GND, INPUT_PULLUP, 50ms Entprellung, toggelt Notaus |
 | GPIO48 | LED RGB onboard (FAULT) | ja | NeoPixel, rot blinkend bei Sensorausfall/Flex-Fehler, orange blinkend bei Notaus |
-| GPIO21 | Buzzer | nein | entfaellt vorerst, LEDs reichen fuer Debugging |
 
 ## Receiver (ESP32-S3-WROOM-1-N16R8) — Stand 2026-04-02
 

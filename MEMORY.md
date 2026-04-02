@@ -19,7 +19,7 @@ Beim Sitzungsstart oder nach Kontextkomprimierung ist dieses Dokument zu lesen.
 - MACs dokumentiert in `security/local/device_identities.local.txt` (gitignoriert)
 - Akku-/Lade-Arbeitsstand festgelegt: `4x Molicel INR-18650-M35A` ohne Loetfahne + `1x XTAR VC4SL`
 - Stock-Funktionsentscheidung: OLED uebernehmen, Potentiometer als Fallback, Learning/Action Memory uebernehmen, Processing vorerst als Referenz-/Fallbackpfad behalten
-- Naechste Schritte: LED- und Buzzer-Pfade validieren, Security-Uplift, dauerbetriebsnahen Schaltplan ableiten, Akku-/Strompfad finalisieren
+- Naechste Schritte: LED-Pfade validieren (Buzzer gestrichen), Security-Uplift, IMU-zu-Servo-Mapping, Wearable-Montage
 
 ---
 

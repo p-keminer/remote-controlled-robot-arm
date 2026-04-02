@@ -98,20 +98,20 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - [ ] konkrete `ESP-NOW`-/`ESP-IDF`-Zielbasis fuer Realbetrieb freigeben
 - [x] I2C-Grundkette `Receiver -> Arduino` bench-validieren (erledigt 2026-04-02, I2C statt UART wegen Interrupt-Kollision)
 - [ ] Bench-Protokoll auf die dokumentierte Security-Baseline mit `session_id` und Authentisierungstag anheben
-- [ ] Stock-Baseline-Test des aufgebauten Adeept-Arms durchfuehren und dokumentieren
+- [ ] Stock-Baseline-Test: Servo90, Unpacking, Potentiometer erledigt — Learning Mode noch offen
 - [x] ausgewaehlte Akkus und das Ladegeraet beschafft und in Betrieb (4x Molicel INR-18650-M35A + XTAR VC4SL, bestaetigt 2026-04-02)
-- [ ] Dashboard-Views im bestehenden IoT Control Center auf dem Pi implementieren
-- [ ] PPS-Optimierung bei Multi-Peer ESP-NOW (aktuell ~1-2 PPS statt 20)
+- [x] Dashboard-Views im bestehenden IoT Control Center auf dem Pi implementiert (Debug-Konsole, Statistiken, 3D-Simulation)
+- [x] PPS-Optimierung bei Multi-Peer ESP-NOW abgeschlossen
 - [ ] OTA Dual-Partition Rollback bench-validieren
 - [ ] Security-, Safety- und Kommunikationsfaelle in konkrete Test- und Messdokumente herunterbrechen
 
 ## Naechste sinnvolle Arbeitspakete
 
-1. Stock-Baseline-Test des aufgebauten Adeept-Arms durchfuehren (Servo90, Unpacking_test_code)
-2. ROS2-Visualisierung mit Live-MQTT-Daten verbinden und Dual-Arm URDF gegen reale Sensordaten testen
-3. Dashboard-Views im bestehenden IoT Control Center auf dem Pi implementieren (Debug-Konsole, Statistiken, 3D-Simulation)
-4. IMU-Daten auf Servo-Zielwinkel mappen (echte Armbewegung statt Sweep-Test)
-5. Security-Uplift auf die bestehende I2C-Grundkette aufsetzen
+1. Learning Mode des Adeept Stock-Kits testen und dokumentieren
+2. LED-Pfade am Receiver und Controller gegen bestaetigten Pinplan validieren
+3. IMU-Daten auf Servo-Zielwinkel mappen (echte Armbewegung statt Sweep-Test)
+4. Security-Uplift auf die bestehende I2C-Grundkette aufsetzen
+5. Wearable-Montage: Sensoren vom Breadboard an den Koerper
 
 ## Leitende Dokumente fuer den aktuellen Stand
 

@@ -7,7 +7,7 @@ Dieser Ordner beschreibt die Vorbereitung des Entwicklungs- und Testarbeitsplatz
 ## Aktueller Stand
 
 Die Bench-Basis ist real genutzt und teilweise validiert.
-Controller- und Receiver-Boards wurden fuer BNO055, PCA9548A, Flex-Sensor und `ESP-NOW` bereits am offenen Bench getestet; die I2C-Grundkette (Receiver → Arduino) ist bench-validiert (bestaetigt 2026-04-02); LED-, Buzzer- und Lasttests am realen Roboterarm sind noch offen.
+Controller- und Receiver-Boards wurden fuer BNO055, PCA9548A, Flex-Sensor und `ESP-NOW` bereits am offenen Bench getestet; die I2C-Grundkette (Receiver → Arduino) ist bench-validiert (bestaetigt 2026-04-02); LED-Validierung und Lasttests am realen Roboterarm sind noch offen. Buzzer wurde als Projektentscheidung gestrichen.
 
 ## Inhalt
 

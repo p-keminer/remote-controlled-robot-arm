@@ -19,7 +19,7 @@ Eine belastbare Elektronikdokumentation fuer Sender- und Receiver-ESP32 aufbauen
 - [x] aktuellen Bench-Schaltplanstand dokumentieren
 - [x] Stromversorgung der Arm-Seite gegen die offizielle Adeept-Produktbasis abgleichen und als Konzept dokumentieren
 - [x] I2C-Pfad (GPIO13/14) zum Arduino gegen den bestaetigten Pinplan validiert (bestaetigt 2026-04-02)
-- [ ] LED- und Buzzer-Pfade gegen den bestaetigten Pinplan validieren
+- [ ] LED-Pfade gegen den bestaetigten Pinplan validieren (Buzzer wurde als Projektentscheidung gestrichen — LEDs reichen aus)
 - [ ] Verdrahtung und Steckersystem spaeter nach `hardware/verkabelung/` ueberfuehren
 - [ ] aus den validierten Bench-Ergebnissen einen dauerbetriebsnahen Schaltplanstand ableiten
 - [ ] reale Akku-/Strompfadentscheidung nach Arm-Aufbau und Messung finalisieren

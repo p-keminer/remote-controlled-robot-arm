@@ -45,7 +45,7 @@ Der erste Receiver-Benchaufbau soll enthalten:
 
 - offene Steckverkabelung fuer Labor- und Tischtests
 - Dupont-Kabel fuer kurze Teststrecken
-- sichtbare Debug-LEDs und provisorischer Buzzer
+- sichtbare Debug-LEDs
 - schnelles Umbauen fuer Pin- und Sensorversuche
 
 ## Was auf Breadboard nicht der Zielzustand ist
@@ -98,7 +98,6 @@ Der Breadboardpfad gilt als erfolgreich vorbereitet, wenn:
 
 - Einzelsensor, Mux-Pfad, Flex-Sensor, `ESP-NOW` und I2C jeweils separat nachvollziehbar funktionieren
 - die bevorzugte GPIO-Belegung keine unmittelbaren Konflikte zeigt
-- der Buzzer keine unerwuenschten Einschalttoene durch rohe Bootzustandswechsel produziert
 - klar ist, welche Stecker, Kabellaengen und Trageorte in den Lochrasterpfad uebernommen werden
 
 ## Projektentscheidung hinter der Breadboard-Grenze

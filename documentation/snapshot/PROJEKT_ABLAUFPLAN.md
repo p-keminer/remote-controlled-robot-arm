@@ -127,7 +127,7 @@ Die Sensorseite des Systems technisch sicher in Betrieb nehmen und Rohdaten nach
 - Flex-Sensor ADC-Pfad validieren und Rohwerte dokumentieren (bestaetigt 2026-03-22)
 - IMU-Daten per ESP-NOW uebertragen, Bench-Paketformat und Integritaet pruefen (bestaetigt 2026-03-22)
 - LED-Debugging einbauen: Sender GPIO4/5/6 (IMU-Status), GPIO7 (COMMS), GPIO10 (FAULT)
-- Buzzer-Pfad GPIO21 mit sicherem Default-Off pruefen
+- ~~Buzzer-Pfad~~ gestrichen — LEDs und RGB reichen (Projektentscheidung 2026-04-02); GPIO21 wird fuer Notaus-Toggle genutzt
 - Receiver-LEDs GPIO4/5/6 einbauen
 - Flex-Sensor nach Montage neu kalibrieren
 
@@ -169,7 +169,7 @@ Den Datenpfad vom Wearable bis zur Servoausfuehrung konsistent, ueberpruefbar un
 - Stock- und Projekt-Strompfad sichtbar getrennt dokumentieren
 - Arduino-Firmware fuer Servo-Ausfuehrung mit Limits und Rampen schreiben
 - Watchdog, Timeout und Neutralverhalten implementieren
-- Safety-Fallback und Buzzer-Warnlogik einbauen
+- Safety-Fallback und LED-/RGB-Warnlogik einbauen (Buzzer gestrichen)
 - Gesamtkette Wearable → ESP-NOW → Receiver → I2C → Arduino → Servo testen
 
 ## Phase 9 - Integration, Leistung und Hardware-Verstetigung

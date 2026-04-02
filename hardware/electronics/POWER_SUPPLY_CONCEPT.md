@@ -96,7 +96,7 @@ Diese Punkte muessen vor der echten Beschaffung dokumentiert und abgehakt werden
 
 - Servolast wird nicht stillschweigend ueber einen USB-Uploadpfad freigegeben
 - die Projektdokumentation behandelt hohe Servolast und Logikversorgung als zwei unterschiedliche Planungsprobleme
-- bei spaeteren Erweiterungen mit ESP32, LEDs, Buzzer und Sensorik soll die Servoenergie nicht unkontrolliert ueber empfindliche Controllerpfade mitlaufen
+- bei spaeteren Erweiterungen mit ESP32, LEDs und Sensorik soll die Servoenergie nicht unkontrolliert ueber empfindliche Controllerpfade mitlaufen
 - ein gemeinsamer Ground-Bezug bleibt fuer Signalintegritaet mitzudenken, ersetzt aber keine getrennte Leistungsplanung
 
 ## Offene Punkte

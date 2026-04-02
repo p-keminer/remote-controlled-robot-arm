@@ -47,7 +47,7 @@ Das Sender-Gehaeuse soll:
 ### Elektroniktraeger
 
 - `ESP32-S3 DevKitC-1 N16R8`
-- feste Lochraster- oder Adapterplatine fuer I2C, LED-Ausgaenge und Buzzer
+- feste Lochraster- oder Adapterplatine fuer I2C und LED-Ausgaenge
 - geordnete Leitungswege zu Arduino, Stromversorgung und Diagnosepunkten
 
 ### Gehaeuseidee
@@ -56,7 +56,7 @@ Das Receiver-Gehaeuse soll:
 
 - am Robotersockel oder an einer festen Tragrahmenplatte montierbar sein
 - von aussen sichtbare Statusanzeigen besitzen
-- den Buzzer akustisch nach aussen fuehren
+- Status-LEDs von aussen sichtbar halten
 - USB- und Wartungszugang behalten
 - Signalverkabelung und energiereiche Leitungen sauber trennen
 - nicht die Funkleistung durch schlechte Antennenlage oder metallische Abschattung verschlechtern
@@ -67,7 +67,7 @@ Fuer beide Seiten ist `3D-Druck` der bevorzugte erste Gehaeusepfad, weil:
 
 - Abstaende, Oeffnungen und Haltepunkte leicht iterierbar sind
 - DevKit, Lochraster und Steckverbinder an den realen Bestand angepasst werden koennen
-- spaetere Aenderungen an Gurtaufnahme, LED-Fenstern oder Buzzeroeffnung schnell umsetzbar bleiben
+- spaetere Aenderungen an Gurtaufnahme und LED-Fenstern schnell umsetzbar bleiben
 
 Falls kein 3D-Druck direkt verfuegbar ist, sind als Zwischenpfad auch `Pouch + Tragerplatte` oder einfache Gehaeuse mit mechanischer Nacharbeit akzeptabel.
 
@@ -92,7 +92,6 @@ Receiver-Endstufe
  | ESP32-S3 |
  | Perfboard|
  | LEDs     |
- | Buzzer   |
  +----USB---+
       |
   Sockel / Chassis
@@ -110,7 +109,7 @@ Receiver-Endstufe
 
 - bevorzugter Pinplan ist bench-validiert
 - Stecker, Leitungswege und Trageort sind dokumentiert
-- Gehaeuseoeffnungen fuer USB, LEDs und Buzzer sind bekannt
+- Gehaeuseoeffnungen fuer USB und LEDs sind bekannt
 - die gewaehlte Anordnung verschlechtert die Funkstrecke nicht offensichtlich
 
 ## Recherchequellen
