@@ -55,8 +55,8 @@
                 password: MQTT_WS_PASS,
                 clientId: 'dashboard_' + Math.random().toString(36).substring(2, 8),
                 clean: true,
-                reconnectPeriod: 5000,
-                connectTimeout: 10000
+                reconnectPeriod: 2000,
+                connectTimeout: 5000
             });
         } catch (e) {
             console.error('[RA-MQTT] Verbindungsfehler:', e);

@@ -170,6 +170,8 @@ void loop() {
 
     // ESP-NOW Timeout: Blau blinkt
     bool espnow_timeout = (letzter_empfang_ms > 0 && (jetzt - letzter_empfang_ms) > EMPFANGS_TIMEOUT);
+    // Zaehler-Reset bei Timeout: Controller-Neustart akzeptieren
+    if (espnow_timeout) letzter_zaehler = UINT32_MAX;
     digitalWrite(LED_LINK, (espnow_timeout && blink) ? HIGH : LOW);
 
     // FAULT/NOTAUS: RGB-Anzeige

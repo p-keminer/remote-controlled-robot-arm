@@ -23,6 +23,17 @@
         ]
       }
     ],
+    "PreToolUse:git-push": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Der User will pushen. Bevor du git push ausfuehrst: Hast du in dieser Session bereits /doc-sync ausgefuehrt oder die Dokumentation gegen den Code geprueft? Falls NEIN, fuehre zuerst /doc-sync aus und pushe erst danach. Falls JA (doc-sync lief bereits), fahre mit dem Push fort."
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "matcher": "compact",

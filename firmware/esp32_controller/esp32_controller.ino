@@ -41,7 +41,7 @@
 #define MUX_ADRESSE       0x70
 #define BNO_ADRESSE       0x29
 #define ANZAHL_SENSOREN   3
-#define SENDE_INTERVALL   50    // ms
+#define SENDE_INTERVALL   5     // ms
 #define PROTOKOLL_VERSION 4
 
 #define NOTAUS_PIN       21     // Toggle-Button nach GND, interner Pull-Up
@@ -500,6 +500,8 @@ void loop_einzelkalibrierung() {
     delay(500);
 }
 
+static uint8_t status_check_zaehler = 0;
+
 void loop_normal() {
     notaus_lesen();
 
@@ -513,10 +515,12 @@ void loop_normal() {
         mux_kanal_oeffnen(i);
         delay(10);
 
-        // Live-Pruefung: Sensor noch erreichbar?
-        uint8_t sys_status = 0;
-        sensoren[i].getSystemStatus(&sys_status, NULL, NULL);
-        if (sys_status == 0) {
+        // Live-Pruefung: nur alle 10 Zyklen (spart ~30ms pro Durchlauf)
+        bool status_pruefen = (status_check_zaehler == 0);
+        if (status_pruefen) {
+            uint8_t sys_status = 0;
+            sensoren[i].getSystemStatus(&sys_status, NULL, NULL);
+            if (sys_status == 0) {
             // Sensor antwortet nicht — als ausgefallen markieren
             if (sensor_bereit[i]) {
                 sensor_bereit[i] = false;
@@ -535,17 +539,22 @@ void loop_normal() {
             }
         }
 
+        }  // if (status_pruefen)
+
         sensors_event_t ereignis;
         sensoren[i].getEvent(&ereignis);
         paket.sensoren[i].heading = ereignis.orientation.x;
         paket.sensoren[i].roll    = ereignis.orientation.y;
         paket.sensoren[i].pitch   = ereignis.orientation.z;
-        sensoren[i].getCalibration(
-            &paket.kalib[i].sys, &paket.kalib[i].gyro,
-            &paket.kalib[i].accel, &paket.kalib[i].mag);
+        // Kalibrierung nur alle 20 Zyklen abfragen (aendert sich langsam)
+        if (status_check_zaehler == 0) {
+            sensoren[i].getCalibration(
+                &paket.kalib[i].sys, &paket.kalib[i].gyro,
+                &paket.kalib[i].accel, &paket.kalib[i].mag);
 
-        if (!kalib_gespeichert[i] && kalib_gut_genug(&paket.kalib[i])) {
-            kalib_speichern(i);
+            if (!kalib_gespeichert[i] && kalib_gut_genug(&paket.kalib[i])) {
+                kalib_speichern(i);
+            }
         }
     }
     mux_alle_schliessen();
@@ -586,6 +595,7 @@ void loop_normal() {
         Serial.println();
     }
 
+    status_check_zaehler = (status_check_zaehler + 1) % 20;
     delay(SENDE_INTERVALL);
 }
 
