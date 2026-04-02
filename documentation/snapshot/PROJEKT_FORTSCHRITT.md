@@ -5,10 +5,10 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 
 ## Gesamtstatus
 
-- Projektmodus: bench-validierte Sensor-, Kommunikations- und Elektronikbasis mit MQTT-Bridge und Live-Dashboard-Infrastruktur
-- Aktive Hauptphasen: Phase 6 - Sensorvalidierung, Phase 8 - Kommunikation und Safety, Phase 10 - Entwicklungs-Dashboard (als Bench-Werkzeug)
+- Projektmodus: bench-validierte Sensor-, Kommunikations- und Elektronikbasis mit MQTT-Bridge, Live-Dashboard-Infrastruktur und ROS2-Visualisierung
+- Aktive Hauptphasen: Phase 6 - Sensorvalidierung, Phase 8 - Kommunikation und Safety, Phase 10 - Entwicklungs-Dashboard (als Bench-Werkzeug), ROS2-Visualisierung aktiv
 - Parallel gepflegt: Phase 1 - Dokumentationsfundament, Phase 2 - Security-Grundlage, Phase 3 - Vorbereitung und Toolchain, Phase 4 - Hardware-Readiness
-- Entwicklungsrealitaet: Controller → Receiver + Bridge per ESP-NOW auf Kanal 1 mit ImuPaket v4 (Notaus-Flag); Bridge → Mosquitto (Pi) per WiFi/MQTT; MQTT MCP Server fuer Claude Live-Debugging; LED-Schema invertiert mit RGB GPIO48; Notaus-Toggle-Button an GPIO21; Secret-Scanner mit Git-Hooks integriert
+- Entwicklungsrealitaet: Controller → Receiver + Bridge per ESP-NOW auf Kanal 1 mit ImuPaket v4 (Notaus-Flag); Bridge → Mosquitto (Pi) per WiFi/MQTT; MQTT MCP Server fuer Claude Live-Debugging; LED-Schema invertiert mit RGB GPIO48; Notaus-Toggle-Button an GPIO21; Secret-Scanner mit Git-Hooks integriert; ROS2 Jazzy mit URDF-Visualisierung und MQTT-Bridge aktiv
 - Naechste Schritte: Stock-Baseline-Test, UART-Grundkette, Dashboard-Views, Security-Uplift
 
 ## Aktuelle Phasenampel
@@ -24,7 +24,7 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 | Phase 7 - Kalibrierung und Mapping | vorbereitet | startet nach Arm-Aufbau, Referenzpose und erster Servo-Grundfunktion |
 | Phase 8 - Kommunikation, Servoausfuehrung und Safety | in Arbeit | `ESP-NOW`-Benchpfad ist validiert; Security-Uplift, UART und Arduino-Safety-Logik sind offen |
 | Phase 9 - Integration und Hardware-Verstetigung | nicht gestartet | folgt nach erster lauffaehiger Gesamtkette bis zur Servoebene |
-| Phase 10 - Zukunftsausbau und Systemerweiterung | vorbereitet | als Post-v1-Ausblick dokumentiert, aber nicht aktiv |
+| Phase 10 - Zukunftsausbau und Systemerweiterung | in Arbeit | ROS2-Visualisierung mit URDF und MQTT-Bridge aktiv; weitere Ausbaustufen als Post-v1-Ausblick dokumentiert |
 
 ## Bereits erledigt
 
@@ -80,6 +80,12 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - [x] Notaus-Kette end-to-end validiert: Controller (Toggle-Button GPIO21) → ImuPaket v4 flags → Receiver (RGB orange) + Bridge (RGB orange, MQTT `"notaus":true/false`) (bestaetigt 2026-03-28)
 - [x] Alle Dokumentation auf GPIO21, Toggle-Button, Kanal 1 und LED-Schema an=Problem durchgezogen (bestaetigt 2026-03-28)
 - [x] Foto des aktuellen Bench-Aufbaus unter docs/photos/2026-03-28_bench_aufbau_aktuell.jpg abgelegt (2026-03-28)
+- [x] ROS 2 Jazzy Package (robotarm_description) mit URDF-Visualisierung aufgesetzt (bestaetigt 2026-04-02)
+- [x] Dual-Arm Wandmontage-URDF (robotarm_wall.urdf) mit L/R Armen erstellt (bestaetigt 2026-04-02)
+- [x] MQTT-zu-ROS2 Bridge mit Toggle-Service (/toggle_arm) implementiert (bestaetigt 2026-04-02)
+- [x] Fast-DDS Shared Memory Transport fuer WSL2-Kompatibilitaet konfiguriert (bestaetigt 2026-04-02)
+- [x] Controller: SENDE_INTERVALL von 50ms auf 5ms optimiert, Status/Kalib-Polling alle 20 Zyklen (bestaetigt 2026-04-02)
+- [x] Receiver: Zaehler-Reset bei ESP-NOW Timeout eingebaut (bestaetigt 2026-04-02)
 
 ## Noch offen im aktuellen Schwerpunkt
 
@@ -97,9 +103,10 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 ## Naechste sinnvolle Arbeitspakete
 
 1. Stock-Baseline-Test des aufgebauten Adeept-Arms durchfuehren (Servo90, Unpacking_test_code)
-2. Dashboard-Views im bestehenden IoT Control Center auf dem Pi implementieren (Debug-Konsole, Statistiken, 3D-Simulation)
-3. UART-Pfad Receiver → Arduino in Betrieb nehmen
-4. Security-Uplift erst danach auf die Grundkette aufsetzen
+2. ROS2-Visualisierung mit Live-MQTT-Daten verbinden und Dual-Arm URDF gegen reale Sensordaten testen
+3. Dashboard-Views im bestehenden IoT Control Center auf dem Pi implementieren (Debug-Konsole, Statistiken, 3D-Simulation)
+4. UART-Pfad Receiver → Arduino in Betrieb nehmen
+5. Security-Uplift erst danach auf die Grundkette aufsetzen
 
 ## Leitende Dokumente fuer den aktuellen Stand
 

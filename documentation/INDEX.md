@@ -1,6 +1,6 @@
 # Dokumentationsindex
 
-Erzeugt am: 2026-03-31 18:03:07 CEST
+Erzeugt am: 2026-04-02 03:08:26 CEST
 
 ## Gesammelte Dokumente
 
@@ -90,6 +90,7 @@ Erzeugt am: 2026-03-31 18:03:07 CEST
 - [preparation/bench_setup/README.md](snapshot/preparation/bench_setup/README.md)
 - [preparation/esp32_environment/README.md](snapshot/preparation/esp32_environment/README.md)
 - [preparation/robot_arm_readiness/README.md](snapshot/preparation/robot_arm_readiness/README.md)
+- [ros2/QUICKSTART.md](snapshot/ros2/QUICKSTART.md)
 - [scripts/README.md](snapshot/scripts/README.md)
 - [scripts/ROADMAP.md](snapshot/scripts/ROADMAP.md)
 - [security/COMMUNICATION_SECURITY.md](snapshot/security/COMMUNICATION_SECURITY.md)

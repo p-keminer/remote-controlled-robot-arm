@@ -129,6 +129,8 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 - [x] minimalen UART-Frame v1 zwischen Receiver und Arduino dokumentieren — festes Binaerformat mit Startbytes, Version, Sequenz, Flags, 5 Achs-Sollwerten und CRC8
 - [x] Bench-Variante auf dritten IMU erweitert — ImuPaket v3 mit drei Sensoren und KalibStatus, Protokollversion 3 (bestaetigt 2026-03-26)
 - [x] ImuPaket v4 mit Notaus-Flag (Bit 0 im `flags`-Feld), Toggle-Button an GPIO21, alle drei Firmwares aktualisiert (bestaetigt 2026-03-28)
+- [x] Controller SENDE_INTERVALL von 50ms auf 5ms optimiert, Status/Kalib-Polling alle 20 Zyklen (bestaetigt 2026-04-02)
+- [x] Receiver Zaehler-Reset bei ESP-NOW Timeout eingebaut (bestaetigt 2026-04-02)
 - [ ] erste Arduino-Grundkette per UART aufbauen und validieren
 - [ ] Kommunikationsrahmen danach von der Bench-Variante auf die dokumentierte Security-Baseline mit `session_id`, applikationsseitigem Authentisierungstag und Advisory-gepruefter Stack-Basis anheben
 
@@ -154,6 +156,15 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 - [ ] Stromversorgung, Befestigung und Entlastung finalisieren
 
 ## Phase 10 - Zukunftsausbau nach dem Grundsystem
+
+### Arbeitspaket 10.0 - ROS2-Visualisierung und Bridge
+
+- [x] ROS 2 Jazzy Package (robotarm_description) mit URDF-Visualisierung aufgesetzt (bestaetigt 2026-04-02)
+- [x] Dual-Arm Wandmontage-URDF (robotarm_wall.urdf) mit L/R Armen erstellt (bestaetigt 2026-04-02)
+- [x] MQTT-zu-ROS2 Bridge mit Toggle-Service (/toggle_arm) implementiert (bestaetigt 2026-04-02)
+- [x] Fast-DDS Shared Memory Transport fuer WSL2-Kompatibilitaet konfiguriert (bestaetigt 2026-04-02)
+- [ ] Live-MQTT-Sensordaten an ROS2-Visualisierung anbinden und validieren
+- [ ] Dual-Arm URDF gegen reale IMU-Daten testen
 
 ### Arbeitspaket 10.1 - Mobile Plattform und Teleoperation
 

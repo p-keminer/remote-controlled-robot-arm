@@ -12,6 +12,7 @@ Dieses Dokument ist fuer Menschen und KI gleichermassen verbindlich.
 - `tests/` enthaelt Testablaeufe, Bench-Skripte und Nachweise fuer Security, Safety und Verhalten.
 - `docs/` bleibt manuell gepflegte Arbeits-, Nachweis- und Template-Dokumentation.
 - `dashboard/` enthaelt nur Entwicklungs-Dashboard-Views, MQTT MCP Server und Debug-Tooling (Bench-Werkzeug, nicht Teil des v1-Steuerpfads).
+- `ros2/` — ROS 2 Jazzy Workspace (robotarm_description Package, URDFs, MQTT-Bridge, Launch-Files).
 - `future/` enthaelt nur Zukunftsausbau, Post-v1-Ideen und spaeter zu aktivierende Erweiterungslinien.
 - `official_downloads/` enthaelt nur importierte Herstellerstaende, Vendor-Artefakte und projektrelevante Auswertungen dazu.
 - `documentation/` ist ausschliesslich generierter Snapshot-Inhalt und wird nicht manuell gepflegt. Nach jedem grossen Dokumentationsdurchlauf muss `documentation/snapshot/` komplett neu aus den Live-Dateien generiert werden.

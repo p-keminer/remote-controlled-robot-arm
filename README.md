@@ -40,6 +40,7 @@ Abgeschlossen (Stand 2026-03-28):
 - Secret-Scanner mit 10 Kategorien, Pre-Commit/Pre-Push Hooks, GitHub Actions
 - Notaus-Schalter (Emergency Stop): Toggle-Button an GPIO21, jeder Tastendruck toggelt Notaus, propagiert per ImuPaket v4 an Receiver und Bridge
 - Adeept 5-DOF Roboterarm mechanisch im Stock-Zustand aufgebaut (noch nicht eingeschaltet/getestet)
+- ROS 2 Jazzy Package `robotarm_description` eingerichtet: URDF-Visualisierung (stehend + Wandmontage mit Dual-Arm L/R), MQTT-Bridge mit Toggle-Service fuer Arm-Umschaltung, Fast-DDS Shared Memory fuer WSL2 (Schnellstart: `ros2/QUICKSTART.md`)
 
 ## Leitdokumente
 
@@ -60,6 +61,7 @@ Vor groesseren Aenderungen sind besonders relevant:
 - `hardware/ADEEPT_ARM_PRODUCT_BASELINE.md` fuer die konkrete Produktbasis des vorhandenen Adeept-Kits
 - `hardware/electronics/POWER_SUPPLY_CONCEPT.md` fuer die Stromversorgungsstrategie von Stock-Test, Bench und spaeterem Projektbetrieb
 - `official_downloads/README.md` fuer den importierten offiziellen Herstellerstand
+- `ros2/QUICKSTART.md` fuer den Schnellstart des ROS 2 Jazzy Workspace
 - `LICENSE.md` fuer die Apache-2.0-Lizenz der projekt-eigenen Inhalte
 - `SAFETY_NOTICE.md` fuer die getrennten Sicherheits- und Einsatzhinweise
 
@@ -91,4 +93,5 @@ Debug-Infrastruktur: Bridge-ESP32 leitet Daten per WiFi/MQTT an Mosquitto (Pi); 
 LED-Schema invertiert (aus=OK, an=Problem) mit RGB GPIO48 als FAULT auf allen ESPs.
 Secret-Scanner mit 10 Kategorien und automatischen Git-Hooks schuetzt vor versehentlichem Secret-Push.
 Die Security-Baseline wird bewusst erst nach erster UART-Grundkette aktiviert.
+ROS 2 Jazzy Workspace mit `robotarm_description` Package: URDF-Visualisierung (stehend + Wandmontage mit Dual-Arm L/R), MQTT-Bridge mit Toggle-Service fuer Arm-Umschaltung, Fast-DDS Shared Memory fuer WSL2.
 Naechste Schritte: Stock-Baseline-Test, Dashboard-Views, UART-Inbetriebnahme zum Arduino.

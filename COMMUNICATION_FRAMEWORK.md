@@ -10,6 +10,7 @@ Dieses Dokument ist die kanonische Quelle fuer alle Kommunikationsregeln zwische
 - Controller und Bridge tauschen die gleichen Daten parallel per `ESP-NOW` aus (Debug-Pfad, 2. Peer).
 - Bridge und Pi kommunizieren per WiFi und MQTT (Mosquitto, Port 1883, passwortgeschuetzt).
 - Receiver und Arduino kommunizieren ueber UART.
+- Fuer ROS2-Integration: Ein MQTT-Bridge-Node auf dem Pi kann die MQTT-Topics (Mosquitto) in das ROS2-DDS-Netz (Fast-DDS) weiterleiten. Dieser Pfad ist rein beobachtend und nicht Teil des sicherheitskritischen Steuerpfads.
 - Controller und Receiver setzen WiFi-Kanal 1 explizit per esp_wifi_set_channel(). Die Bridge bezieht den Kanal vom Router per WiFi.begin() und laeuft dadurch ebenfalls auf Kanal 1, solange der Router auf Kanal 1 konfiguriert ist.
 
 ## Grundregeln
@@ -97,7 +98,7 @@ typedef struct __attribute__((packed)) {
 - Paketgroesse: `sizeof(ImuPaketV4Bench)` — Receiver verwirft Pakete anderer Groesse
 - Integritaet im Bench-Pfad: XOR-Pruefsumme ueber alle Bytes bis auf das Pruefsummenfeld
 - Frische: Pakete mit `zaehler <= letzter_zaehler` werden verworfen
-- Sendeintervall: 50ms (20Hz)
+- Sendeintervall: 5ms (200Hz)
 - Drei IMUs ueber PCA9548A Mux-Kanaele 0/1/2, Mux-Delay 10ms
 - Kalibrierungsoffsets persistent im ESP32-NVS, automatisches Laden beim Boot
 - Einzelkalibrierung per Serial-Befehl (CAL0/CAL1/CAL2, RECAL, STOP)
@@ -115,7 +116,7 @@ Die Bridge empfaengt identische ImuPaket v4 Frames wie der Receiver, validiert s
 
 - **Protokoll:** MQTT ueber WiFi (PubSubClient), Mosquitto-Broker auf dem Pi (Port 1883)
 - **Authentifizierung:** Passwortgeschuetzt (`allow_anonymous false`), eigener MQTT-User fuer Bridge
-- **Topics:** `robotarm/imu` (20Hz, QoS 0), `robotarm/status` (1Hz, retained), `robotarm/kalib` (bei Aenderung, retained), `robotarm/ota/log`
+- **Topics:** `robotarm/imu` (200Hz, QoS 0), `robotarm/status` (1Hz, retained), `robotarm/kalib` (bei Aenderung, retained), `robotarm/ota/log`
 - **Kanal-Alignment:** Alle ESPs (Controller, Receiver, Bridge) muessen auf dem gleichen WiFi-Kanal laufen (aktuell Kanal 1)
 - **Sicherheit:** Die Bridge ist rein beobachtend. Sie kann keine Steuerbefehle senden. Ein Ausfall der Bridge hat keinen Einfluss auf den Steuerpfad.
 - **JSON-Format:** Kompakte Schluessel (`z`=zaehler, `s`=sensoren, `h`=heading, `r`=roll, `p`=pitch, `k`=kalib, `f`=flex_prozent, `fl`=flags, `notaus`=Notaus-Status, `v`=protokoll_version)
@@ -154,7 +155,7 @@ typedef struct {
 - Frische: Pakete mit `zaehler <= letzter_zaehler` werden verworfen
 - Authentisierung: `auth_tag64` wird applikationsseitig aus lokalem Schluesselmaterial berechnet
 - Nur gueltige `msg_typ`- und `flags`-Kombinationen duerfen in Bewegungslogik uebergehen
-- Sendeintervall: 50ms (20Hz)
+- Sendeintervall: 5ms (200Hz)
 - Dieser Stand ist das dokumentierte Zielbild fuer Bewegungsfreigabe ausserhalb des reinen Bench-Betriebs
 
 Hinweis:
