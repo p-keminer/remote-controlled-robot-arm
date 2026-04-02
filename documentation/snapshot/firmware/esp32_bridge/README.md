@@ -1,0 +1,56 @@
+# firmware/esp32_bridge
+
+## Zweck
+
+Dieser Ordner enthaelt die Firmware fuer den Bridge-ESP32, der als drahtloser Debug-Beobachter fungiert.
+Der Bridge-ESP32 empfaengt ImuPaket v4 per ESP-NOW vom Controller und leitet die Daten per WiFi und MQTT an den Mosquitto-Broker auf dem Raspberry Pi weiter.
+ImuPaket v4 enthaelt ein flags-Bitfeld (Bit 0 = Notaus). Der Notaus-Zustand wird per MQTT als `"notaus":true/false` in den JSON-Payloads weitergegeben und per RGB-LED angezeigt (orange blinkend).
+
+Die Bridge ist ein reines **Entwicklungswerkzeug** und kein Teil des v1-Steuerpfads.
+Sie kann keine Befehle zuruecksenden und hat keinen Einfluss auf die Servobewegung.
+
+## Aktueller Stand
+
+Die Bridge-Firmware ist implementiert und bench-validiert.
+ESP-NOW Empfang, MQTT-Weiterleitung (PubSubClient), OTA (ArduinoOTA) und RGB-FAULT-LED (NeoPixel) funktionieren.
+Die Bridge bezieht den WiFi-Kanal vom Router per WiFi.begin(). Controller und Receiver setzen Kanal 1 explizit per esp_wifi_set_channel(). Koexistenz funktioniert solange der Router auf Kanal 1 laeuft.
+LED-Schema invertiert: aus = OK, an = Problem.
+
+## Inhalt
+
+- `esp32_bridge.ino` — Hauptfirmware: ESP-NOW Empfang, MQTT Publish, OTA, RGB-FAULT
+- `peer_config.template.h` — Vorlage fuer die Controller-MAC-Adresse (Absendervalidierung)
+- `wifi_config.template.h` — Vorlage fuer WiFi SSID, Passwort, MQTT-Broker IP/Port/User/Passwort, OTA-Passwort
+
+## Regeln
+
+- die Bridge ist rein empfangend und darf keine Daten in den Steuerpfad einschleusen
+- WiFi- und MQTT-Zugangsdaten gehoeren ausschliesslich in die gitignorierte `wifi_config.local.h`
+- die MAC-Adresse des Controllers gehoert in die gitignorierte `peer_config.local.h`
+- OTA-Passwort muss sich von WiFi- und MQTT-Passwort unterscheiden (drei getrennte Geheimnisse)
+- ESP-NOW und WiFi muessen auf dem gleichen Funkkanal laufen (aktuell Kanal 1)
+- ein Ausfall der Bridge darf den Controller-Receiver-Pfad nicht beeintraechtigen
+- die Bridge validiert empfangene Pakete (Groesse, Absender-MAC, Pruefsumme, Protokollversion) bevor sie per MQTT weiterleitet
+
+## LED-Debugging (invertiert: aus = OK, an = Problem)
+
+- GPIO4 Gruen — blinkt wenn WiFi getrennt
+- GPIO5 Blau — blinkt wenn ESP-NOW Timeout (kein Paket seit 2s)
+- GPIO7 Weiss — blinkt wenn MQTT getrennt
+- GPIO48 RGB — orange blinkend bei Notaus, rot blinkend bei Fehler, aus wenn OK
+
+## MQTT Topics
+
+- `robotarm/imu` — ImuPaket v4 als kompaktes JSON inkl. Notaus-Flag (bei jedem Empfang, QoS 0)
+- `robotarm/status` — Bridge-Status: WiFi RSSI, Uptime, Paketrate, Fehlerrate (1Hz, retained)
+- `robotarm/kalib` — Kalibrierungsstatus pro Sensor (bei Aenderung, retained)
+- `robotarm/ota/log` — OTA-Versuchsprotokoll (bei jedem Versuch)
+
+## Schnittstellen/Abhaengigkeiten
+
+- empfaengt ImuPaket v4 per ESP-NOW vom Controller (`../esp32_controller/`)
+- publiziert per MQTT auf dem Mosquitto-Broker des Pi (`../../dashboard/`)
+- nutzt die gleiche Paketstruktur wie `../esp32_controller/` und `../esp32_receiver/`
+- WiFi-Kanal 1 muss zum Router-Kanal und zum Controller/Receiver passen
+- Paketformat dokumentiert in `../../COMMUNICATION_FRAMEWORK.md`
+- MQTT-Topic-Struktur dokumentiert in `../../dashboard/DASHBOARD_CONCEPT.md`

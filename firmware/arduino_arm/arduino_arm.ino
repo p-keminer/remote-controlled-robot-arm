@@ -10,11 +10,16 @@
 //   nicht gleichzeitig laufen, ohne dass die Servos zucken (Jitter).
 //   Loesung: Servos und SoftwareSerial wechseln sich in festen Zeitfenstern ab.
 //
-//   [--- 150ms Listen ---][--- 100ms Servo PWM ---]
+//   [--- 100ms Listen ---][--- 100ms Servo PWM (4x25ms Slew-Schritte) ---]
 //     SoftwareSerial aktiv    Servos attached + PWM
 //     Servos detached         SoftwareSerial aus
+//     buf_pos Reset!          Multi-Step Slew-Rate-Limiter
 //
-//   Siehe: firmware/SERVO_UART_DESIGNENTSCHEIDUNGEN.md (Abschnitte 2-3)
+//   Zyklusdauer: 200ms (5 Hz Update-Rate fuer Servos).
+//   Der Slew-Rate-Limiter (aktuell[] → ziel[], MAX_SCHRITT Grad pro Sub-Step)
+//   sorgt fuer glatte Bewegungen auch bei Frame-Verlust.
+//
+//   Siehe: firmware/SERVO_UART_DESIGNENTSCHEIDUNGEN.md (Abschnitte 2-3, 9-12)
 //
 // NICHT AENDERN ohne das Designdokument zu lesen:
 //   - Pin-Zuordnungen (Abschnitt 1 + 4)
@@ -22,6 +27,9 @@
 //   - Timing SERVO_MS / LISTEN_MS (Abschnitt 2)
 //   - attach/write-Reihenfolge (Abschnitt 3)
 //   - Startwerte / Neutralposition (Abschnitt 5)
+//   - Slew-Rate-Limiter (Abschnitt 9)
+//   - Multi-Step Servo Phase (Abschnitt 10)
+//   - Frame Alignment / buf_pos Reset (Abschnitt 11)
 // =============================================================================
 
 #include <Servo.h>
@@ -99,8 +107,7 @@ typedef struct __attribute__((packed)) {
 
 #define TIMEOUT_MS   1000   // Wenn 1s kein Frame: Neutral setzen
 #define SERVO_MS     100    // Servos attached mit sauberem PWM (5 Zyklen bei 50Hz)
-                            // Weniger = Servos erreichen Position nicht sicher
-#define LISTEN_MS    150    // SoftwareSerial aktiv, Servos detached
+#define LISTEN_MS    100    // SoftwareSerial aktiv, Servos detached
                             // Weniger = zu wenige Frames empfangen (ruckelig)
                             // Ein Frame @ 9600 Baud = ~12ms (11 Bytes)
 
@@ -119,12 +126,26 @@ unsigned long letzter_frame_ms = 0;  // Zeitstempel des letzten gueltigen Frames
 // Bei pauschal 90 Grad springt z.B. der Ellbogen um 37 Grad beim ersten Frame.
 // Siehe: firmware/SERVO_UART_DESIGNENTSCHEIDUNGEN.md Abschnitt 5
 
+// Maximale Grad-Aenderung pro Zyklus (Slew-Rate-Limiter).
+// Bei 250ms Zyklus und MAX_SCHRITT=3: max 12 Grad/Sekunde.
+// Glaettet Bewegung bei Frame-Verlust und verhindert harte Spruenge.
+#define MAX_SCHRITT  2
+
+// ziel[] = Sollwert vom letzten empfangenen Frame
+// aktuell[] = tatsaechliche Servo-Position (interpoliert)
 int ziel[5] = {
     (BASE_MIN + BASE_MAX) / 2,         // 75 — Base Mitte
     (SHOULDER_MIN + SHOULDER_MAX) / 2,  // 88 — Shoulder Mitte
     (ELBOW_MIN + ELBOW_MAX) / 2,       // 127 — Elbow Mitte
     (WRIST_MIN + WRIST_MAX) / 2,       // 91 — Wrist Mitte
     (GRIPPER_MIN + GRIPPER_MAX) / 2    // 79 — Gripper Mitte
+};
+int aktuell[5] = {
+    (BASE_MIN + BASE_MAX) / 2,
+    (SHOULDER_MIN + SHOULDER_MAX) / 2,
+    (ELBOW_MIN + ELBOW_MAX) / 2,
+    (WRIST_MIN + WRIST_MAX) / 2,
+    (GRIPPER_MIN + GRIPPER_MAX) / 2
 };
 
 // CRC8 — XOR ueber alle Bytes. Muss identisch mit uart_frame.h sein.
@@ -144,17 +165,30 @@ uint8_t crc_berechnen(const uint8_t* daten, uint8_t laenge) {
 // Durch sofortiges write() nach jedem attach() wird der Glitch minimiert.
 // Siehe: firmware/SERVO_UART_DESIGNENTSCHEIDUNGEN.md Abschnitt 3
 // NICHT AENDERN: Nicht erst alle attachen und dann alle schreiben!
+// Slew-Rate-Limiter: aktuell[] bewegt sich pro Zyklus max MAX_SCHRITT Grad
+// Richtung ziel[]. Glaettet Bewegung bei Frame-Verlust.
+void slew_update() {
+    for (int i = 0; i < 5; i++) {
+        if (aktuell[i] < ziel[i]) {
+            aktuell[i] = min(aktuell[i] + MAX_SCHRITT, ziel[i]);
+        } else if (aktuell[i] > ziel[i]) {
+            aktuell[i] = max(aktuell[i] - MAX_SCHRITT, ziel[i]);
+        }
+    }
+}
+
 void servos_attach_und_schreiben() {
+    slew_update();
     servoBase.attach(SERVO_BASE_PIN);
-    servoBase.write(ziel[0]);
+    servoBase.write(aktuell[0]);
     servoShoulder.attach(SERVO_SHOULDER_PIN);
-    servoShoulder.write(ziel[1]);
+    servoShoulder.write(aktuell[1]);
     servoElbow.attach(SERVO_ELBOW_PIN);
-    servoElbow.write(ziel[2]);
+    servoElbow.write(aktuell[2]);
     servoWrist.attach(SERVO_WRIST_PIN);
-    servoWrist.write(ziel[3]);
+    servoWrist.write(aktuell[3]);
     servoGripper.attach(SERVO_GRIPPER_PIN);
-    servoGripper.write(ziel[4]);
+    servoGripper.write(aktuell[4]);
 }
 
 // Alle Servos detachen — kein PWM-Signal mehr, kein Haltemoment.
@@ -209,19 +243,27 @@ void setup() {
 // =============================================================================
 // Hauptschleife — Detach-Zyklus
 // =============================================================================
-// Ablauf pro Iteration (~250ms):
-//   1. SoftwareSerial einschalten, 150ms lang Frames empfangen (Servos detached)
-//   2. SoftwareSerial ausschalten
-//   3. Servos attachen, Zielwinkel schreiben, 100ms PWM halten
-//   4. Servos detachen
-//   5. Timeout pruefen
+// Ablauf pro Iteration (~200ms = 5 Hz):
+//   1. buf_pos auf 0 setzen (Frame-Alignment-Fix, siehe Abschnitt 11)
+//   2. SoftwareSerial einschalten, 100ms lang Frames empfangen (Servos detached)
+//   3. SoftwareSerial ausschalten
+//   4. Servos attachen, 4x Slew-Update + Write mit je 25ms Delay (= 100ms PWM)
+//   5. Servos detachen
+//   6. Timeout pruefen
 //
 // WARUM diese Reihenfolge:
 //   - SoftwareSerial und Servo-PWM duerfen NIEMALS gleichzeitig aktiv sein
 //   - Servos brauchen mindestens ~100ms (5 PWM-Zyklen) fuer stabile Position
-//   - 150ms Listen bei 20Hz Frame-Rate = durchschnittlich 3 Frames pro Fenster
+//   - 100ms Listen bei 20Hz Frame-Rate = durchschnittlich 2 Frames pro Fenster
+//   - Multi-Step Slew (4 Sub-Steps) innerhalb der Servo-Phase glaettet Bewegung
+//     (siehe Abschnitt 10 im Designdokument)
 void loop() {
     // --- Phase 1: UART-Daten lesen (Servos sind detached, kein PWM-Jitter) ---
+    // KRITISCH: buf_pos zuruecksetzen! Ohne diesen Reset werden unvollstaendige
+    // Frames aus dem vorherigen Fenster mit neuen Daten zusammengemischt,
+    // was zu sporadischen Servo-Spruengen fuehrt (besonders Basis).
+    // Siehe: firmware/SERVO_UART_DESIGNENTSCHEIDUNGEN.md Abschnitt 11
+    buf_pos = 0;
     espSerial.begin(9600);
     unsigned long phase_start = millis();
     while (millis() - phase_start < LISTEN_MS) {
@@ -252,9 +294,26 @@ void loop() {
     }
     espSerial.end();  // SoftwareSerial AUS — ab hier saubere Timer-Interrupts
 
-    // --- Phase 2: Servos mit sauberem PWM versorgen ---
-    servos_attach_und_schreiben();
-    delay(SERVO_MS);
+    // --- Phase 2: Multi-Step Servo Phase (Abschnitt 10 im Designdokument) ---
+    // 4 Sub-Steps a 25ms = 100ms sauberes PWM. Pro Sub-Step bewegt sich aktuell[]
+    // um MAX_SCHRITT Grad Richtung ziel[] (Slew-Rate-Limiter, Abschnitt 9).
+    // Effektiv: 4 × MAX_SCHRITT(2) = 8 Grad pro Zyklus = 40 Grad/Sekunde.
+    // WARUM 4×25ms statt 1×100ms: Servo-Position aendert sich in 25ms-Intervallen
+    // statt alle 200ms — deutlich fluessigere Bewegung.
+    servoBase.attach(SERVO_BASE_PIN);
+    servoShoulder.attach(SERVO_SHOULDER_PIN);
+    servoElbow.attach(SERVO_ELBOW_PIN);
+    servoWrist.attach(SERVO_WRIST_PIN);
+    servoGripper.attach(SERVO_GRIPPER_PIN);
+    for (int s = 0; s < 4; s++) {
+        slew_update();
+        servoBase.write(aktuell[0]);
+        servoShoulder.write(aktuell[1]);
+        servoElbow.write(aktuell[2]);
+        servoWrist.write(aktuell[3]);
+        servoGripper.write(aktuell[4]);
+        delay(25);
+    }
     servos_detach();
 
     // --- Timeout: Keine Frames seit 1 Sekunde → Sicherheits-Neutral ---

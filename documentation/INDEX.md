@@ -1,6 +1,6 @@
 # Dokumentationsindex
 
-Erzeugt am: 2026-04-02 03:11:22 CEST
+Erzeugt am: 2026-04-02 10:14:32 CEST
 
 ## Gesammelte Dokumente
 
@@ -48,6 +48,7 @@ Erzeugt am: 2026-04-02 03:11:22 CEST
 - [docs/templates/WIRING_LOG_TEMPLATE.md](snapshot/docs/templates/WIRING_LOG_TEMPLATE.md)
 - [firmware/README.md](snapshot/firmware/README.md)
 - [firmware/ROADMAP.md](snapshot/firmware/ROADMAP.md)
+- [firmware/SERVO_UART_DESIGNENTSCHEIDUNGEN.md](snapshot/firmware/SERVO_UART_DESIGNENTSCHEIDUNGEN.md)
 - [firmware/UART_FRAME_V1.md](snapshot/firmware/UART_FRAME_V1.md)
 - [firmware/arduino_arm/README.md](snapshot/firmware/arduino_arm/README.md)
 - [firmware/arduino_arm/ROADMAP.md](snapshot/firmware/arduino_arm/ROADMAP.md)
