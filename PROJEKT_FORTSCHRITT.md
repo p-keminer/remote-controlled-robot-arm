@@ -99,7 +99,7 @@ Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv
 - [x] I2C-Grundkette `Receiver -> Arduino` bench-validieren (erledigt 2026-04-02, I2C statt UART wegen Interrupt-Kollision)
 - [ ] Bench-Protokoll auf die dokumentierte Security-Baseline mit `session_id` und Authentisierungstag anheben
 - [ ] Stock-Baseline-Test des aufgebauten Adeept-Arms durchfuehren und dokumentieren
-- [ ] ausgewaehlte Akkus und das Ladegeraet beschaffen und pruefen
+- [x] ausgewaehlte Akkus und das Ladegeraet beschafft und in Betrieb (4x Molicel INR-18650-M35A + XTAR VC4SL, bestaetigt 2026-04-02)
 - [ ] Dashboard-Views im bestehenden IoT Control Center auf dem Pi implementieren
 - [ ] PPS-Optimierung bei Multi-Peer ESP-NOW (aktuell ~1-2 PPS statt 20)
 - [ ] OTA Dual-Partition Rollback bench-validieren

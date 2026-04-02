@@ -6,15 +6,21 @@ Dieser Ordner enthaelt die manuell gepflegte Arbeits- und Nachweisdokumentation 
 
 ## Aktueller Stand
 
-Die Struktur ist vorbereitet.
+Erste reale Nachweisdokumente sind angelegt (Stand 2026-04-02): Hardware-Inventar, Aufbauprotokoll, I2C-Bench-Test, Power-On-Checkliste, Sensormontage und Verkabelungsprotokoll.
 Sitzungsnotizen, Messprotokolle, Fotodokumentation und dokumentationsnahe Vorlagen werden hier gesammelt und bewusst nicht generiert.
 
 ## Inhalt
 
+- `HARDWARE_INVENTORY.md` — Soll/Ist-Bestandsliste aller Komponenten
+- `ASSEMBLY_LOG_2026-03-24.md` — Aufbauprotokoll Stock-Montage
+- `BENCH_TEST_I2C_CHAIN_2026-04-02.md` — Bench-Testprotokoll I2C-Kette
+- `FIRST_POWER_ON_CHECKLIST.md` — Erstinbetriebnahme-Checkliste aller Geraete
+- `SENSOR_MOUNTING_RECORD.md` — Sensorpositionen und Mux-Zuordnung
+- `WIRING_LOG_2026-04-02.md` — Verkabelungsprotokoll mit allen Verbindungen
 - `session_notes/` fuer Arbeitsnotizen und Zwischenstaende
 - `measurement_logs/` fuer Messreihen, Beobachtungen und Versuchsergebnisse
 - `photos/` fuer Bildmaterial von Aufbau, Referenzposen und Verkabelung
-- `templates/` fuer Projektvorlagen rund um Inventar, Aufbau, Verkabelung und Bench-Tests
+- `templates/` fuer Projektvorlagen (leer, als Grundlage fuer weitere Eintraege)
 
 ## Regeln
 

@@ -1,6 +1,6 @@
 # Dokumentationsindex
 
-Erzeugt am: 2026-04-02 19:01:17 CEST
+Erzeugt am: 2026-04-02 19:11:44 CEST
 
 ## Gesammelte Dokumente
 
@@ -34,8 +34,14 @@ Erzeugt am: 2026-04-02 19:01:17 CEST
 - [dashboard/DASHBOARD_CONCEPT.md](snapshot/dashboard/DASHBOARD_CONCEPT.md)
 - [dashboard/README.md](snapshot/dashboard/README.md)
 - [dashboard/ROADMAP.md](snapshot/dashboard/ROADMAP.md)
+- [docs/ASSEMBLY_LOG_2026-03-24.md](snapshot/docs/ASSEMBLY_LOG_2026-03-24.md)
+- [docs/BENCH_TEST_I2C_CHAIN_2026-04-02.md](snapshot/docs/BENCH_TEST_I2C_CHAIN_2026-04-02.md)
+- [docs/FIRST_POWER_ON_CHECKLIST.md](snapshot/docs/FIRST_POWER_ON_CHECKLIST.md)
+- [docs/HARDWARE_INVENTORY.md](snapshot/docs/HARDWARE_INVENTORY.md)
 - [docs/README.md](snapshot/docs/README.md)
 - [docs/ROADMAP.md](snapshot/docs/ROADMAP.md)
+- [docs/SENSOR_MOUNTING_RECORD.md](snapshot/docs/SENSOR_MOUNTING_RECORD.md)
+- [docs/WIRING_LOG_2026-04-02.md](snapshot/docs/WIRING_LOG_2026-04-02.md)
 - [docs/measurement_logs/README.md](snapshot/docs/measurement_logs/README.md)
 - [docs/photos/README.md](snapshot/docs/photos/README.md)
 - [docs/session_notes/README.md](snapshot/docs/session_notes/README.md)
