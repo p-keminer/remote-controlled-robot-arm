@@ -3,6 +3,9 @@
 #include <esp_wifi.h>
 #include <Adafruit_NeoPixel.h>
 
+#include "uart_frame.h"
+#include "test_sweep.h"
+
 // Receiver: IMU-Pakete empfangen und validieren
 // Prueft: Protokollversion, Pruefsumme, Frame-Frische
 //
@@ -161,6 +164,10 @@ void setup() {
     }
 
     esp_now_register_recv_cb(beiEmpfang);
+
+    // UART-Ausgabe an Arduino (GPIO15 TX)
+    uart_frame_init();
+    Serial.println("UART TX auf GPIO15 aktiv (Test-Sweep).");
     Serial.println("Bereit. LEDs aus = alles OK.");
 }
 
@@ -184,6 +191,9 @@ void loop() {
         rgb.clear();
     }
     rgb.show();
+
+    // UART Test-Sweep an Arduino senden
+    test_sweep_update();
 
     delay(100);
 }

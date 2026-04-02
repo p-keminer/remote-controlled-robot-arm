@@ -6,10 +6,35 @@ Dieser Ordner dokumentiert die mechanischen und softwareseitigen Winkelgrenzen a
 
 ## Aktueller Stand
 
-Die Dokumentationsbasis ist angelegt.
-Reale Grenzwerte werden nach Messung und Erstinbetriebnahme eingetragen.
-Die offizielle Herstellerbasis ist inzwischen klarer: Laufzeitseitig werden fuenf aktive Servos auf `D9`, `D6`, `D5`, `D3`, `D11` genutzt, waehrend `D10/servo6` als Stock-Test-/Reservepfad auftaucht.
-Vor dem realen Aufbau bleiben die tatsaechliche physische Zuordnung, reale Grenzwerte und die Bestaetigung des Reserverservos trotzdem offen.
+Erstmessung am 2026-04-02 durchgefuehrt. Alle 5 Servos auf 90° kalibriert, Shoulder-Servo (Originalservo defekt) durch Reserveservo ersetzt.
+
+### Reale Pin-zu-Gelenk-Zuordnung
+
+Die tatsaechliche Verkabelung weicht vom offiziellen Standard ab:
+
+| Pin | Poti | Gelenk   | Offiziell erwartet |
+|-----|------|----------|--------------------|
+| D9  | A0   | Base     | Base               |
+| D6  | A1   | Gripper  | Shoulder           |
+| D5  | A2   | Wrist    | Elbow              |
+| D3  | A3   | Elbow    | Wrist              |
+| D11 | A6   | Shoulder | Gripper            |
+
+### Gemessene Servo-Grenzwerte
+
+| Gelenk   | Pin | Min  | Max  | Beschreibung                                          |
+|----------|-----|------|------|-------------------------------------------------------|
+| Base     | D9  | 12°  | 139° | 12° = max rechts (Uhrzeiger), 139° = max links (gegen Uhrzeiger) |
+| Gripper  | D6  | 32°  | 126° | 32° = komplett offen, 126° = komplett geschlossen     |
+| Wrist    | D5  | 5°   | 177° | 5° = Uhrzeiger, 177° = gegen Uhrzeiger                |
+| Elbow    | D3  | 80°  | 175° | 80° = komplett gerade, 175° = komplett eingeklappt    |
+| Shoulder | D11 | 35°  | 142° | 35° = komplett eingeklappt, 90° = aufrecht, 142° = max nach hinten |
+
+### Hinweise
+
+- Shoulder offizieller Potentiometer-Sketch begrenzte auf 35-90, realer Bereich ist 35-142 (107°)
+- Shoulder-Servo ist der Reserveservo — Originalservo war defekt
+- Neutralposition aller Servos: 90° (kalibriert am 2026-04-02)
 
 ## Inhalt
 
