@@ -1,6 +1,6 @@
 # Dokumentationsindex
 
-Erzeugt am: 2026-04-02 18:49:23 CEST
+Erzeugt am: 2026-04-02 19:01:17 CEST
 
 ## Gesammelte Dokumente
 
@@ -46,10 +46,10 @@ Erzeugt am: 2026-04-02 18:49:23 CEST
 - [docs/templates/README.md](snapshot/docs/templates/README.md)
 - [docs/templates/SENSOR_MOUNTING_RECORD_TEMPLATE.md](snapshot/docs/templates/SENSOR_MOUNTING_RECORD_TEMPLATE.md)
 - [docs/templates/WIRING_LOG_TEMPLATE.md](snapshot/docs/templates/WIRING_LOG_TEMPLATE.md)
+- [firmware/I2C_FRAME_V1.md](snapshot/firmware/I2C_FRAME_V1.md)
 - [firmware/README.md](snapshot/firmware/README.md)
 - [firmware/ROADMAP.md](snapshot/firmware/ROADMAP.md)
 - [firmware/SERVO_UART_DESIGNENTSCHEIDUNGEN.md](snapshot/firmware/SERVO_UART_DESIGNENTSCHEIDUNGEN.md)
-- [firmware/UART_FRAME_V1.md](snapshot/firmware/UART_FRAME_V1.md)
 - [firmware/arduino_arm/README.md](snapshot/firmware/arduino_arm/README.md)
 - [firmware/arduino_arm/ROADMAP.md](snapshot/firmware/arduino_arm/ROADMAP.md)
 - [firmware/esp32_bridge/README.md](snapshot/firmware/esp32_bridge/README.md)

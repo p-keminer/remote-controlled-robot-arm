@@ -44,7 +44,7 @@ Dieses Dokument ist die kanonische Quelle fuer alle Kommunikationsregeln zwische
 - I2C wurde statt UART gewaehlt, weil SoftwareSerial (PCINT-Interrupt) mit Timer1 (Servo-PWM) auf dem ATmega328P kollidiert und Servo-Jitter verursacht. I2C nutzt die TWI-Hardware-Peripherie, deren Interrupt nicht mit Timer1 kollidiert.
 - ESP32 ist I2C-Master (GPIO13 SDA, GPIO14 SCL), Arduino ist I2C-Slave (Adresse 0x42, SDA=A4, SCL=A5).
 - Die I2C-Verbindung nutzt den OLED-Header des Adeept-Boards (das OLED muss dafuer ausgesteckt werden).
-- Das Frame-Format ist identisch mit dem urspruenglich fuer UART geplanten Frame V1 (11 Bytes, dokumentiert in `firmware/UART_FRAME_V1.md`), nur der Transport ist I2C statt UART.
+- Das Frame-Format ist identisch mit dem urspruenglich fuer UART geplanten Frame V1 (11 Bytes, dokumentiert in `firmware/I2C_FRAME_V1.md`), nur der Transport ist I2C statt UART.
 - Servos bleiben dauerhaft attached (kein Detach-Zyklus), 50Hz Update-Rate.
 - ISR-minimales Design auf dem Arduino: Wire.onReceive() kopiert nur Rohbytes in einen Puffer, Validierung und map() passieren in loop().
 - Der Receiver darf dem Arduino keine unvalidierten oder unvollstaendigen Bewegungsdaten uebergeben.
@@ -182,7 +182,7 @@ typedef struct __attribute__((packed)) {
     uint8_t handgelenk_soll;    // 0..255, abstrahierter Sollwert
     uint8_t greifer_soll;       // 0..255, abstrahierter Sollwert
     uint8_t crc8;               // Integritaetspruefung ueber alle vorherigen Bytes
-} UartFrameV1;
+} I2cFrameV1;
 ```
 
 - Das Format bleibt absichtlich klein, fest und binaerisch.

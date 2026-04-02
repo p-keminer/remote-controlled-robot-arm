@@ -1,13 +1,13 @@
-# UART Frame V1
+# I2C Frame V1
 
 ## Zweck
 
-Dieses Dokument beschreibt das minimale serielle Startformat zwischen `esp32_receiver` und `arduino_arm`.
+Dieses Dokument beschreibt das minimale Binaerformat fuer die I2C-Kommunikation zwischen `esp32_receiver` und `arduino_arm`.
 
 ## Aktueller Stand
 
 Das Format ist bench-validiert (bestaetigt 2026-04-02).
-Es wird ueber I2C transportiert (nicht UART) — der Dateiname ist historisch.
+Transport: I2C (ESP32 GPIO13/14 als Master → Arduino A4/A5 als Slave, Adresse 0x42).
 SoftwareSerial (UART) wurde durch I2C ersetzt, weil PCINT-Interrupts mit Timer1 (Servo-PWM) auf dem ATmega328P kollidieren und Servo-Jitter verursachen. I2C (TWI-Hardware) hat dieses Problem nicht.
 Das Frame-Format selbst ist identisch geblieben: 11 Bytes, festes Binaerformat, gleiche Struktur.
 Implementierung: `esp32_receiver/i2c_frame.h` (Sender) und `arduino_arm/arduino_arm_i2c.ino` (Empfaenger).
@@ -28,7 +28,7 @@ typedef struct __attribute__((packed)) {
     uint8_t handgelenk_soll;    // 0..255, abstrahierter Sollwert
     uint8_t greifer_soll;       // 0..255, abstrahierter Sollwert
     uint8_t crc8;               // Integritaetspruefung ueber alle vorherigen Bytes
-} UartFrameV1;
+} I2cFrameV1;
 ```
 
 ## Feldbedeutung
@@ -57,6 +57,6 @@ typedef struct __attribute__((packed)) {
 
 ## Schnittstellen/Abhaengigkeiten
 
-- ist in `../COMMUNICATION_FRAMEWORK.md` als kanonisches UART-Minimalformat gespiegelt
+- ist in `../COMMUNICATION_FRAMEWORK.md` als kanonisches I2C-Minimalformat gespiegelt
 - wird von `esp32_receiver/i2c_frame.h` erzeugt und von `arduino_arm/arduino_arm_i2c.ino` ueber I2C empfangen
 - muss mit `../SAFETY_FRAMEWORK.md` konsistent bleiben

@@ -33,7 +33,7 @@ Batteriebetrieb ist erforderlich (USB 500mA reicht nicht fuer 5 Servos bei perma
 ## Schnittstellen/Abhaengigkeiten
 
 - empfaengt validierte Zielwerte per I2C (Wire-Slave 0x42) aus `../esp32_receiver/`
-- Frame-Format dokumentiert in `../UART_FRAME_V1.md` (historischer Name, wird ueber I2C transportiert)
+- Frame-Format dokumentiert in `../I2C_FRAME_V1.md`
 - Designentscheidungen dokumentiert in `../SERVO_UART_DESIGNENTSCHEIDUNGEN.md` (insb. Abschnitt 13: I2C-Migration)
 - nutzt Limit- und Neutralregeln aus `../../calibration/servo_limits/`
 - orientiert sich an `../../SAFETY_FRAMEWORK.md`

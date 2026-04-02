@@ -19,7 +19,7 @@ Den Receiver-ESP32 als nachvollziehbare und sichere Funk-zu-I2C-Bruecke vorberei
 
 ### Offen
 
-- [x] I2C-Grundkette anhand `../UART_FRAME_V1.md` umgesetzt und bench-validiert (bestaetigt 2026-04-02)
+- [x] I2C-Grundkette anhand `../I2C_FRAME_V1.md` umgesetzt und bench-validiert (bestaetigt 2026-04-02)
 - [ ] Security-Uplift mit Session- und Authentisierungsschicht erst danach umsetzen
 - [ ] Timeout-Verhalten fuer Realbetrieb konkretisieren
 - [ ] Fehler- und Neutralverhalten sauber beschreiben

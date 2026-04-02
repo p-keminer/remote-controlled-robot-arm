@@ -20,7 +20,7 @@ Firmware-Archive frueherer Versionen liegen unter `espnow_imu_v1/`, `espnow_imu_
 - `esp32_receiver/` fuer Funkempfang, Validierung und I2C-Uebergabe an Arduino (Steuerpfad)
 - `esp32_bridge/` fuer Debug-Beobachtung per ESP-NOW-Mitlesen und MQTT-Weiterleitung an Pi (Entwicklungswerkzeug)
 - `arduino_arm/` fuer direkte Servoansteuerung, Limits und Rampen
-- `UART_FRAME_V1.md` fuer das minimale Frame-Format zwischen Receiver und Arduino (historisch als UART geplant, wird ueber I2C transportiert)
+- `I2C_FRAME_V1.md` fuer das minimale Frame-Format zwischen Receiver und Arduino (11 Bytes, I2C-Transport)
 - `SERVO_UART_DESIGNENTSCHEIDUNGEN.md` fuer Designentscheidungen zu Servo-Steuerung, Timing und I2C-Migration
 - `espnow_imu_v1/`, `espnow_imu_v2/` — archivierte Controller-Firmware-Versionen
 - `espnow_receiver_v1/`, `espnow_receiver_v2/` — archivierte Receiver-Firmware-Versionen

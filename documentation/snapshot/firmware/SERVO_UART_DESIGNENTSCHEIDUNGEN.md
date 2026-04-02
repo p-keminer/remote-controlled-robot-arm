@@ -253,7 +253,7 @@ Reihenfolge der Argumente: Flags, Basis, Schulter, Ellbogen, Handgelenk, Greifer
 
 ## 7. UART Frame V1 Protokoll
 
-Vollstaendige Spezifikation: `firmware/UART_FRAME_V1.md`
+Vollstaendige Spezifikation: `firmware/I2C_FRAME_V1.md` (ehemals `UART_FRAME_V1.md`)
 
 ### Kurzuebersicht
 

@@ -50,9 +50,9 @@
 #define I2C_ADDR  0x42
 
 // =============================================================================
-// Frame V1 — Protokolldefinition (identisch mit UART Frame V1)
+// I2C Frame V1 — Protokolldefinition
 // =============================================================================
-// 11-Byte Binaerprotokoll. Gleiche Struktur wie beim UART-Transport.
+// 11-Byte Binaerprotokoll. Spezifikation: firmware/I2C_FRAME_V1.md
 // MUSS identisch sein mit firmware/esp32_receiver/i2c_frame.h
 
 #define FRAME_START_A    0xA5   // Magic Byte 1 — Frame-Identifikation
