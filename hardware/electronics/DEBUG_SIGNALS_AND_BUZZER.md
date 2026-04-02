@@ -6,7 +6,7 @@ Die Kombination aus LEDs und Buzzer soll Debug, Bringup und spaetere Safety-Reak
 ## Ziel
 
 - Sensoraktivitaet am Sender direkt sichtbar machen
-- Funk-, UART- und Fehlerstatus am Receiver klar zeigen
+- Funk-, I2C- und Fehlerstatus am Receiver klar zeigen
 - Warnungen nicht nur in Logs verstecken
 - Safety-Reaktionen akustisch und optisch erkennbar machen
 
@@ -39,7 +39,7 @@ Die Kombination aus LEDs und Buzzer soll Debug, Bringup und spaetere Safety-Reak
 ### Minimalkonzept
 
 - `LINK LED` fuer gueltige Funkframes
-- `UART LED` fuer gueltige Weitergabe an Arduino
+- `I2C LED` fuer gueltige Weitergabe an Arduino
 - `FAULT LED` fuer Timeout, Integritaetsfehler oder Safety-Fallback
 
 ### Hauptbuzzer
@@ -84,10 +84,10 @@ Der Hauptbuzzer sitzt auf der Receiver- oder Robotikseite, weil dort die letzte 
 - externe LEDs sind weiterhin primaer fuer kanalspezifische Statusanzeige (WiFi, ESP-NOW, MQTT, Kalibrierung)
 - Bridge hat zusaetzlich weisse LED fuer MQTT-Status
 
-### Aktuelle LED-Belegung (Stand 2026-03-26)
+### Aktuelle LED-Belegung (Stand 2026-04-02)
 
 **Controller:** GPIO4 Gruen(S2), GPIO5 Gelb(S1), GPIO6 Rot(S0), GPIO7 Blau(COMMS), GPIO10 Weiss(FAULT), GPIO48 RGB(FAULT)
-**Receiver:** GPIO4 Gruen(UART), GPIO5 Blau(ESP-NOW), GPIO48 RGB(FAULT)
+**Receiver:** GPIO4 Gruen(LINK), GPIO5 Blau(I2C), GPIO48 RGB(FAULT)
 **Bridge:** GPIO4 Gruen(WiFi), GPIO5 Blau(ESP-NOW), GPIO7 Weiss(MQTT), GPIO48 RGB(FAULT)
 
 ## Recherchequellen

@@ -16,11 +16,12 @@ Der Kern des Systems besteht aus mehreren grossen Saeulen:
 
 ## Was dieses Projekt noch nicht ist
 
-- Adeept-Arm ist mechanisch im Stock-Zustand aufgebaut, aber noch nicht eingeschaltet oder getestet
-- noch keine vollstaendige Firmwarekette bis zum Servo
+- Stock-Baseline-Test des Adeept-Arms steht noch aus (Servo90, Unpacking_test_code)
+- IMU-Daten werden noch nicht auf echte Servo-Zielwinkel gemappt (aktuell nur Sweep-Test)
+- Security-Uplift (session_id, auth_tag) noch nicht umgesetzt
 - kein WLAN-, Cloud- oder Web-Interface-Projekt
 
-## Was bereits steht (Stand 2026-03-28)
+## Was bereits steht (Stand 2026-04-02)
 
 - Toolchain: Arduino IDE 3.3.7 als Hauptumgebung, PlatformIO als lokaler Fallback und Gegencheck
 - BNO055 Einzel, Dual und Triple (3x) via PCA9548A-Mux validiert (Kanaele 0/1/2)
@@ -31,6 +32,9 @@ Der Kern des Systems besteht aus mehreren grossen Saeulen:
 - Kompletter Datenpfad validiert: Controller → ESP-NOW → Bridge → MQTT → Pi → MCP → Claude
 - WiFi-Kanal 1 auf allen ESPs (Router-Kanal) fuer ESP-NOW/WiFi-Koexistenz
 - Custom Board FQBN `esp32:esp32:robotic_arm_s3n16r8` — nie generisches Board verwenden (siehe `GLOBAL_RULES.md`)
+- I2C-Kette Receiver → Arduino bench-validiert: ESP32 GPIO13/14 → Arduino A4/A5 (TWI Slave 0x42), Frame V1, 50Hz, alle 5 Servos mit kalibrierten Limits
+- Servo-Limits empirisch kalibriert und in `calibration/servo_limits/` dokumentiert
+- ISR-minimales Arduino-Design: Wire.onReceive() nur Rohbytes, Verarbeitung in loop(), Slew-Rate-Limiter (50 Grad/s)
 - Security-Haertung mit `session_id`, Authentisierungstag und Advisory-gepruefter Stack-Basis ist dokumentiert, aber noch nicht umgesetzt
 
 ## Kein Hartcodieren — gilt fuer Firmware UND Skripte

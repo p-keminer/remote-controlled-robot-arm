@@ -8,7 +8,7 @@ Es beschreibt, wie das System gegen unautorisierte Steuerung, unsichere Schnitts
 Die erste Projektversion wird als lokal betriebenes Embedded-System behandelt:
 
 - `ESP-NOW` ist der einzige vorgesehene Funkpfad zwischen den ESP32
-- `UART` ist die interne Uebergabe zwischen Receiver und Arduino
+- `I2C` ist die interne Uebergabe zwischen Receiver (Master, GPIO13/14) und Arduino (Slave 0x42, A4/A5)
 - WLAN, Internetanbindung, Cloud, Web-API und Fernwartung sind in v1 ausdruecklich nicht Teil des Zielsystems
 
 ## Trennung zu Safety
@@ -83,7 +83,7 @@ Die erste Projektversion wird als lokal betriebenes Embedded-System behandelt:
 
 ## Schnittstellensicherheit
 
-- UART darf nur klar definierte, validierbare Bewegungsframes akzeptieren
+- die I2C-Schnittstelle zum Arduino darf nur klar definierte, validierbare Bewegungsframes akzeptieren
 - Debug- und Wartungsschnittstellen muessen als lokale Servicepfade beschrieben werden
 - unsichere Generalschnittstellen wie Kommando-Shells oder unstrukturierte Fernkonfiguration sind fuer v1 nicht vorgesehen
 

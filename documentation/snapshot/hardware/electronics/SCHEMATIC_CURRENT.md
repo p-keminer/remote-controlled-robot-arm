@@ -1,6 +1,6 @@
 # Schematic Current
 
-Aktueller Bench-Aufbau — Stand 2026-03-28.
+Aktueller Bench-Aufbau — Stand 2026-04-02.
 Nur bestaetigte und getestete Verbindungen. Geplante aber noch nicht getestete Pfade sind als `(geplant)` markiert.
 
 **LED-Schema:** Invertiert — aus = OK, an = Problem. RGB auf GPIO48 als FAULT auf allen ESPs.
@@ -61,11 +61,18 @@ ESP32-S3-WROOM-1-N16R8
 │                     │
 │  WiFi (intern) ─────┼──)) ESP-NOW Kanal 1 ← Controller
 │                     │
-│  GPIO4  ────────────┼── LED Gruen (UART)       + 100 Ohm ── GND  [reserviert, spaeter]
+│  GPIO4  ────────────┼── LED Gruen (I2C)        + 100 Ohm ── GND  [leuchtet bei I2C-Aktivitaet]
 │  GPIO5  ────────────┼── LED Blau (ESP-NOW)     + 100 Ohm ── GND  [blinkt bei Timeout]
 │  GPIO48 ────────────┼── LED RGB onboard (FAULT)                   [rot blinkt bei Fehler]
-│  GPIO15 (geplant) ──┼── UART TX ── Arduino RX
-│  GPIO16 (geplant) ──┼── UART RX ── Arduino TX
+│  GPIO13 (SDA) ──────┼── I2C SDA ── Arduino A4 (SDA)  [Wire Master, 100kHz]
+│  GPIO14 (SCL) ──────┼── I2C SCL ── Arduino A5 (SCL)  [Slave 0x42]
+│                     │
+│         Arduino ATmega328P (Adeept Board)
+│         ├── D9  ── Servo Base     (12°-139°)
+│         ├── D6  ── Servo Gripper  (32°-126°)
+│         ├── D5  ── Servo Wrist    (5°-177°)
+│         ├── D3  ── Servo Elbow    (80°-175°)
+│         └── D11 ── Servo Shoulder (35°-142°)
 │                     │
 │  USB-C ─────────────┼── PC (Flash / Serial Monitor)
 └─────────────────────┘
@@ -121,14 +128,14 @@ BNO055 #2 (Hand) ─────┘                                    │ ADC
                                     │                 │
                            ESP32-S3 (Receiver)   ESP32-S3 (Bridge)
                                     │                 │
-                     ┌── GPIO4  Gruen  (UART)    ┌── GPIO4  Gruen  (WiFi)
+                     ┌── GPIO4  Gruen  (I2C)     ┌── GPIO4  Gruen  (WiFi)
                      ├── GPIO5  Blau   (ESP-NOW) ├── GPIO5  Blau   (ESP-NOW)
                      ├── GPIO48 RGB    (FAULT)   ├── GPIO7  Weiss  (MQTT)
                      │                           ├── GPIO48 RGB    (FAULT)
-                UART (geplant)                   │
+               I2C (GPIO13/14, 50Hz)             │
                      │                      MQTT (WiFi)
-                Arduino (geplant)                │
-                                         Mosquitto (Pi)
+              Arduino ATmega328P                 │
+               (5 Servos PWM)            Mosquitto (Pi)
 ```
 
 ## WiFi-Kanal-Alignment
@@ -146,7 +153,7 @@ Alle drei ESPs muessen auf dem gleichen WiFi-Kanal laufen fuer ESP-NOW/WiFi-Koex
 - Inhalt: 3x Euler-Daten (H/R/P), 3x Kalibrierungsstatus (S/G/A/M), Flex-Prozent, Flags (Bit 0 = Notaus)
 - Pruefsumme: XOR, `__attribute__((packed))`
 - Frische-Check: Frame-Zaehler
-- Sendeintervall: 50ms (20Hz) — aktuell ~1-2 PPS durch Multi-Peer Timing
+- Sendeintervall: 5ms (200Hz), I2C-Frame an Arduino: 50Hz (20ms Loop)
 - Kalibrierungsoffsets: persistent im ESP32-NVS, automatisches Laden beim Boot
 
 ## LED-Verhalten (invertiert: aus = OK, an = Problem)
@@ -160,7 +167,7 @@ Alle drei ESPs muessen auf dem gleichen WiFi-Kanal laufen fuer ESP-NOW/WiFi-Koex
 - Im Kalibrierungsmodus (CAL0/1/2): jeweilige Sensor-LED blinkt
 
 ### Receiver
-- UART (Gruen): reserviert fuer spaetere UART-Weiterleitung
+- I2C (Gruen): leuchtet bei I2C-Frame-Aktivitaet zum Arduino
 - ESP-NOW (Blau): blinkt bei Empfangs-Timeout (>2s)
 - NOTAUS (RGB orange): blinkt bei empfangenem Notaus-Flag (hoechste Prioritaet)
 - FAULT (RGB rot): blinkt bei Validierungsfehler oder Timeout

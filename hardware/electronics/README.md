@@ -9,7 +9,7 @@ Dieser Ordner dokumentiert die Integration der ESP32-, Sensor- und Debug-Elektro
 Die Dokumentationsbasis fuer `ESP32-S3 DevKitC-1 N16R8` ist angelegt und teilweise real validiert.
 Boardrevision, RGB-Pin, I2C-Pinplan, ADC-Pfad und der aktuelle Bench-Schaltplan sind bestaetigt.
 Zusaetzlich ist jetzt ein eigenes Stromversorgungskonzept verfuegbar, das den offiziellen Adeept-Stock-Pfad vom spaeteren Projektbetrieb trennt.
-LED-, Buzzer-, UART-, Lochraster- und Gehaeusethemen sind konzeptionell dokumentiert, in der praktischen Umsetzung aber noch offen.
+Die I2C-Grundkette (Receiver GPIO13/14 → Arduino A4/A5, Slave 0x42) ist bench-validiert (bestaetigt 2026-04-02). LED-, Buzzer-, Lochraster- und Gehaeusethemen sind konzeptionell dokumentiert, in der praktischen Umsetzung aber noch offen.
 
 ## Inhalt
 

@@ -2,7 +2,7 @@
 
 ## Ziel
 
-Den Receiver-ESP32 als nachvollziehbare und sichere Funk-zu-UART-Bruecke vorbereiten.
+Den Receiver-ESP32 als nachvollziehbare und sichere Funk-zu-I2C-Bruecke vorbereiten.
 
 ## Arbeitspakete
 
@@ -19,7 +19,7 @@ Den Receiver-ESP32 als nachvollziehbare und sichere Funk-zu-UART-Bruecke vorbere
 
 ### Offen
 
-- [ ] Minimale UART-Grundkette anhand `../UART_FRAME_V1.md` umsetzen und bench-validieren
+- [x] I2C-Grundkette anhand `../UART_FRAME_V1.md` umgesetzt und bench-validiert (bestaetigt 2026-04-02)
 - [ ] Security-Uplift mit Session- und Authentisierungsschicht erst danach umsetzen
 - [ ] Timeout-Verhalten fuer Realbetrieb konkretisieren
 - [ ] Fehler- und Neutralverhalten sauber beschreiben

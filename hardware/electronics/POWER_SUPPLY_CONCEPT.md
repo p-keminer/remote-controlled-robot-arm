@@ -61,7 +61,7 @@ Nicht als Schlussfolgerung fuer spaeter behandeln:
 
 Ziel:
 
-- Arduino, Receiver-ESP, Sensorpfad und UART/ESP-NOW pruefen
+- Arduino, Receiver-ESP, Sensorpfad und I2C/ESP-NOW pruefen
 
 Bevorzugter Pfad:
 

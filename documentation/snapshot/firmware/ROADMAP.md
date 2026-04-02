@@ -27,6 +27,6 @@ Eine klar getrennte Firmwarebasis fuer Controller, Receiver, Arduino und Bridge 
 ### Offen
 
 - [ ] Funkprotokoll vom Bench-Pfad auf die dokumentierte Security-Baseline anheben
-- [ ] UART-Fluss zwischen Receiver und Arduino implementierbar vorbereiten
-- [ ] Servoebene mit Limits, Rampen und Timeout-Verhalten konkretisieren
+- [x] I2C-Fluss zwischen Receiver und Arduino bench-validiert (GPIO13/14, Slave 0x42, Frame V1, bestaetigt 2026-04-02)
+- [x] Servoebene mit Limits, Slew-Rate (MAX_SCHRITT=1, 50°/s), Timeout 1s → Neutral bench-validiert (bestaetigt 2026-04-02)
 - [ ] lokale Teil-Roadmaps mit echtem Implementierungsfortschritt mitziehen

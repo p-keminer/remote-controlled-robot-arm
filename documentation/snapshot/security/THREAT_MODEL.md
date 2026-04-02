@@ -6,7 +6,7 @@ Dieses Dokument beschreibt die wichtigsten Assets, Angreifer und Missbrauchspfad
 
 - autorisierte Bewegungssteuerung des Roboterarms
 - Integritaet der ESP-NOW-Kommunikation
-- Integritaet der UART-Uebergabe an den Arduino
+- Integritaet der I2C-Uebergabe an den Arduino
 - Kalibrierungs- und Grenzwerte
 - lokale Service- und Debugzugaenge
 
@@ -21,7 +21,7 @@ Dieses Dokument beschreibt die wichtigsten Assets, Angreifer und Missbrauchspfad
 
 - Controller-ESP32 zu Funkkanal
 - Funkkanal zu Receiver-ESP32
-- Receiver-ESP32 zu UART-Frame
+- Receiver-ESP32 zu I2C-Frame
 - lokaler Rechner oder Servicezugang zu Debug- und Provisioning-Pfaden
 
 ## Wesentliche Missbrauchspfade
@@ -30,7 +30,7 @@ Dieses Dokument beschreibt die wichtigsten Assets, Angreifer und Missbrauchspfad
 - ein aufgezeichneter gueltiger Frame wird erneut abgespielt
 - ein Angreifer nutzt unverschluesselten Unicast oder Default-PMK-basierte Fehlkonfiguration aus
 - ein Angreifer oder Stoerpaket triggert Parser- oder Empfangsfehler in einer verwundbaren `ESP-NOW`-Basis
-- ein unvollstaendiger oder manipulierte UART-Frame beeinflusst die Servoausgabe
+- ein unvollstaendiger oder manipulierter I2C-Frame beeinflusst die Servoausgabe
 - Debugschnittstellen bleiben im Zielbetrieb offen oder unkontrolliert zugreifbar
 - Kalibrier- oder Grenzwerte werden unkontrolliert ueberschrieben
 

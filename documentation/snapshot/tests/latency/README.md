@@ -11,7 +11,7 @@ Messmethoden und reale Latenzergebnisse werden spaeter hier dokumentiert.
 
 ## Inhalt
 
-- Messstrategie fuer Controller, Funkstrecke, UART und Servoebene
+- Messstrategie fuer Controller, Funkstrecke, I2C und Servoebene
 - Zielwerte und Vergleich gegen reale Messungen
 - Hilfsnotizen zu Messaufbau und Werkzeugen
 

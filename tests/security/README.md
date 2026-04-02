@@ -19,7 +19,7 @@ Die aktuelle Sequenz ist dabei verbindlich: erst dritter IMU und erste `Receiver
 - Verhalten bei alter `session_id` oder ruecklaeufigem Zaehler
 - Verhalten bei ungueltigem oder fehlendem `auth_tag64`
 - Verhalten bei verwundbarer oder nicht freigegebener Stack-Version
-- Validierung von UART-Frames und Servicezugriffen
+- Validierung von I2C-Frames und Servicezugriffen
 - Nachweise fuer Secret- und Provisioning-Disziplin
 
 ## Regeln

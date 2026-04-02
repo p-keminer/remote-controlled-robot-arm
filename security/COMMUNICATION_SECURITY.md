@@ -5,7 +5,7 @@ Dieses Dokument beschreibt die erste Security-Grundlage fuer die Kommunikationsp
 ## V1-Kommunikationsgrenzen
 
 - `ESP-NOW` ist der lokale Funkkanal zwischen Controller und Receiver
-- `UART` ist die lokale Kabelschnittstelle zwischen Receiver und Arduino
+- `I2C` ist die lokale Kabelschnittstelle zwischen Receiver (Master, GPIO13/14) und Arduino (Slave 0x42, A4/A5)
 - WLAN, Internet und Cloud sind kein Teil der v1-Kommunikation
 
 ## ESP-NOW-Grundsaetze
@@ -42,7 +42,7 @@ Dieses Dokument beschreibt die erste Security-Grundlage fuer die Kommunikationsp
 - alte `session_id` oder ruecklaeufige Zaehler muessen verworfen werden
 - Steuerung wird erst nach explizitem `armed`- oder `ready`-Zustand akzeptiert
 - der aktuelle Bench-Pfad mit XOR-Pruefsumme und Frische-Check bleibt ausdruecklich ein Zwischenstand und ersetzt diese Security-Baseline nicht
-- der eigentliche Security-Uplift wird erst nach drittem IMU und erster `Receiver -> Arduino`-Grundkette aktiviert; ab der naechsten Paketrevision muessen aber mindestens `protokoll_version`, `flags` und klar erkennbare Erweiterungspunkte fuer spaetere Security-Felder mitgefuehrt werden
+- die I2C-Grundkette Receiver → Arduino ist bench-validiert (bestaetigt 2026-04-02); der Security-Uplift ist der naechste Schritt; ab der naechsten Paketrevision muessen mindestens `protokoll_version`, `flags` und klar erkennbare Erweiterungspunkte fuer spaetere Security-Felder mitgefuehrt werden
 
 ### Empfangs- und Parse-Haertung
 
@@ -52,9 +52,9 @@ Dieses Dokument beschreibt die erste Security-Grundlage fuer die Kommunikationsp
 - bei unklarer oder veralteter Stack-Version keinen Bewegungsbetrieb freigeben
 - die committed Stack-Zielbasis muss in `../preparation/esp32_environment/README.md` stehen; lokal geflashte Ist-Versionen gehoeren in eine gitignorierte Datei unter `./local/`
 
-## UART-Grundsaetze
+## I2C-Grundsaetze
 
-- die serielle Verbindung uebertraegt ausschliesslich klar strukturierte Bewegungsframes
+- die I2C-Verbindung (Receiver GPIO13/14 → Arduino A4/A5, Slave 0x42) uebertraegt ausschliesslich klar strukturierte Bewegungsframes
 - ungepruefte oder unvollstaendige Frames duerfen nicht in direkte Bewegung uebergehen
 - Diagnose oder Debugwerte duerfen die Bewegungssteuerung nicht implizit vermischen
 

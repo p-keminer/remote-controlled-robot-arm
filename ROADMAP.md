@@ -131,15 +131,15 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 - [x] ImuPaket v4 mit Notaus-Flag (Bit 0 im `flags`-Feld), Toggle-Button an GPIO21, alle drei Firmwares aktualisiert (bestaetigt 2026-03-28)
 - [x] Controller SENDE_INTERVALL von 50ms auf 5ms optimiert, Status/Kalib-Polling alle 20 Zyklen (bestaetigt 2026-04-02)
 - [x] Receiver Zaehler-Reset bei ESP-NOW Timeout eingebaut (bestaetigt 2026-04-02)
-- [ ] erste Arduino-Grundkette per UART aufbauen und validieren
+- [x] I2C-Grundkette Receiver → Arduino aufgebaut und validiert — Frame V1 ueber I2C (GPIO13/14 → A4/A5), alle 5 Servos bei 50Hz (bestaetigt 2026-04-02)
 - [ ] Kommunikationsrahmen danach von der Bench-Variante auf die dokumentierte Security-Baseline mit `session_id`, applikationsseitigem Authentisierungstag und Advisory-gepruefter Stack-Basis anheben
 
 ### Arbeitspaket 8.2 - Servoebene
 
-- [ ] Servoinitialisierung fuer alle 5 Achsen umsetzen
-- [ ] Gelenklimits pro Servo ausmessen und dokumentieren
-- [ ] Rampen- oder Geschwindigkeitsbegrenzung einbauen
-- [ ] Neutralposition fuer Fehlerfaelle festlegen
+- [x] Servoinitialisierung fuer alle 5 Achsen umgesetzt — Base D9, Gripper D6, Wrist D5, Elbow D3, Shoulder D11 (bestaetigt 2026-04-02)
+- [x] Gelenklimits pro Servo ausgemessen und dokumentiert — Base 12-139, Shoulder 35-142, Elbow 80-175, Wrist 5-177, Gripper 32-126 (bestaetigt 2026-04-02)
+- [x] Slew-Rate-Limiter eingebaut — MAX_SCHRITT=1 bei 50Hz = 50 Grad/s (bestaetigt 2026-04-02)
+- [x] Neutralposition fuer Fehlerfaelle festgelegt — Mittelwert (MIN+MAX)/2, Timeout 1s (bestaetigt 2026-04-02)
 
 ## Phase 9 - Integration, Latenz und Hardware-Verstetigung
 

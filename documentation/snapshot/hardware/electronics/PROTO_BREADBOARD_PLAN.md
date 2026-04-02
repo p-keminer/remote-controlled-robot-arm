@@ -5,7 +5,7 @@ Es ist kein Freifahrtschein fuer einen dauerhaften oder koerpergetragenen Breadb
 
 ## Ziel
 
-- Sensor-, Funk-, ADC- und UART-Pfade schnell testbar machen
+- Sensor-, Funk-, ADC- und I2C-Pfade schnell testbar machen
 - eine erste Pinbelegung pruefen
 - Fehler sichtbar machen, bevor Lochraster oder Gehaeuse festgelegt werden
 
@@ -35,9 +35,9 @@ Der erste Sender-Benchaufbau soll enthalten:
 Der erste Receiver-Benchaufbau soll enthalten:
 
 - `ESP32-S3 DevKitC-1 N16R8`
-- UART-Testpfad zum Arduino (GPIO15 TX, GPIO16 RX — geplant)
+- I2C-Verbindung zum Arduino (GPIO13 SDA, GPIO14 SCL → Arduino A4/A5, Slave 0x42) — bench-validiert
 - LED Gruen (GPIO4, 100 Ohm) — LINK
-- LED Blau (GPIO5, 100 Ohm) — UART (reserviert)
+- LED Blau (GPIO5, 100 Ohm) — I2C (leuchtet bei I2C-Aktivitaet)
 - LED Gelb (GPIO6, 100 Ohm) — FAULT
 - einfachen Zugriff auf USB, Reset und Flashing
 
@@ -77,12 +77,16 @@ Sender-Bench (Stand 2026-03-26, bench-validiert)
                                                           │
                                                        USB-C / Logs
 
-Receiver-Bench (Stand 2026-03-26, bench-validiert)
+Receiver-Bench (Stand 2026-04-02, bench-validiert)
 
-  ESP-NOW )) ESP32-S3 ──── UART (geplant) ──── Arduino
-                 │
+  ESP-NOW )) ESP32-S3 ──── I2C (GPIO13/14, 50Hz) ──── Arduino (A4/A5, Slave 0x42)
+                 │                                          ├── D9  Base      12-139°
+                 │                                          ├── D11 Shoulder  35-142°
+                 │                                          ├── D3  Elbow     80-175°
+                 │                                          ├── D5  Wrist      5-177°
+                 │                                          └── D6  Gripper   32-126°
           LED Gruen  (GPIO4, LINK)
-          LED Blau   (GPIO5, UART reserviert)
+          LED Blau   (GPIO5, I2C-Aktivitaet)
           LED Gelb   (GPIO6, FAULT)
                  │
               USB-C / Logs
@@ -92,7 +96,7 @@ Receiver-Bench (Stand 2026-03-26, bench-validiert)
 
 Der Breadboardpfad gilt als erfolgreich vorbereitet, wenn:
 
-- Einzelsensor, Mux-Pfad, Flex-Sensor, `ESP-NOW` und UART jeweils separat nachvollziehbar funktionieren
+- Einzelsensor, Mux-Pfad, Flex-Sensor, `ESP-NOW` und I2C jeweils separat nachvollziehbar funktionieren
 - die bevorzugte GPIO-Belegung keine unmittelbaren Konflikte zeigt
 - der Buzzer keine unerwuenschten Einschalttoene durch rohe Bootzustandswechsel produziert
 - klar ist, welche Stecker, Kabellaengen und Trageorte in den Lochrasterpfad uebernommen werden

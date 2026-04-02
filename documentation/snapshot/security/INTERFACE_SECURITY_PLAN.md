@@ -5,7 +5,7 @@ Dieses Dokument beschreibt die Sicherheitsregeln fuer lokale Service-, Debug- un
 ## Relevante Schnittstellen
 
 - ESP32-Programmier- und Debugzugriff
-- serielle Verbindung zwischen Receiver und Arduino
+- I2C-Verbindung zwischen Receiver (Master) und Arduino (Slave 0x42)
 - lokale Bench- und Serviceanschluesse
 
 ## Grundregeln
@@ -14,11 +14,12 @@ Dieses Dokument beschreibt die Sicherheitsregeln fuer lokale Service-, Debug- un
 - Debug- oder Servicezugriffe muessen klar von der eigentlichen Bewegungssteuerung getrennt sein
 - Default-Konfigurationen duerfen keine weit offenen Betriebsmodi voraussetzen
 
-## UART-Schnittstelle
+## I2C-Schnittstelle (Receiver → Arduino)
 
-- akzeptiert nur das dokumentierte Bewegungsframe
+- akzeptiert nur das dokumentierte Bewegungsframe (Frame V1, 11 Bytes, Slave 0x42)
 - keine allgemeine Befehlsschnittstelle fuer unspezifizierte Kommandos
 - kein implizites Umschalten in riskante Betriebszustaende durch freie Texteingaben
+- ISR-minimales Design: Wire.onReceive() kopiert nur Rohbytes, Validierung in loop()
 
 ## Debug- und Servicezugang
 

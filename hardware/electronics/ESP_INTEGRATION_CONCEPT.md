@@ -27,7 +27,7 @@ Bestaetigte Boarddetails (2026-03-22):
 | Modul | Hauptaufgabe | Betriebsort |
 | --- | --- | --- |
 | Sender-ESP | IMUs, Mux, Flex-Sensor, erste Zustandsanzeigen, `ESP-NOW`-Sender | koerpergetragen |
-| Receiver-ESP | `ESP-NOW`-Empfang, UART-Weitergabe, Warnsignale, Robotik-nahe Diagnose | am Roboter oder am Bench |
+| Receiver-ESP | `ESP-NOW`-Empfang, I2C-Weitergabe an Arduino (Slave 0x42), Warnsignale, Robotik-nahe Diagnose | am Roboter oder am Bench |
 
 ## Drei Integrationsstufen
 
@@ -71,8 +71,8 @@ Bestaetigte Boarddetails (2026-03-22):
 ### Startphase
 
 - `ESP32-S3 DevKitC-1 N16R8` offen am Bench
-- UART-Verbindung zum Arduino
-- Link-, UART- und Fehleranzeige sichtbar
+- I2C-Verbindung zum Arduino (GPIO13 SDA, GPIO14 SCL → Arduino A4/A5, Slave 0x42)
+- Link-, I2C- und Fehleranzeige sichtbar
 - Hauptbuzzer auf der Roboter- oder Receiver-Seite
 
 ### Spaeterer Betrieb
@@ -117,7 +117,7 @@ Das dauerbetriebsnahe Receiver-Gehaeuse soll:
 
 - das DevKit, die Statusanzeigen und den Buzzer aufnehmen
 - oeffenbare Wartung erlauben
-- UART-, Strom- und Debugzugang geordnet herausfuehren
+- I2C-, Strom- und Debugzugang geordnet herausfuehren
 - an Sockel, Grundplatte oder Tragrahmen des Roboterarms befestigbar sein
 - die Antennenzone nicht mit Metall oder dicken Bauteilen abschatten
 
@@ -132,7 +132,7 @@ Koerperseite
 
 Roboterseite
 
-  (( ESP-NOW ))  Receiver-ESP ---- UART ---- Arduino ---- Servos
+  (( ESP-NOW ))  Receiver-ESP ---- I2C (GPIO13/14) ---- Arduino (A4/A5, 0x42) ---- Servos
                       |
                  LEDs + Buzzer
 ```

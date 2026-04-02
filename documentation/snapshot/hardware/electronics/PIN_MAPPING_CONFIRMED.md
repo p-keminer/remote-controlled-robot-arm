@@ -21,16 +21,16 @@ Planungsannahmen und Recherchegrundlagen stehen in `PIN_MAPPING_RESEARCH.md`.
 | GPIO48 | LED RGB onboard (FAULT) | ja | NeoPixel, rot blinkend bei Sensorausfall/Flex-Fehler, orange blinkend bei Notaus |
 | GPIO21 | Buzzer | nein | entfaellt vorerst, LEDs reichen fuer Debugging |
 
-## Receiver (ESP32-S3-WROOM-1-N16R8) — Stand 2026-03-28
+## Receiver (ESP32-S3-WROOM-1-N16R8) — Stand 2026-04-02
 
 | GPIO | Funktion | Bestaetigt | Anmerkung |
 | --- | --- | --- | --- |
 | — | ESP-NOW (WiFi intern, Kanal 1) | ja | Unicast, ImuPaket v4, drei IMUs + KalibStatus + Notaus-Flag, Pruefsumme und Frische-Check |
-| GPIO4 | LED Gruen (UART) | ja | 100 Ohm, reserviert fuer spaetere UART-Weiterleitung |
+| GPIO4 | LED Gruen (I2C) | ja | 100 Ohm, leuchtet bei I2C-Frame-Aktivitaet zum Arduino |
 | GPIO5 | LED Blau (ESP-NOW) | ja | 100 Ohm, blinkt wenn ESP-NOW Empfangs-Timeout (>2s) |
 | GPIO48 | LED RGB onboard (FAULT) | ja | NeoPixel, rot blinkend bei Fehler/Timeout, orange blinkend bei Notaus |
-| GPIO15 | UART TX → Arduino RX | nein | geplant, noch nicht getestet |
-| GPIO16 | UART RX ← Arduino TX | nein | geplant, noch nicht getestet |
+| GPIO13 | I2C SDA → Arduino A4 | ja | Wire Master, 100kHz, Frame V1 (11 Bytes) an Slave 0x42 (bestaetigt 2026-04-02) |
+| GPIO14 | I2C SCL → Arduino A5 | ja | Wire Master, 100kHz (bestaetigt 2026-04-02) |
 
 ## Bridge (ESP32-S3-WROOM-1-N16R8) — Stand 2026-03-28
 
@@ -51,5 +51,5 @@ Die Bridge uebernimmt den Kanal automatisch bei WiFi-Verbindung zum Router.
 
 ## Naechste Validierungsschritte
 
-- Receiver-UART auf GPIO15/GPIO16 pruefen
-- PPS-Optimierung bei Multi-Peer ESP-NOW (aktuell ~1-2 PPS statt 20)
+- PPS-Optimierung bei Multi-Peer ESP-NOW (aktuell ~1-2 PPS statt 200)
+- IMU-Daten auf Servo-Zielwinkel mappen (aktuell nur Sweep-Test)

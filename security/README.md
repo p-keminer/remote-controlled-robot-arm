@@ -8,13 +8,13 @@ Hier werden Angriffsmodell, Kommunikationshaertung, Schnittstellenregeln und Pro
 ## Aktueller Stand
 
 Die Security-Basis wird in dieser Ausbaustufe erstmals als eigener Projektbereich aufgebaut.
-Der Schwerpunkt liegt auf lokaler ESP-NOW- und UART-Sicherheit, nicht auf WLAN- oder Cloud-Infrastruktur.
+Der Schwerpunkt liegt auf lokaler ESP-NOW- und I2C-Sicherheit, nicht auf WLAN- oder Cloud-Infrastruktur.
 Bekannte ESP-NOW-Schwachstellen, Advisory-Lage und frueh mitzudenkende Haertungsmassnahmen werden jetzt als eigener Dokumentationsstrang nachgezogen.
 
 ## Inhalt
 
 - `THREAT_MODEL.md` fuer Assets, Angreifer und Missbrauchspfade
-- `COMMUNICATION_SECURITY.md` fuer ESP-NOW- und UART-Sicherheitsregeln
+- `COMMUNICATION_SECURITY.md` fuer ESP-NOW- und I2C-Sicherheitsregeln
 - `INTERFACE_SECURITY_PLAN.md` fuer Debug-, Service- und serielle Schnittstellen
 - `PROVISIONING_AND_DEBUG_RULES.md` fuer Secret-Umgang, Pairing und Servicepraxis
 - `local/` fuer nicht-repotaugliche lokale Secret-, Peer- und Geraetedaten

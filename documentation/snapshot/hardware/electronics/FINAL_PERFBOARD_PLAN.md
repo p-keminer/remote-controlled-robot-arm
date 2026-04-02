@@ -47,7 +47,7 @@ Das Sender-Gehaeuse soll:
 ### Elektroniktraeger
 
 - `ESP32-S3 DevKitC-1 N16R8`
-- feste Lochraster- oder Adapterplatine fuer UART, LED-Ausgaenge und Buzzer
+- feste Lochraster- oder Adapterplatine fuer I2C, LED-Ausgaenge und Buzzer
 - geordnete Leitungswege zu Arduino, Stromversorgung und Diagnosepunkten
 
 ### Gehaeuseidee
@@ -88,7 +88,7 @@ Receiver-Endstufe
 
  [ ESP-NOW ]
       |
- [ Gehaeuse ] ---> UART ---> Arduino
+ [ Gehaeuse ] ---> I2C (GPIO13/14) ---> Arduino (A4/A5, 0x42)
  | ESP32-S3 |
  | Perfboard|
  | LEDs     |

@@ -6,7 +6,7 @@ Dieses Dokument beschreibt die Architekturentscheidung, den Techstack und die Ab
 
 Das Dashboard ist ein **Entwicklungswerkzeug** (Bench-/Debug-Tool) und kein Teil des v1-Steuerpfads.
 Es dient dazu, Sensordaten live zu beobachten, die Armkonfiguration visuell zu pruefen und Kommunikationsstatistiken zu ueberwachen.
-WiFi wird ausschliesslich zwischen dem Bridge-ESP32 und dem Raspberry Pi genutzt — der v1-Steuerpfad (ESP-NOW → UART → Arduino) bleibt davon unberuehrt.
+WiFi wird ausschliesslich zwischen dem Bridge-ESP32 und dem Raspberry Pi genutzt — der v1-Steuerpfad (ESP-NOW → I2C → Arduino) bleibt davon unberuehrt.
 
 Das Dashboard wird als **Erweiterung des bestehenden IoT Control Center Dashboards** auf dem Pi Zero 2W realisiert.
 Es wird kein separater Server aufgesetzt. Stattdessen werden neue Views und ein MQTT-basierter Datenpfad in die bestehende Infrastruktur integriert.
@@ -14,7 +14,7 @@ Es wird kein separater Server aufgesetzt. Stattdessen werden neue Views und ein 
 ## Datenpfad
 
 ```
-Controller ESP32 ──ESP-NOW──> Receiver ESP32 ──UART──> Arduino (unveraendert)
+Controller ESP32 ──ESP-NOW──> Receiver ESP32 ──I2C──> Arduino (unveraendert)
        │
        └──ESP-NOW (2. Peer)──> Bridge ESP32 ──WiFi──> Mosquitto (MQTT Broker, Port 1883)
                                                               │
