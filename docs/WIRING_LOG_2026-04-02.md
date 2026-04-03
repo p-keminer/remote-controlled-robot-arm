@@ -64,6 +64,8 @@
 
 - OLED muss ausgesteckt bleiben solange die I2C-Verbindung zum ESP32 ueber den OLED-Header laeuft (Bus-Kollision)
 - Servo-Pin-Zuordnung weicht vom Adeept-Standard ab — bei Firmware-Aenderungen immer gegen diese Tabelle pruefen
+- Flex-Sensor-Kabel bei Wearable-Montage nicht neben Servo-/Motorleitungen fuehren (analoges Signal, kleines Messfenster)
+- I2C-Kabel (IMU/Mux) moeglichst verdrillt fuehren (SDA+GND, SCL+GND)
 
 ## Nachweise
 

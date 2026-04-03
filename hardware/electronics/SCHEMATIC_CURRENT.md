@@ -181,6 +181,12 @@ Alle drei ESPs muessen auf dem gleichen WiFi-Kanal laufen fuer ESP-NOW/WiFi-Koex
 - FAULT (RGB): orange blinkend bei Notaus (hoechste Prio), rot blinkend bei Fehler, aus wenn OK
 - Beim Boot: alle LEDs blitzen kurz auf (Starttest)
 
+## Kabelfuehrung bei Wearable-Montage
+
+- **I2C (Controller → Mux → IMUs):** bis 1m bei 100kHz unkritisch (~75pF Bus-Kapazitaet, Limit 400pF). Verdrillte Paare (SDA+GND, SCL+GND) empfohlen. Nicht neben Servokabeln verlegen.
+- **Flex-Sensor (analog, GPIO1):** empfindlicher als I2C wegen kleinem Messfenster (168 Counts). Abgeschirmtes Kabel oder Signal+GND eng zusammen fuehren. Bei Rauschen >20 Counts: Softwarefilter oder 100nF am ADC-Pin.
+- **25 cm Kabellaenge** (Controller am Koerper → Oberarm-IMU) ist fuer beide Signaltypen unkritisch.
+
 ## Sensorausfallerkennung (Live)
 
 - IMU: `getSystemStatus()` wird jeden Loop-Durchgang geprueft; Ausfall wird sofort erkannt und gemeldet

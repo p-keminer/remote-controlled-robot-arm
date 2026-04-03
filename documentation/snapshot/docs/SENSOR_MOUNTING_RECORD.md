@@ -21,6 +21,27 @@
 - Einzelkalibrierung per Serial moeglich: CAL0/CAL1/CAL2, RECAL, STOP
 - Mux-Delay 10ms zwischen Kanalwechseln (nicht weiter optimieren, niedrige PPS akzeptiert)
 
+## Kabelfuehrung — Hinweise fuer die Wearable-Montage
+
+### I2C-Kabel (Controller → PCA9548A → BNO055)
+
+- Bei 100 kHz (Standard-Mode) sind Kabellaengen bis ca. 1 Meter unproblematisch
+- Bus-Kapazitaet bei aktuellem Setup (~75 pF) weit unter dem I2C-Limit von 400 pF
+- Der PCA9548A hilft: immer nur ein Mux-Kanal aktiv, Kapazitaet der anderen Sensoren abgekoppelt
+- **Verdrillte Paare** empfohlen (SDA+GND, SCL+GND) statt lose parallel laufende Draehte
+- Kabel nicht direkt neben Servo-/Motorleitungen verlegen (PWM-Stoerungen)
+- Pull-Ups sind auf PCA9548A und BNO055-Boards bereits vorhanden — bei unter 50 cm kein Zusatz noetig
+- 25 cm (Controller am Koerper → Oberarm-IMU) ist unkritisch
+
+### Flex-Sensor-Kabel (analoges Signal)
+
+- Analogsignale sind empfindlicher gegen Stoerungen als I2C
+- Das ADC-Messfenster ist klein (nur 168 Counts: 1108 gerade → 940 gebogen) — Rauschen faellt stark ins Gewicht
+- Bei 25+ cm Kabellaenge: **abgeschirmtes Kabel** empfohlen (Schirmung an GND) oder Signal+GND eng zusammen fuehren
+- **Nicht neben Servo-/Motorleitungen** verlegen — PWM-Impulse koppeln ein
+- Nach Montage: Flex-Sensor in Endposition halten und per Serial Monitor pruefen ob Werte stabil sind
+- Falls Rauschen >20 Counts: Software-Gleitender-Mittelwert (5-10 Samples) oder 100nF Kondensator am ADC-Pin gegen GND
+
 ## Relevanz fuer Kalibrierung
 
 - IMU-Referenzsystem und Achszuordnung muessen nach Koerpermontage neu beschrieben werden
