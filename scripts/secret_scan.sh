@@ -122,10 +122,10 @@ T=$(echo "$DATEIEN" | xargs grep -HnEi \
     2>/dev/null | grep -vE 'PLATZHALTER|HIER_EINTRAGEN|BEISPIEL|MEIN_|example|placeholder|template|\.template\.' || true)
 pruefe "5/10" "WiFi SSIDs" "$T"
 
-# 6. Absolute lokale Pfade
+# 6. Absolute und Tilde-basierte lokale Pfade
 T=$(echo "$DATEIEN" | xargs grep -HnE \
-    '(/home/[a-z][-a-z0-9]*/|/mnt/c/Users/|C:\\Users\\|/Users/[a-z])' \
-    2>/dev/null | grep -vE 'PLATZHALTER|HIER_EINTRAGEN|BEISPIEL|BENUTZER|example|placeholder|template|\.template\.|/home/username/|/Users/username/|/mnt/c/Users/username/' || true)
+    '(/home/[a-z][-a-z0-9]*/|/mnt/c/Users/|C:\\Users\\|/Users/[a-z]|~/[a-z][-a-z0-9_]*/[a-z])' \
+    2>/dev/null | grep -vE 'PLATZHALTER|HIER_EINTRAGEN|BEISPIEL|BENUTZER|example|placeholder|template|\.template\.|/home/username/|/Users/username/|/mnt/c/Users/username/|<pfad' || true)
 pruefe "6/10" "Absolute Pfade" "$T"
 
 # 7. SSH-Verbindungsdaten
