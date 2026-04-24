@@ -8,35 +8,34 @@ Das Projekt ist in folgende feste Bereiche gegliedert:
 
 - `preparation/` fuer Toolchain, Bench und Inbetriebnahmebereitschaft
 - `security/` fuer Bedrohungsmodell, Kommunikationshaertung und Provisioning-Regeln
-- `firmware/esp32_controller` fuer Sensorerfassung, Vorverarbeitung und Sendevorbereitung
-- `firmware/esp32_receiver` fuer Funkempfang, Validierung und I2C-Uebergabe an den Arduino
-- `firmware/arduino_arm` fuer Servoansteuerung, Limits, Rampen und Fehlerverhalten
-- `hardware/` fuer Schaltplaene, Verkabelung, Aufbauablauf, Bringup und Stueckliste
-- `calibration/` fuer Referenzdaten, Grenzen und Mappingdokumentation
+- `firmware/esp32_controller/` fuer Sensorerfassung, Vorverarbeitung und Sendevorbereitung
+- `firmware/esp32_receiver/` fuer Funkempfang, Validierung und I2C-Uebergabe an den Arduino
+- `firmware/esp32_bridge/` fuer die beobachtende Debug-Bridge
+- `firmware/arduino_arm/` fuer Servoansteuerung, Limits, Rampen und Fehlerverhalten
+- `hardware/` fuer Schaltplaene, Verdrahtung, Aufbauablauf, Bringup und Stueckliste
+- `calibration/` fuer Referenzdaten, Grenzen und Twin-/Servo-Mappingwissen
+- `dashboard/` fuer den browserbasierten Digital Twin und MQTT-Debug-Views
+- `ros2/` fuer den ROS-2-Digital-Twin, Replay- und Monitoring-Pfad
 - `tests/` fuer Bench-, Security-, Integrations-, Latenz- und Safety-Nachweise
-- `docs/` fuer Sitzungsnotizen, Messprotokolle, Bilder und Templates
-
-## Preparation-Framework
-
-- beschreibt die Voraussetzungen, bevor echte Entwicklungs- und Inbetriebnahmeschritte beginnen
-- trennt Toolchain, Arbeitsplatz, Hardware-Readiness und Freigabepunkte sichtbar
-
-## Security-Framework
-
-- beschreibt Angreifer, Trust Boundaries, Kommunikationshaertung und Provisioning-Regeln
-- trennt Security von physischer Bewegungssicherheit
+- `docs/` fuer Messprotokolle, Bilder, dated Logs und Templates
 
 ## Controller-Framework
 
-- liest IMUs und Flex-Sensor in definierter Reihenfolge
-- fuehrt notwendige Vorverarbeitung und Segmentzuordnung durch
-- erzeugt fachliche Zielwerte fuer Servos, aber keine direkte Servoausgabe
+- liest drei IMUs und die aktuelle Greifer-Eingabe in definierter Reihenfolge
+- fuehrt Vorverarbeitung, Referenzbezug und Paketaufbereitung durch
+- erzeugt keine direkte Servoausgabe
 
 ## Receiver-Framework
 
 - kapselt den `ESP-NOW`-Empfang
 - validiert Paketinhalte, Zeitverhalten und Integritaet
-- uebersetzt Funkframes in ein einfaches, nachvollziehbares I2C-Frame-Format (Frame V1, 11 Bytes an Arduino-Slave 0x42)
+- uebersetzt Funkframes in ein I2C-Frame fuer den Arduino
+
+## Bridge-Framework
+
+- liest denselben ESP-NOW-Datenstrom beobachtend mit
+- publiziert MQTT fuer Dashboard, MCP und ROS 2
+- darf keine Steuerbefehle in den Bewegungsweg einspeisen
 
 ## Arduino-Framework
 
@@ -44,20 +43,14 @@ Das Projekt ist in folgende feste Bereiche gegliedert:
 - setzt Gelenklimits, Neutralpositionen und Rampen durch
 - reagiert definiert auf Datenverlust oder ungueltige Frames
 
-## Hardware-Framework
-
-- trennt Schaltplanstand, reale Verkabelung, Aufbauablauf, Bringup und Stueckliste
-- dokumentiert Abweichungen zwischen geplanter und realer Hardwarelage
-
 ## Kalibrierungs-Framework
 
-- trennt IMU-Referenzen, Flex-Sensor-Kennlinien, Servo-Limits und Referenzposen
-- macht nachvollziehbar, aus welcher Messung welche Grenze oder Invertierung stammt
+- trennt IMU-Referenzen, Greifer-Eingaben, Servo-Limits und Referenzposen
+- behandelt `calibration/flex_sensor/` als historischen Bench-Pfad
+- fuehrt den aktuellen Potentiometer-Arbeitsstand unter `calibration/gripper_input/`
 
-## Test-Framework
+## Twin-Framework
 
-- `bench/` fuer kleine Teilpruefungen an Sensorik oder Schnittstellen
-- `security/` fuer Angriffs-, Missbrauchs- und Integritaetsfaelle
-- `integration/` fuer Ende-zu-Ende-Ablaufpruefungen
-- `latency/` fuer Zeitverhalten und Messmethoden
-- `safety/` fuer Fehlerfaelle, Grenzwertpruefung und Freigabetests
+- `dashboard/` visualisiert MQTT-Daten live im Browser und bildet den aktuellen Mapping-Stand als Three.js-Szene ab
+- `ros2/` bildet denselben Gelenkstand in RViz, Recorder, Replay, Plot und Live-Monitor ab
+- beide Twin-Pfade sind beobachtend und kein Ersatz fuer reale Safety-Freigaben

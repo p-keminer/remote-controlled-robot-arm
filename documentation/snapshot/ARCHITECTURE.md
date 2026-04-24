@@ -4,80 +4,69 @@ Dieses Dokument beschreibt die feste Systemstruktur des Roboterarm-Projekts.
 
 ## Zielbild
 
-Das System uebersetzt Koerperbewegungen in sichere Servo-Zielwinkel.
-Die Gesamtarchitektur wird in klar getrennte Ebenen zerlegt:
+Das System uebersetzt Koerperbewegungen in sichere Gelenkzielwerte und trennt dabei bewusst zwischen:
 
 - Vorbereitung und Toolchain-Basis
 - Wearable-Sensorik und Vorverarbeitung
-- lokaler Funkkanal ueber `ESP-NOW`
-- Receiver-Bridge (Steuerpfad)
-- Servoausfuehrung
-- Security- und Safety-Vorgaben
-- Kalibrierung, Hardware- und Nachweisfluss
-- Entwicklungs-Dashboard (Debug-Beobachtungsebene, nicht Teil des Steuerpfads)
+- lokalem Funkpfad ueber `ESP-NOW`
+- Steuerpfad Receiver → Arduino → Servos
+- beobachtender Debug-Bridge ueber WiFi/MQTT
+- Digital Twin in Dashboard und ROS 2
+- Security-, Safety-, Kalibrierungs- und Nachweisfluss
 
 ## Systemgrenzen
 
-### Vorbereitungsebene
-
-- beschreibt Toolchain, Bench, Hardware-Readiness und Vorbedingungen
-- fuehrt keine Firmware aus, sondern schafft die nachvollziehbare Basis dafuer
-
 ### Wearable-Seite
 
-- ein ESP32 liest BNO055-IMUs ueber Multiplexer und den Flex-Sensor ueber ADC
-- die Controller-Firmware berechnet daraus relative oder direkt abgeleitete Gelenkzielwerte
-- die Wearable-Seite enthaelt keine direkte Servo-PWM
+- ein Controller-ESP32 liest drei BNO055 ueber PCA9548A
+- die Greifer-Eingabe kommt aktuell ueber ein Potentiometer auf `GPIO1`
+- die Controller-Firmware erzeugt fachliche Zielgroessen, aber keine direkte Servo-PWM
 
-### Funkstrecke
+### Steuerpfad
 
-- die drahtlose Strecke transportiert kompakte Zielwerte und Integritaetsinformationen
-- `ESP-NOW` ist der vorgesehene lokale Funkpfad fuer v1
-- WLAN, Internet und Cloud sind nicht Teil der v1-Architektur
-- Bewegungsframes sollen zusaetzlich Session-, Replay- und applikationsseitige Authentisierung beruecksichtigen
+- `ESP-NOW` ist der lokale Funkpfad zwischen Controller und Receiver
+- der Receiver validiert Frames und uebersetzt sie in das I2C-Frame V1
+- das Adeept-Arduino-Board setzt Zielwerte unter Limits, Rampen und Neutralverhalten um
+- dieser Pfad bleibt der sicherheitskritische Bewegungsweg
 
-### Roboterseite
+### Debug- und Twin-Pfad
 
-- ein zweiter ESP32 (Receiver) empfaengt Funkdaten, validiert sie und leitet sie ueber I2C weiter (ESP32 als Master, Arduino als Slave an Adresse 0x42)
-- das Adeept-Arduino-Board setzt Zielwerte in reale Servoauslenkungen um
-- mechanische Grenzwerte und Rampen greifen spaetestens auf der Arduino-Ebene
-
-### Entwicklungs-Dashboard-Ebene (optional, nicht Teil des Steuerpfads)
-
-- ein dritter ESP32 (Bridge) empfaengt die gleichen ESP-NOW Pakete wie der Receiver als zweiter Peer
-- die Bridge leitet die Daten per WiFi und MQTT an einen Mosquitto-Broker auf dem Raspberry Pi weiter
-- das Dashboard zeigt Live-Sensordaten, Statistiken und eine 3D-Simulation im Browser
-- ein MQTT MCP Server erlaubt Claude direkten Zugriff auf die Live-Sensordaten fuer KI-gestuetztes Debugging
-- die Bridge ist rein beobachtend und kann keine Steuerbefehle in den Steuerpfad einschleusen
-- ein Ausfall der Bridge oder des Dashboards hat keinen Einfluss auf den Steuerpfad (Receiver → Arduino)
+- die Bridge empfaengt denselben ESP-NOW-Datenstrom wie der Receiver als zweiter Peer
+- sie publiziert die Daten per WiFi/MQTT an Mosquitto auf dem Pi
+- Dashboard, MQTT MCP Server und ROS 2 lesen denselben beobachtenden Datenstrom
+- Dashboard und ROS 2 bilden den aktuellen Digital Twin; sie ersetzen keine reale Safety-Freigabe
 
 ## Datenfluss
 
-### Steuerpfad (sicherheitskritisch)
+### Steuerpfad
 
-1. IMUs und Flex-Sensor liefern Rohdaten an den Controller-ESP32.
-2. Der Controller berechnet segmentbezogene oder relative Winkel.
-3. Das Ergebnis wird in ein `ESP-NOW`-Frame (ImuPaket v4) mit Integritaets- und Frischeannahmen ueberfuehrt.
-4. Der Receiver-ESP32 validiert das Frame und erstellt daraus ein I2C-Uebergabeformat (Frame V1, 11 Bytes).
-5. Der Arduino setzt die Zielwerte unter Beruecksichtigung von Limits, Rampen und Neutralverhalten um.
+1. IMUs und Greifer-Eingabe liefern Rohdaten an den Controller.
+2. Der Controller erzeugt aus Segment- und Referenzbezug ein `ImuPaket v4`.
+3. Der Receiver validiert Groesse, Frische und Integritaet.
+4. Der Receiver uebergibt ein I2C-Frame V1 an den Arduino.
+5. Der Arduino setzt die Gelenkziele unter Beruecksichtigung von Limits und Timeout-Regeln um.
 
-### Debug-Pfad (Entwicklungswerkzeug, nicht sicherheitskritisch)
+### Debug- und Twin-Pfad
 
-3b. Das gleiche ESP-NOW-Frame geht parallel als zweiter Peer an die Bridge.
-4b. Die Bridge validiert das Paket und publiziert es als JSON per MQTT auf dem Pi.
-5b. Dashboard, MCP Server und api.php lesen die MQTT-Topics mit.
+1. Die Bridge empfaengt das gleiche `ImuPaket v4` parallel.
+2. Die Bridge publiziert JSON auf `robotarm/imu`, `robotarm/status`, `robotarm/kalib` und `robotarm/ota/log`.
+3. Dashboard, MQTT MCP Server und ROS 2 konsumieren diese Topics beobachtend.
+4. Dashboard und ROS 2 berechnen daraus den aktuellen Twin-Zustand und Debug-Ansichten.
 
 ## Persistente Artefakte
 
 - Vorbereitungs- und Toolchainwissen liegt unter `preparation/`
-- Security-Regeln und Bedrohungsmodell liegen unter `security/`
-- Referenzposen, Limits und Mappingannahmen werden unter `calibration/` dokumentiert
-- Hardware-, Aufbau- und Bringupwissen liegt unter `hardware/`
-- Messungen, Fotos und Integrationsnachweise werden unter `docs/` abgelegt
-- generierte Sammlungen liegen nur in `documentation/`
+- Hardware-, Aufbau- und Schaltplanwissen liegt unter `hardware/`
+- Kalibrierungs- und Referenzwissen liegt unter `calibration/`
+- Laufzeitlogik liegt unter `firmware/`
+- Debug-Oberflaeche liegt unter `dashboard/`
+- ROS-2-Digital-Twin liegt unter `ros2/`
+- Nachweise, Fotos, Messungen und Templates liegen unter `docs/`
+- generierte Spiegelstaende liegen unter `documentation/`
 
 ## Architekturregeln
 
-- Vorbereitung, Hardwarebeschreibung und Laufzeitlogik werden nicht vermischt.
-- Kalibrierungs- oder Security-Wissen darf nicht nur als versteckte Konstante in Firmware verbleiben.
-- Eine neue Schnittstelle gilt erst dann als eingefuehrt, wenn der passende Framework-Text mitgezogen wurde.
+- Steuerpfad und Debug-/Twin-Pfad duerfen nicht implizit vermischt werden.
+- Kalibrierwissen darf nicht nur als Konstante im Code verbleiben.
+- Historische Bench- oder Flex-Sensor-Staende bleiben dokumentiert, gelten aber nicht als aktueller Pfad.
+- Eine neue Schnittstelle oder ein neuer Mapping-Stand gilt erst dann als eingefuehrt, wenn Root- und Bereichsdoku denselben Stand abbilden.

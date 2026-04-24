@@ -1,6 +1,6 @@
 # documentation
 
-Dieser Ordner ist ein automatisch erzeugtes Archiv der verteilten Projektdokumentation.
+Dieser Ordner ist ein automatisch erzeugter Snapshot der verteilten Projektdokumentation.
 Bitte die Dateien in diesem Ordner nicht manuell pflegen.
 
 ## Update-Befehl
@@ -9,10 +9,24 @@ Bitte die Dateien in diesem Ordner nicht manuell pflegen.
 bash ./scripts/update_docs.sh
 ```
 
+## Enthalten
+
+- Markdown-Quelldokumentation aus dem Repository
+- repo-gepflegte Doku-Medien aus `docs/photos/readme/`
+- Dashboard-Screenshots aus `dashboard/web/screenshots/`
+
+## Nicht enthalten
+
+- generierte oder lokale Verzeichnisse
+- `security/local/`
+- `official_downloads/raw/`
+- `official_downloads/extracted/`
+
 ## Letzte Aktualisierung
 
-2026-04-03 06:47:21 CEST
+2026-04-24 08:21:13 CEST
 
-## Anzahl gesammelter Dokumente
+## Anzahl gesammelter Dateien
 
-109
+- Markdown: 117
+- Medien: 6

@@ -2,31 +2,19 @@
 
 ## Zweck
 
-Dieser Ordner dokumentiert die mechanische Integration von Sensoren, Elektronik und Roboterarm.
+Dieser Ordner dokumentiert die mechanische Integration von Arm, Sensorik und Zusatzhardware.
 
 ## Aktueller Stand
 
-Die mechanische Dokumentation ist vorbereitet, reale Halterungen und Montagevarianten folgen spaeter.
-
-## Inhalt
-
-- IMU-Befestigung am menschlichen Arm
-- `WEARABLE_SENSOR_CONCEPT.md` fuer das allgemeine Tragekonzept und die Zielpositionen
-- `WEARABLE_PROTOTYPE_V1.md` fuer den ersten strap-basierten Prototyp
-- `WEARABLE_FINAL_WEAR_SYSTEM.md` fuer den spaeteren stabilen Betriebstyp
-- Halterungen fuer Controller-Elektronik
-- Montage von Receiver und Arduino am Roboterarm
-- Hinweise zu Kabelentlastung und Bewegungsfreiheit
+Der Arm-Prototyp ist aufgebaut und die Sensorik wird aktiv fuer den Twin genutzt.
+Mechanikdokumente beschreiben daher nicht nur Zielbilder, sondern den realen aktuellen Aufbau und moegliche weitere Verbesserungen.
 
 ## Regeln
 
-- jede mechanische Loesung mit Einsatzzweck und Grenzen beschreiben
-- Befestigungen, die Sensororientierung beeinflussen, immer mit Kalibrierhinweisen verknuepfen
-- mechanische Konzept- und Entscheidungsdokumente muessen die verwendeten Quellen in einem Abschnitt `Recherchequellen` sammeln
+- mechanische Loesungen, die die Sensororientierung beeinflussen, muessen mit `calibration/imu/` zusammen betrachtet werden
+- dated Foto- und Mounting-Nachweise laufen ueber `docs/`
 
 ## Schnittstellen/Abhaengigkeiten
 
-- referenziert `calibration/imu/` fuer Sensororientierungen
-- arbeitet mit `../electronics/` fuer Traegermodule, Gehaeuse und Kabelfuehrung zusammen
-- wird durch `docs/photos/` und `docs/measurement_logs/` ergaenzt
-- arbeitet mit `docs/templates/SENSOR_MOUNTING_RECORD_TEMPLATE.md` fuer spaetere Nachweise
+- `../../calibration/imu/`
+- `../../docs/SENSOR_MOUNTING_RECORD.md`

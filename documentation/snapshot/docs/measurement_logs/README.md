@@ -6,8 +6,8 @@ Dieser Ordner enthaelt Messprotokolle und beobachtete Ergebnisse aus Tests, Kali
 
 ## Aktueller Stand
 
-Die Struktur ist vorbereitet.
-Reale Messungen werden spaeter nach Themen und Datum dokumentiert.
+Die Struktur ist aktiv in Benutzung.
+Hier liegen dated Nachweise fuer den aktuellen Potentiometer-Arbeitsstand, die verifizierte Debug-Bridge und den gemappten Twin-Stand.
 
 ## Inhalt
 
@@ -15,6 +15,12 @@ Reale Messungen werden spaeter nach Themen und Datum dokumentiert.
 - Kalibrierergebnisse
 - Latenz- und Kommunikationsmessungen
 - Sicherheitsrelevante Beobachtungen
+- Bridge- und Twin-Verifikation
+
+## Aktuelle dated Eintraege
+
+- `2026-04-24_doku_sync_audit_checkliste.md`
+- `2026-04-24_debug_bridge_und_twin_mapping.md`
 
 ## Regeln
 

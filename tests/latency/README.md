@@ -2,25 +2,14 @@
 
 ## Zweck
 
-Dieser Ordner enthaelt Methoden und Nachweise fuer das Zeitverhalten des Gesamtsystems.
+Dieser Ordner dokumentiert das Zeitverhalten des Systems.
 
 ## Aktueller Stand
 
-Die Struktur ist vorbereitet.
-Messmethoden und reale Latenzergebnisse werden spaeter hier dokumentiert.
-
-## Inhalt
-
-- Messstrategie fuer Controller, Funkstrecke, I2C und Servoebene
-- Zielwerte und Vergleich gegen reale Messungen
-- Hilfsnotizen zu Messaufbau und Werkzeugen
+Der Debugpfad erlaubt heute bereits Recorder, Replay und Kurvenanalyse.
+Formale Latenzwerte fuer Steuerpfad und Debugpfad sind aber noch als eigener Nachweis offen.
 
 ## Regeln
 
-- Messpunkte und Zeitbasis immer explizit angeben
-- theoretische Zielwerte und reale Messwerte nicht vermischen
-
-## Schnittstellen/Abhaengigkeiten
-
-- nutzt Nachweise aus `docs/measurement_logs/`
-- bezieht Kommunikationspfade aus `COMMUNICATION_FRAMEWORK.md`
+- Messpunkte und Zeitbasis explizit angeben.
+- Steuerpfad und Debugpfad getrennt betrachten.

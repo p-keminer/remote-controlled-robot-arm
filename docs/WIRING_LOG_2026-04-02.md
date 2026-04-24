@@ -1,10 +1,14 @@
 # Wiring Log
 
+> Historischer Bench-Stand: Diese Datei dokumentiert den Wiring-Zustand der I2C-Benchphase vom 2026-04-02.
+> Der aktuelle Prototyp-Wiring-Stand wird getrennt in `WIRING_LOG_2026-04-24.md` gepflegt.
+
 ## Sitzung
 
 - Datum: 2026-04-02
 - Bearbeiter: p-keminer
 - Aufbauzustand: Bench-Prototyp mit I2C-Kette Receiver → Arduino validiert
+- Nachtrag 2026-04-22: aktuelle Wearable-Zuordnung S0 = Hand/Wrist, S1 = Unterarm, S2 = Oberarm; reale Controller-LED-Farben GPIO4 blau, GPIO5 rot, GPIO6 weiss, GPIO7 gruen
 
 ## Verbindung — I2C (Receiver → Arduino)
 
@@ -20,29 +24,29 @@
 | --- | --- | --- | --- | --- | --- |
 | ESP32 GPIO8 | PCA9548A SDA | I2C SDA (Mux) | bidirektional | validiert | Pull-Ups auf Mux-Board |
 | ESP32 GPIO9 | PCA9548A SCL | I2C SCL (Mux) | Master-Clock | validiert | Pull-Ups auf Mux-Board |
-| PCA9548A CH0 | BNO055 #0 (Oberarm) | I2C Mux-Kanal | Euler-Daten | validiert | Adresse 0x29 |
+| PCA9548A CH0 | BNO055 #0 (Hand/Wrist) | I2C Mux-Kanal | Euler-Daten | validiert | Adresse 0x29 |
 | PCA9548A CH1 | BNO055 #1 (Unterarm) | I2C Mux-Kanal | Euler-Daten | validiert | Adresse 0x29 |
-| PCA9548A CH2 | BNO055 #2 (Hand) | I2C Mux-Kanal | Euler-Daten | validiert | Adresse 0x29 |
+| PCA9548A CH2 | BNO055 #2 (Oberarm) | I2C Mux-Kanal | Euler-Daten | validiert | Adresse 0x29 |
 | ESP32 GPIO1 | Flex-Sensor + 10kOhm | ADC1 | Spannung 0-3.3V | validiert | gerade=1108, gebogen=940 |
 
 ## Verbindung — Controller LEDs
 
 | Von | Nach | Signal / Zweck | Erwartung | Tatsaechlicher Stand | Hinweis |
 | --- | --- | --- | --- | --- | --- |
-| ESP32 GPIO4 | LED Gruen + 100 Ohm | Hand/Wrist S2 | aus=OK, an=Problem | validiert | |
-| ESP32 GPIO5 | LED Gelb + 100 Ohm | Unterarm S1 | aus=OK, an=Problem | validiert | |
-| ESP32 GPIO6 | LED Rot + 100 Ohm | Oberarm S0 | aus=OK, an=Problem | validiert | |
-| ESP32 GPIO7 | LED Blau + 100 Ohm | COMMS | aus=OK, an=Problem | validiert | |
-| ESP32 GPIO10 | LED Weiss + 100 Ohm | FAULT | aus=OK, an=Problem | validiert | |
+| ESP32 GPIO4 | LED Blau + 100 Ohm | Oberarm S2 | aus=OK, an=Problem | validiert | |
+| ESP32 GPIO5 | LED Rot + 100 Ohm | Unterarm S1 | aus=OK, an=Problem | validiert | |
+| ESP32 GPIO6 | LED Weiss + 100 Ohm | Hand/Wrist S0 | aus=OK, an=Problem | validiert | |
+| ESP32 GPIO7 | LED Gruen + 100 Ohm | COMMS | aus=OK, an=Problem | validiert | |
+| ESP32 GPIO10 | LED FAULT + 100 Ohm | FAULT | aus=OK, an=Problem | validiert | Farbe separat nicht neu verifiziert |
 | ESP32 GPIO21 | Taster nach GND | Notaus-Toggle | interner Pull-Up, 50ms Entprellung | validiert | |
 
 ## Verbindung — Receiver LEDs
 
 | Von | Nach | Signal / Zweck | Erwartung | Tatsaechlicher Stand | Hinweis |
 | --- | --- | --- | --- | --- | --- |
-| ESP32 GPIO4 | LED Gruen + 100 Ohm | LINK | aus=OK, an=Problem | validiert | |
-| ESP32 GPIO5 | LED Blau + 100 Ohm | I2C | leuchtet bei I2C-Aktivitaet | validiert | |
-| ESP32 GPIO6 | LED Gelb + 100 Ohm | FAULT | aus=OK, an=Problem | validiert | |
+| ESP32 GPIO4 | LED Gruen + 100 Ohm | I2C | aus=OK, an=Problem | validiert | aktive I2C-Variante |
+| ESP32 GPIO5 | LED Blau + 100 Ohm | ESP-NOW / LINK | aus=OK, an=Problem | validiert | blinkt bei Empfangs-Timeout |
+| ESP32 GPIO48 | RGB onboard | FAULT / Notaus | aus=OK, blinkt bei Fehler | validiert | rot bei Fehler, orange bei Notaus |
 
 ## Verbindung — Arduino Servos
 

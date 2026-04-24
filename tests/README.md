@@ -2,28 +2,33 @@
 
 ## Zweck
 
-Dieser Ordner ist fuer nachvollziehbare Test- und Verifizierungsarbeit reserviert.
+Dieser Ordner sammelt nachvollziehbare Nachweise fuer Bench, Integration, Latenz, Safety und Security.
 
 ## Aktueller Stand
 
-Die Teststruktur ist vorbereitet und erste Bench-Ergebnisse liegen bereits in Firmware-, Hardware- und Kalibrierdokumenten vor.
-Diese Nachweise muessen noch systematisch in eigene Testfaelle fuer Bench, Security, Integration, Latenz und Safety ueberfuehrt werden.
+Die Tests sind nicht mehr nur Struktur:
+
+- der Steuerpfad Controller -> Receiver -> Arduino ist als aktive Kette vorhanden
+- der Debugpfad Controller -> Bridge -> MQTT -> Dashboard/ROS ist verifiziert
+- dated Nachweise fuer Twin- und Bridge-Validierung liegen in `docs/measurement_logs/`
+
+Weiterhin offen bleiben formale Safety-, Security- und Langzeitnachweise.
 
 ## Inhalt
 
-- `bench/` fuer kleine Teilpruefungen einzelner Komponenten
-- `security/` fuer Angriffs-, Missbrauchs- und Integritaetsfaelle
-- `integration/` fuer Ende-zu-Ende-Ablaufpruefungen
-- `latency/` fuer Zeitverhalten und Messmethoden
-- `safety/` fuer Grenz-, Stop- und Fehlerfallpruefungen
+- `bench/` fuer fokussierte Teiltests
+- `integration/` fuer Ende-zu-Ende-Pfade
+- `latency/` fuer Zeitverhalten
+- `safety/` fuer Bewegungs- und Fehlergrenzen
+- `security/` fuer Angriffs- und Missbrauchsnachweise
 
 ## Regeln
 
-- Tests sollen reproduzierbar und klar dokumentiert sein
-- Messmethode, erwartetes Verhalten und Ergebnis muessen zusammen sichtbar sein
-- Security- und Safety-Nachweise muessen sichtbar getrennt bleiben
+- Debug-Erfolg und Twin-Erfolg werden nicht mit Produktivfreigabe verwechselt.
+- dated Mess- und Testnachweise sind die Referenz fuer erledigte Aussagen.
 
 ## Schnittstellen/Abhaengigkeiten
 
-- orientiert sich an `../SECURITY_FRAMEWORK.md`, `../SAFETY_FRAMEWORK.md`, `../COMMUNICATION_FRAMEWORK.md` und `../CALIBRATION_FRAMEWORK.md`
-- verweist fuer reale Messungen auf `../docs/measurement_logs/`
+- `../docs/measurement_logs/`
+- `../security/`
+- `../SAFETY_FRAMEWORK.md`

@@ -2,13 +2,14 @@
 
 ## Ziel
 
-Eine nachvollziehbare Kalibrierbasis fuer Sensorik, Mapping und Servogrenzen aufbauen.
+Eine nachvollziehbare Kalibrierbasis fuer Sensorik, Referenzpose, Twin-Mapping und reale Armfreigabe pflegen.
 
 ## Arbeitspakete
 
-- [x] Kalibrierbereiche und Dokumentationsorte festlegen
-- [ ] IMU-Referenzsystem und Achszuordnung beschreiben
-- [x] erste Flex-Sensor-Rohmessung und vorlaeufiges Messfenster dokumentieren
-- [ ] Flex-Sensor in realer Montageposition erneut kalibrieren und finales Messfenster festziehen
-- [x] Servolimits aus realen Messungen hergeleitet — Base 12-139, Shoulder 35-142, Elbow 80-175, Wrist 5-177, Gripper 32-126, dokumentiert in `servo_limits/README.md` (bestaetigt 2026-04-02)
-- [ ] Referenzposen fuer Start und Wiederkalibrierung festschreiben
+- [x] Kalibrierbereiche und Dokumentationsorte festgelegt
+- [x] historische Flex-Sensor-Messungen als Altstand erhalten
+- [x] aktueller Potentiometer-Arbeitsstand als Greifer-Eingabe dokumentiert
+- [x] erste Referenzpose fuer den entspannt herunterhaengenden Arm dokumentiert
+- [x] Servolimits aus realen Messungen hergeleitet und in `servo_limits/README.md` dokumentiert
+- [ ] IMU-Nullpunktlogik und weitere Referenzposen fuer reale Armfreigabe nachziehen
+- [ ] bestaetigten Twin-Stand kontrolliert in reale Bewegungsfreigabe ueberfuehren

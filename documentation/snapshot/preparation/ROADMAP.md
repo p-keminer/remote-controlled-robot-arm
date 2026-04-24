@@ -2,13 +2,15 @@
 
 ## Ziel
 
-Eine saubere Vorbereitungsbasis fuer Toolchain, Bench und spaetere Inbetriebnahme schaffen.
+Toolchain, lokale Umgebung und Inbetriebnahmebasis auf dem echten Prototypstand halten.
 
-## Arbeitspakete
+## Abgeschlossen
 
-- [x] `Preparation` als eigenen Projektbereich anlegen
-- [x] Arduino IDE als Hauptumgebung und PlatformIO als Fallback dokumentieren
-- [x] Bench- und Inbetriebnahmebereitschaft als Checklistenbereich aufbauen
-- [x] konkrete Installations- und Verifikationsschritte mit realem Setup nachgezogen
-- [ ] committed Zielbasis fuer Realbetrieb und lokale Stack-Freigaben sauber trennen
-- [ ] Vorbereitungsstatus mit Hardware- und Firmwarefortschritt synchron halten
+- [x] Arduino IDE als Hauptpfad dokumentiert
+- [x] Custom-FQBN als Repo-Standard festgezogen
+- [x] Bench- und Bringup-Grundlagen auf den aktuellen Prototypstand angehoben
+
+## Offen
+
+- [ ] lokale Ist-Staende, Sicherheitsfreigaben und Buildpfade weiter sauber trennen
+- [ ] Vorbereitungsdoku mit weiteren Hardware- und Testnachweisen fortlaufend synchron halten

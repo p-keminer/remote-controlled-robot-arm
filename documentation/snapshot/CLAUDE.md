@@ -7,25 +7,27 @@ Dieses Dokument dient als schneller Projektbrief fuer KI-Systeme, die ohne tiefe
 `IMU Robotic Arm` ist ein dokumentationsgetrieben vorbereitetes Embedded-Projekt fuer einen 5-DOF-Roboterarm.
 Der Kern des Systems besteht aus mehreren grossen Saeulen:
 
-- Wearable-Controller mit IMUs und Flex-Sensor
+- Wearable-Controller mit IMUs und Potentiometer-basierter Greifer-Eingabe
 - lokaler Funkpfad ueber `ESP-NOW`
 - Receiver-ESP32 als Bruecke zur Servoebene
 - Arduino-basierte Servoausfuehrung
+- beobachtende Debug-Bridge ueber WiFi/MQTT zum Pi
+- Dashboard- und ROS-2-Digital-Twin fuer Live-Debugging
 - getrennte Sicherheits-, Kalibrierungs- und Hardwaredokumentation
 - nachvollziehbare Vorbereitung fuer Toolchain, Bench und spaetere Inbetriebnahme
 
 ## Was dieses Projekt noch nicht ist
 
 - Stock-Baseline-Test des Adeept-Arms steht noch aus (Servo90, Unpacking_test_code)
-- IMU-Daten werden noch nicht auf echte Servo-Zielwinkel gemappt (aktuell nur Sweep-Test)
+- der reale Bewegungsbetrieb des Arms ist noch nicht als sicher freigegebener Produktivpfad dokumentiert
 - Security-Uplift (session_id, auth_tag) noch nicht umgesetzt
-- kein WLAN-, Cloud- oder Web-Interface-Projekt
+- kein WLAN-, Cloud- oder Web-Interface-Projekt im sicherheitskritischen Steuerpfad
 
-## Was bereits steht (Stand 2026-04-02)
+## Was bereits steht (Stand 2026-04-24)
 
 - Toolchain: Arduino IDE 3.3.7 als Hauptumgebung, PlatformIO als lokaler Fallback und Gegencheck
 - BNO055 Einzel, Dual und Triple (3x) via PCA9548A-Mux validiert (Kanaele 0/1/2)
-- Flex-Sensor ADC-Pfad ausgelesen und kalibriert
+- Greifer-Eingabe aktuell ueber Potentiometer auf `GPIO1`, weil dieser Pfad im Prototyp robuster arbeitet
 - ESP-NOW Unicast als Bench-Pfad laeuft; `ImuPaket v4` mit drei IMUs, Kalibrierungsstatus, XOR-Pruefsumme und Frische-Check ist bestaetigt
 - BNO055-Kalibrierungsoffsets werden im NVS persistent gespeichert und beim Boot geladen; Einzelkalibrierung per CAL0/CAL1/CAL2
 - Bridge-ESP32 leitet Daten per WiFi/MQTT an Mosquitto (Pi); MQTT MCP Server erlaubt Claude Live-Sensorzugriff
@@ -35,6 +37,8 @@ Der Kern des Systems besteht aus mehreren grossen Saeulen:
 - I2C-Kette Receiver → Arduino bench-validiert: ESP32 GPIO13/14 → Arduino A4/A5 (TWI Slave 0x42), Frame V1, 50Hz, alle 5 Servos mit kalibrierten Limits
 - Servo-Limits empirisch kalibriert und in `calibration/servo_limits/` dokumentiert
 - ISR-minimales Arduino-Design: Wire.onReceive() nur Rohbytes, Verarbeitung in loop(), Slew-Rate-Limiter (50 Grad/s)
+- Controller sitzt auf Lochraster/Perfboard, der aktuelle Arm-Prototyp ist mechanisch aufgebaut
+- Dashboard-Twin und ROS-2-Twin sind auf denselben Gelenkstand gemappt; Recorder, Replay, Plot und Live-Monitor sind vorhanden
 - Security-Haertung mit `session_id`, Authentisierungstag und Advisory-gepruefter Stack-Basis ist dokumentiert, aber noch nicht umgesetzt
 
 ## Kein Hartcodieren — gilt fuer Firmware UND Skripte

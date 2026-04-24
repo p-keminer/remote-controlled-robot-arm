@@ -2,26 +2,30 @@
 
 ## Zweck
 
-Dieser Ordner enthaelt die vorbereitende Dokumentation fuer Toolchain, Bench, Entwicklungsumgebung und Inbetriebnahmebereitschaft.
+Dieser Ordner dokumentiert die Vorbereitungsbasis fuer Toolchain, lokale Entwicklungsumgebung und Inbetriebnahme.
 
 ## Aktueller Stand
 
-Die Vorbereitungsbasis ist angelegt und teilweise bereits gegen echte Bench-Hardware verifiziert.
-Toolchain, Boardfakten und erste Bench-Pfade sind dokumentiert; Aufbau-, Freigabe- und Gegencheckschritte werden hier weiter konsistent gehalten.
+Die Projektvorbereitung ist nicht mehr nur theoretisch, sondern auf den aktiven Prototypstand gezogen:
+
+- Arduino IDE bleibt der praktische Hauptpfad
+- das Repo fuehrt verbindlich das Custom-FQBN `esp32:esp32:robotic_arm_s3n16r8`
+- Bench- und Bringup-Doku wurden gegen den realen Perfboard-/Prototypstand nachgezogen
+- Controller, Bridge, Dashboard und ROS laufen als verifizierter Debug- und Twin-Pfad zusammen
 
 ## Inhalt
 
-- `arduino_ide_setup/` — Hauptumgebung fuer Arduino IDE, Upload, Boardeinstellungen und Alltagsworkflow
-- `esp32_environment/` — allgemeiner ESP32-Umgebungsbereich mit bestaetigtem Boardstand, Bibliotheksbasis, Stack-Stand und PlatformIO als Fallback/Gegencheck
-- `bench_setup/` fuer Arbeitsplatz, Strom, Verkabelungsdisziplin und Testreihenfolge
-- `robot_arm_readiness/` fuer Voraussetzungen vor Aufbau und erster Inbetriebnahme
+- `arduino_ide_setup/` fuer den alltaeglichen Build-/Uploadpfad
+- `esp32_environment/` fuer Board-, Stack- und Toolchainstand
+- `bench_setup/` fuer geordneten Labor- und Prototypbetrieb
+- `robot_arm_readiness/` fuer aktuelle Inbetriebnahme- und Freigaberegeln
 
 ## Regeln
 
-- keine Installationsskripte als Pflicht voraussetzen
-- Vorbereitung als Checklisten- und Entscheidungsbasis dokumentieren
-- Vorbereitungsfortschritt muss mit Hardware-, Security- und Firmwaredokumenten konsistent bleiben
+- Lokale Ist-Staende und sensible Konfigurationsdetails gehoeren in gitignorierte Dateien.
+- Historische oder generische Boardpfade werden als Ausnahme markiert, nicht als Standard.
+- Vorbereitungsdoku muss mit Firmware-, Hardware- und Security-Doku synchron bleiben.
 
 ## Schnittstellen/Abhaengigkeiten
 
-- verweist auf `../hardware/`, `../firmware/`, `../security/` und `../docs/templates/`
+- arbeitet mit `../hardware/`, `../firmware/`, `../security/` und `../docs/`

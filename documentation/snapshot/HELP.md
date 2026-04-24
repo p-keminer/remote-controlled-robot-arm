@@ -37,7 +37,7 @@ Diese Einstellungen sind der Hauptpfad fuer den Projektalltag.
 
 | Einstellung | Wert |
 | --- | --- |
-| Board | ESP32S3 Dev Module |
+| Board / FQBN | `esp32:esp32:robotic_arm_s3n16r8` |
 | CPU Frequency | 240MHz (WiFi) |
 | Flash Mode | QIO 80MHz |
 | Flash Size | 16MB (128Mb) |
@@ -47,6 +47,9 @@ Diese Einstellungen sind der Hauptpfad fuer den Projektalltag.
 | Upload Speed | 921600 |
 | Partition Scheme | 16M Flash (3MB APP/9.9MB FATFS) |
 | Port | `<DEIN-COM-PORT>` |
+
+Wenn das Custom-Board in der Arduino IDE noch nicht sichtbar ist, zuerst den lokalen `boards.local.txt`-Pfad aus `preparation/esp32_environment/README.md` nachziehen.
+Das generische Board `ESP32S3 Dev Module` ist fuer dieses Projekt **nicht** der verbindliche Flash-Pfad.
 
 ## PlatformIO (WSL oder Windows-Fallback)
 

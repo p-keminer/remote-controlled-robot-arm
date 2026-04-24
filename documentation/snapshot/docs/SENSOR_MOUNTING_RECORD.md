@@ -2,54 +2,32 @@
 
 ## Sensorzuordnung
 
-- Datum: 2026-04-02
+- Datum: 2026-04-24
 - Bearbeiter: p-keminer
-- Aufbauzustand: Bench-Prototyp, Sensoren noch nicht am Koerper montiert
+- Aufbauzustand: aktueller Wearable- und Twin-Arbeitsstand
 
-| Sensor | Koerper-/Aufbauposition | Mux-Kanal | I2C-Adresse | Befestigung | Besonderheiten |
+| Sensor / Eingabe | Koerper- oder Aufbauposition | Mux-Kanal | I2C-Adresse / Pin | Befestigung | Besonderheiten |
 | --- | --- | --- | --- | --- | --- |
-| BNO055 #0 (S0) | Oberarm | PCA9548A Kanal 0 | 0x29 (ADR=3V3) | Bench-Breadboard | LED Rot GPIO6 am Controller |
-| BNO055 #1 (S1) | Unterarm | PCA9548A Kanal 1 | 0x29 (ADR=3V3) | Bench-Breadboard | LED Gelb GPIO5 am Controller |
-| BNO055 #2 (S2) | Hand/Wrist | PCA9548A Kanal 2 | 0x29 (ADR=3V3) | Bench-Breadboard | LED Gruen GPIO4 am Controller |
-| Flex-Sensor | Handruecken (geplant) | — | GPIO1 ADC1 | Bench-Breadboard | 10kOhm Pull-Down, gerade=1108, gebogen=940 |
-| PCA9548A Mux | — | — | 0x70 | Bench-Breadboard | 3 aktive Kanaele (0/1/2) |
+| BNO055 #0 (`S0`) | Hand/Wrist | PCA9548A Kanal 0 | `0x29` | Wearable-Aufbau | entspricht Hand-/Wrist-Segment |
+| BNO055 #1 (`S1`) | Unterarm | PCA9548A Kanal 1 | `0x29` | Wearable-Aufbau | entspricht Unterarm-Segment |
+| BNO055 #2 (`S2`) | Oberarm | PCA9548A Kanal 2 | `0x29` | Wearable-Aufbau | entspricht Oberarm-Segment |
+| PCA9548A | Controller-nahe Elektronik | — | `0x70` | aktueller Prototyp | 3 aktive Kanaele `0/1/2` |
+| Greifer-Potentiometer | Controller `GPIO1` | — | `ADC1` | aktueller 2-Draht-Aufbau | robuster Greifer-Pfad fuer `f` |
 
 ## Beobachtungen
 
-- Alle drei BNO055 sind GY-BNO055 Clones (Senzooe, Amazon B0D2J5PY29) — kein Adafruit-Breakout
-- Kalibrierungsoffsets werden persistent im NVS gespeichert (Auto-Save bei Gyro>=3, Accel>=2, Mag>=2)
-- Einzelkalibrierung per Serial moeglich: CAL0/CAL1/CAL2, RECAL, STOP
-- Mux-Delay 10ms zwischen Kanalwechseln (nicht weiter optimieren, niedrige PPS akzeptiert)
-
-## Kabelfuehrung — Hinweise fuer die Wearable-Montage
-
-### I2C-Kabel (Controller → PCA9548A → BNO055)
-
-- Bei 100 kHz (Standard-Mode) sind Kabellaengen bis ca. 1 Meter unproblematisch
-- Bus-Kapazitaet bei aktuellem Setup (~75 pF) weit unter dem I2C-Limit von 400 pF
-- Der PCA9548A hilft: immer nur ein Mux-Kanal aktiv, Kapazitaet der anderen Sensoren abgekoppelt
-- **Verdrillte Paare** empfohlen (SDA+GND, SCL+GND) statt lose parallel laufende Draehte
-- Kabel nicht direkt neben Servo-/Motorleitungen verlegen (PWM-Stoerungen)
-- Pull-Ups sind auf PCA9548A und BNO055-Boards bereits vorhanden — bei unter 50 cm kein Zusatz noetig
-- 25 cm (Controller am Koerper → Oberarm-IMU) ist unkritisch
-
-### Flex-Sensor-Kabel (analoges Signal)
-
-- Analogsignale sind empfindlicher gegen Stoerungen als I2C
-- Das ADC-Messfenster ist klein (nur 168 Counts: 1108 gerade → 940 gebogen) — Rauschen faellt stark ins Gewicht
-- Bei 25+ cm Kabellaenge: **abgeschirmtes Kabel** empfohlen (Schirmung an GND) oder Signal+GND eng zusammen fuehren
-- **Nicht neben Servo-/Motorleitungen** verlegen — PWM-Impulse koppeln ein
-- Nach Montage: Flex-Sensor in Endposition halten und per Serial Monitor pruefen ob Werte stabil sind
-- Falls Rauschen >20 Counts: Software-Gleitender-Mittelwert (5-10 Samples) oder 100nF Kondensator am ADC-Pin gegen GND
+- Aktuelle Segmentzuordnung: `S0 = Hand/Wrist`, `S1 = Unterarm`, `S2 = Oberarm`
+- Die Referenzpose `calibration/reference_poses/2026-04-23_neutralpose_arm_haengend.md` dient aktuell als Twin-Arbeitsreferenz
+- Dashboard und ROS 2 nutzen denselben Segment- und Referenzstand
+- Der historische Flex-Sensor-Pfad ist nicht mehr die aktive Greifer-Eingabe und bleibt nur als Altstand dokumentiert
 
 ## Relevanz fuer Kalibrierung
 
-- IMU-Referenzsystem und Achszuordnung muessen nach Koerpermontage neu beschrieben werden
-- Flex-Sensor muss in realer Montageposition erneut kalibriert werden (finales Messfenster offen)
-- Referenzposen fuer Start und Wiederkalibrierung noch nicht festgeschrieben
+- weitere Referenzposen fuer realen Bewegungsbetrieb stehen noch aus
+- der aktuelle Greifer-Pfad wird unter `calibration/gripper_input/` dokumentiert
+- reale Safety-Freigaben folgen erst nach dokumentiertem Security-/Safety-Uplift
 
 ## Verweis auf Fotos
 
-- `docs/photos/2026-03-26_bench_aufbau_breadboards.jpg` — Bench-Breadboard-Uebersicht
-- `docs/photos/2026-03-26_bench_aufbau_i2c_detail.jpg` — I2C-Verkabelungsdetail
-- `docs/photos/2026-03-28_bench_aufbau_aktuell.jpg` — aktueller Bench-Stand mit allen drei ESPs
+- `docs/photos/2026-03-28_bench_aufbau_aktuell.jpg`
+- `docs/photos/readme/20260423_213652000-ios.gif`

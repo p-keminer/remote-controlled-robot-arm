@@ -8,26 +8,27 @@ Es beschreibt den Projektkontext und die verbindliche Arbeitsweise.
 Projektname: `IMU Robotic Arm`
 
 Kurzbeschreibung:
-Ein 5-DOF-Roboterarm soll ueber Armbewegungen, mehrere BNO055-IMUs und einen Flex-Sensor lokal drahtlos gesteuert werden.
+Ein 5-DOF-Roboterarm soll ueber Armbewegungen, mehrere BNO055-IMUs und eine Potentiometer-basierte Greifer-Eingabe lokal drahtlos gesteuert werden.
 Die Architektur trennt Vorbereitung, Security, Hardware, Kalibrierung, Firmware und Testnachweise klar voneinander.
 
 ## Aktuelle Projektphase
 
-Aktuell befindet sich das Projekt in Phase 6/8 — Sensor- und Kommunikations-Bench ist validiert, I2C-Kette Receiver → Arduino ist bench-validiert, Security-Haertung ist noch offen:
+Aktuell befindet sich das Projekt praktisch in Phase 7/8 mit aktivem Digital Twin und laufender Nachweispflege. Der sichere Produktivpfad bleibt dabei bewusst noch offen:
 
 - Toolchain steht: Arduino IDE 3.3.7 als Hauptumgebung, PlatformIO als Fallback und Gegencheck (bestaetigt 2026-03-22)
 - BNO055 drei Sensoren (Oberarm/Unterarm/Hand) via PCA9548A-Mux validiert, Kalibrierungsoffsets im NVS persistent (bestaetigt 2026-03-26)
-- Flex-Sensor ADC-Pfad ausgelesen und kalibriert mit Live-Plausibilitaetspruefung (bestaetigt 2026-03-26)
+- Potentiometer-basierte Greifer-Eingabe auf `GPIO1` als aktueller robuster Arbeitsstand dokumentiert; Protokollfeld `f` bleibt aus Kompatibilitaetsgruenden erhalten
 - ESP-NOW Unicast mit `ImuPaket v4` (drei IMUs, KalibStatus, NVS-Persistenz) laeuft (bestaetigt 2026-03-26)
-- LED-Debugging bench-validiert: Controller Ampelsystem + COMMS + FAULT, Receiver LINK + I2C + FAULT (bestaetigt 2026-03-26)
-- Bridge-ESP32: ESP-NOW Empfang → WiFi/MQTT → Mosquitto (Pi) mit OTA und Passwort-Auth (bestaetigt 2026-03-27)
+- LED-Debugging, Notaus und I2C-Kette Receiver → Arduino sind auf der realen Projektbasis bestaetigt
+- Bridge-ESP32: ESP-NOW Empfang → WiFi/MQTT → Mosquitto (Pi) mit OTA und Passwort-Auth als Debug-Infrastruktur verifiziert
 - WiFi-Kanal 1 auf allen ESPs fuer ESP-NOW/WiFi-Koexistenz (bestaetigt 2026-03-28)
 - MQTT MCP Server fuer Claude Live-Sensorzugriff mit 6 Tools (bestaetigt 2026-03-28)
 - Kompletter Datenpfad validiert: Controller → ESP-NOW → Bridge → MQTT → Pi → MCP → Claude
 - Secret-Scanner mit 10 Kategorien, Pre-Commit/Pre-Push Hooks (bestaetigt 2026-03-27)
-- Adeept 5-DOF Roboterarm mechanisch im Stock-Zustand aufgebaut (bestaetigt 2026-03-24)
+- Controller auf Lochraster/Perfboard ueberfuehrt und Arm-Prototyp mechanisch aufgebaut
 - I2C-Kette Receiver → Arduino bench-validiert: Frame V1 ueber I2C (ESP32 GPIO13/14 → Arduino A4/A5), 50Hz, alle 5 Achsen (bestaetigt 2026-04-02)
-- Naechste Schritte: Stock-Baseline-Test, IMU-zu-Servo-Mapping, Security-Uplift
+- Dashboard- und ROS-Simulation sind auf denselben Gelenkstand gemappt und live debuggt
+- Naechste Schritte: reale Safety-/Security-Freigabe, Stock-/Learning-Mode dokumentieren, Simulationspfad kontrolliert auf reale Armfreigabe ueberfuehren
 
 ## Pflicht nach Kontextkomprimierung oder Sitzungsstart
 
@@ -67,6 +68,7 @@ Nach jeder Kontextkomprimierung oder beim Sitzungsstart ohne vollstaendigen Verl
 - Security und Safety werden als getrennte Dokumentations- und Entscheidungsbereiche behandelt.
 - Der reale Aufbau wird in dieser Ausbaustufe nur als Ablauf, Checklisten- und Nachweisstruktur dokumentiert.
 - Die Bridge (ESP-NOW → WiFi → MQTT → Pi) ist reines Entwicklungswerkzeug, nicht Teil des Steuerpfads.
+- Dashboard und ROS 2 bilden den aktuellen Digital Twin; deren verifizierter Stand ersetzt keine reale Safety-Freigabe des Arms.
 
 ## Board- und Flash-Konfiguration (KRITISCH)
 

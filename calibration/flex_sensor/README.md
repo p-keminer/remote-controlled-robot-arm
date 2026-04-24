@@ -2,26 +2,20 @@
 
 ## Zweck
 
-Dieser Ordner ist fuer die Kalibrierung und das Mapping des Flex-Sensors vorgesehen.
+Dieser Ordner dokumentiert den historischen Flex-Sensor-Prototyp des fruehen Bench- und Wearable-Aufbaus.
 
-## Aktueller Stand
+## Historischer Status
 
-Der Bereich enthaelt bereits reale Rohmessungen unter `MESSWERTE.md`.
-Das Greifermapping bleibt vorlaeufig und muss nach Montage am Handschuh bzw. Wearable neu kalibriert werden.
+Die Inhalte in diesem Ordner bleiben als nachvollziehbarer Altstand erhalten.
+Der aktive Greifer-Pfad nutzt inzwischen ein Potentiometer aus Robustheitsgruenden und wird unter `../gripper_input/` weitergefuehrt.
 
 ## Inhalt
 
-- ADC-Referenzbereiche fuer gestreckten und gebeugten Finger
-- Totzonen, Glattungsannahmen und Mappingbereiche
-- Hinweise auf Abhaengigkeit von Handschuh, Montage und Sensoralterung
-- reale Rohmessungen und abgeleitete Prozentformel
+- fruehe ADC-Referenzbereiche fuer den Flex-Sensor
+- historische Mapping-Annahmen und Bench-Messfenster
+- Hinweise auf Alterung, Kriechverhalten und Montageprobleme des Altpfads
 
 ## Regeln
 
-- Rohmessungen und abgeleitete Mappinggrenzen getrennt dokumentieren
-- jede Aenderung am Greifermapping nachvollziehbar begruenden
-
-## Schnittstellen/Abhaengigkeiten
-
-- richtet sich nach `../README.md` und `../../CALIBRATION_FRAMEWORK.md`
-- beeinflusst `../../firmware/esp32_controller/` und spaeter `../../firmware/arduino_arm/`
+- diesen Ordner nicht stillschweigend als aktuellen Kalibrierpfad behandeln
+- aktive Greifer-Aenderungen nur noch unter `../gripper_input/` dokumentieren

@@ -2,13 +2,15 @@
 
 ## Ziel
 
-Eine kleine, aber belastbare Verifizierungsschicht fuer Sensorik, Kommunikation, Security, Latenz und Safety aufbauen.
+Die vorhandenen Verifikationen in dated, reproduzierbare Testfaelle ueberfuehren.
 
-## Arbeitspakete
+## Abgeschlossen
 
-- [x] Testbereiche und Nachweisarten strukturieren
-- [ ] Bench-Pruefungen fuer Sensorzugriff, Multiplexer, Flex-Sensor und Bench-Funkpfad in eigene Testdokumente ueberfuehren
-- [ ] Security-Faelle fuer unbekannte Peers, ungueltige Frames und lokale Servicepfade beschreiben
-- [ ] Integrationsablaeufe fuer Controller -> Receiver -> Arduino beschreiben
-- [ ] Latenzmessung fuer End-to-End-Pfad definieren
-- [ ] Safety-Pruefungen fuer Timeout, Neutralposition und Limits festziehen
+- [x] Testbereiche strukturiert
+- [x] Debug-Bridge- und Twin-Verifikation als dated Nachweis festgehalten
+
+## Offen
+
+- [ ] Bench-Checks fuer aktuelle Prototyphardware konsolidieren
+- [ ] Ende-zu-Ende-Testfaelle fuer Steuerpfad und Debugpfad ausformulieren
+- [ ] Safety-, Security- und Latenznachweise weiter ausbauen

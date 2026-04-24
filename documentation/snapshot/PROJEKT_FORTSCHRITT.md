@@ -1,136 +1,62 @@
 # Projekt Fortschritt
 
 Dieses Dokument fuehrt den aktuellen Managementstand des Projekts.
-Es zeigt, in welcher Phase sich das Projekt befindet, welche Arbeitspakete aktiv sind und welche Punkte als Naechstes folgen.
 
 ## Gesamtstatus
 
-- Projektmodus: bench-validierte Sensor-, Kommunikations- und Elektronikbasis mit MQTT-Bridge, Live-Dashboard-Infrastruktur und ROS2-Visualisierung
-- Aktive Hauptphasen: Phase 6 - Sensorvalidierung, Phase 8 - Kommunikation und Safety, Phase 10 - Entwicklungs-Dashboard (als Bench-Werkzeug), ROS2-Visualisierung aktiv
-- Parallel gepflegt: Phase 1 - Dokumentationsfundament, Phase 2 - Security-Grundlage, Phase 3 - Vorbereitung und Toolchain, Phase 4 - Hardware-Readiness
-- Entwicklungsrealitaet: Controller → Receiver + Bridge per ESP-NOW auf Kanal 1 mit ImuPaket v4 (Notaus-Flag); Receiver → Arduino per I2C (Frame V1, 50Hz); Bridge → Mosquitto (Pi) per WiFi/MQTT; MQTT MCP Server fuer Claude Live-Debugging; LED-Schema invertiert mit RGB GPIO48; Notaus-Toggle-Button an GPIO21; Secret-Scanner mit Git-Hooks integriert; ROS2 Jazzy mit URDF-Visualisierung und MQTT-Bridge aktiv
-- Naechste Schritte: Stock-Baseline-Test, Dashboard-Views, Security-Uplift
+- Projektmodus: aktiver Prototyp mit verifiziertem Debug- und Digital-Twin-Pfad
+- Aktive Hauptphasen: Dokumentationssynchronisierung, Security-/Safety-Vorbereitung, reale Nachweisfuehrung
+- Entwicklungsrealitaet: Controller → Receiver + Bridge per ESP-NOW, Receiver → Arduino per I2C, Bridge → MQTT → Pi, Dashboard + ROS 2 als beobachtender Twin
+- Aktuelle Greifer-Eingabe: Potentiometer auf `GPIO1` aus Robustheitsgruenden
+- Naechste grosse Schwelle: reale Safety- und Security-Freigabe des Arms
 
 ## Aktuelle Phasenampel
 
 | Phase | Status | Einordnung |
 | --- | --- | --- |
-| Phase 1 - Dokumentationsfundament | in Arbeit | Basis steht und wird nach jedem Bench-Schritt nachgezogen |
-| Phase 2 - Security-Grundlage | in Arbeit | Advisory-Lage, Provisioning und Security-Baseline sind dokumentiert; Stack-Freigabe und formale Testfaelle sind offen |
-| Phase 3 - Vorbereitung und Toolchain | weit fortgeschritten | Toolchain, Boardfakten und Bench-Readiness sind real bestaetigt; lokale Gegencheck- und Freigabeprozesse werden weiter geschaerft |
-| Phase 4 - Hardware-Readiness und Nachweisstruktur | in Arbeit | Arm ist mechanisch aufgebaut (Stock-Zustand); Inventardoku, Stock-Baseline-Test, Batteriefach und reale Verkabelung fehlen noch |
-| Phase 5 - Architektur und Portabilitaetsfundament | vorbereitet | fachlich beschrieben, aber noch nicht als echte Adapter- und Abstraktionsschicht umgesetzt |
-| Phase 6 - Sensorvalidierung | weit fortgeschritten | drei BNO055, PCA9548A, Flex-Sensor und Funk-Bench sind validiert; LED-Debugging bench-validiert; Referenzbewegungen und formale Bench-Nachweise fehlen noch |
-| Phase 7 - Kalibrierung und Mapping | vorbereitet | startet nach Arm-Aufbau, Referenzpose und erster Servo-Grundfunktion |
-| Phase 8 - Kommunikation, Servoausfuehrung und Safety | weit fortgeschritten | `ESP-NOW`-Benchpfad und I2C-Kette Receiver → Arduino sind bench-validiert; Security-Uplift und Arduino-Safety-Logik sind offen |
-| Phase 9 - Integration und Hardware-Verstetigung | nicht gestartet | folgt nach erster lauffaehiger Gesamtkette bis zur Servoebene |
-| Phase 10 - Zukunftsausbau und Systemerweiterung | in Arbeit | ROS2-Visualisierung mit URDF und MQTT-Bridge aktiv; weitere Ausbaustufen als Post-v1-Ausblick dokumentiert |
+| Doku / Management | in Arbeit | Root-, Bereichs- und Nachweisdoku werden auf denselben Ist-Stand gezogen |
+| Toolchain / Flash | stabil | Arduino IDE 3.3.7 plus Custom-Board etabliert |
+| Hardware / Prototyp | weit fortgeschritten | Arm-Prototyp steht, Controller sitzt auf Lochraster/Perfboard |
+| Sensorik / Kommunikation | stabil fuer Twin | drei IMUs, Potentiometer, ESP-NOW, Bridge und I2C sind fuer Debug/Twin belastbar |
+| Digital Twin | aktiv | Dashboard und ROS 2 sind gemappt und verifiziert |
+| Safety / Security Produktivpfad | offen | reale Freigabe bleibt bewusst getrennt und noch nicht abgeschlossen |
 
 ## Bereits erledigt
 
-- [x] Root-Dokumente fuer Architektur, Regeln, Kommunikation, Kalibrierung und Safety angelegt
-- [x] `PROJEKT_ABLAUFPLAN.md` und `PROJEKT_FORTSCHRITT.md` als Managementschicht eingefuehrt
-- [x] `SECURITY_FRAMEWORK.md` und `security/` als eigener Bereich angelegt
-- [x] advisory-basierte `ESP-NOW`-Schwachstellen, Grenzen und fruehe Gegenmassnahmen in Security- und Kommunikationsdokumenten nachgezogen
-- [x] `preparation/` als eigener Vorbereitungsbereich angelegt
-- [x] `hardware/assembly/` und `hardware/bringup/` als neue Hardware-Unterbereiche eingefuehrt
-- [x] `hardware/electronics/` fuer ESP32-S3-Integration, Pinmapping, Debugsignale und Breadboard-/Lochrasterpfad eingefuehrt
-- [x] `future/` fuer spaetere Plattform-, Teleoperations- und Portabilitaetsausbaustufen eingefuehrt
-- [x] `docs/templates/` mit Roboterarm-bezogenen Vorlagen eingefuehrt
-- [x] Wearable-Konzept fuer IMU-Positionierung, Prototyp und spaeteren Betriebstyp dokumentiert
-- [x] `.gitignore` und `security/local/` fuer lokale, nicht-repotaugliche Daten vorbereitet
-- [x] `CLAUDE.md` als kompakter KI-Brief eingefuehrt
-- [x] Quellenpflicht fuer forschungs- und entscheidungsgetriebene Dokumente in Regeln und Hardware-Doku verankert
-- [x] offizieller Adeept-V4.0-Download mit Tutorial-PDFs, Originalcode und Schaltplan unter `official_downloads/` uebernommen und projektrelevant ausgewertet
-- [x] Toolchain vollstaendig eingerichtet: Arduino IDE 3.3.7, ESP32 Core 3.3.7, boards.local.txt fuer N16R8 und PlatformIO als Gegencheck dokumentiert und einsatzbereit
-- [x] echte Boardrevision der vorhandenen ESP32-S3-DevKits und die RGB-LED-Pins am Hardwarebestand geprueft — v1.0, RGB auf GPIO48, GPIO35/36/37 intern belegt
-- [x] ESP-NOW Hello-World erfolgreich zwischen Controller und Receiver getestet
-- [x] Beide Board-MACs dokumentiert in `security/local/device_identities.local.txt`
-- [x] ESP-NOW Unicast erfolgreich getestet (Controller -> Receiver per MAC, bestaetigt 2026-03-22)
-- [x] BNO055 I2C-Scan erfolgreich: Adresse 0x29 (ADR=3V3), SDA GPIO8 / SCL GPIO9
-- [x] BNO055 Rohwerte erfolgreich ausgelesen: Euler-Winkel stabil, Gyro-Kalibrierung 3/3
-- [x] PCA9548A Mux erfolgreich: BNO055 ueber Kanal 0 angesprochen, Sys/Gyro/Accel 3/3, Mux-Adresse 0x70
-- [x] Zwei BNO055 gleichzeitig ueber Mux-Kanaele 0 und 1 ausgelesen, beide Sensoren stabil
-- [x] IMU-Daten per ESP-NOW Unicast uebertragen: `ImuPaket v1` mit XOR-Pruefsumme und Frische-Check, alle Bench-Pakete valide
-- [x] Flex-Sensor Rohmessung: gerade=1108, maximal gebogen=940, Bereich 168 Counts, GPIO1
-- [x] No-Hardcoding-Regel eingefuehrt: MACs in `peer_config.local.h` ausgelagert, gitignoriert
-- [x] Akku- und Ladegeraet-Auswahl als Projektarbeitsstand festgelegt: `4x Molicel INR-18650-M35A` ohne Loetfahne plus `1x XTAR VC4SL`
-- [x] Projektentscheidung zu den wichtigsten Stock-Funktionen festgezogen: OLED uebernehmen, Potentiometer-Steuerung als Fallback behalten, Learning/Action Memory uebernehmen, Processing vorerst als Referenz- und Fallbackpfad behalten
-- [x] minimaler UART-Frame v1 fuer `Receiver -> Arduino` dokumentiert: feste Startbytes, Version, Sequenz, Flags, 5 Achs-Sollwerte, CRC8
-- [x] dritten BNO055 ueber PCA9548A Mux-Kanal 2 angeschlossen und bench-validiert: alle drei Sensoren liefern live Euler-Daten ueber ESP-NOW, Pakete valide (bestaetigt 2026-03-26)
-- [x] ImuPaket auf Protokollversion 3 angehoben: KalibStatus (sys/gyro/accel/mag) pro Sensor im Paket, Mux-Delay auf 10ms erhoeht (bestaetigt 2026-03-26)
-- [x] BNO055-Kalibrierungspersistenz im NVS eingebaut: Offsets werden automatisch gespeichert wenn Gyro>=3, Accel>=2, Mag>=2 und beim Boot wiederhergestellt (bestaetigt 2026-03-26)
-- [x] Einzelkalibrierungsmodus eingefuehrt: CAL0/CAL1/CAL2 per Serial fuer fokussierte Sensor-Kalibrierung, RECAL zum Zuruecksetzen (bestaetigt 2026-03-26)
-- [x] Firmware-Versionsarchiv angelegt: espnow_imu_v1, espnow_receiver_v1, espnow_imu_v2, espnow_receiver_v2 als Bench-Snapshots unter firmware/ (bestaetigt 2026-03-26)
-- [x] Adeept 5-DOF Roboterarm mechanisch im Stock-Zustand aufgebaut — Fotos unter docs/photos/ (bestaetigt 2026-03-24)
-- [x] LED-Debugging invertiert (aus=OK, an=Problem) mit RGB GPIO48 als FAULT/NOTAUS auf allen ESPs (bestaetigt 2026-03-26, aktualisiert 2026-03-28)
-- [x] Live-Sensorausfallerkennung und Flex-Sensor-Plausibilitaetspruefung im Controller (bestaetigt 2026-03-26)
-- [x] Bridge-ESP32 Firmware: ESP-NOW Empfang, MQTT-Weiterleitung (PubSubClient), OTA (ArduinoOTA), NeoPixel RGB (bestaetigt 2026-03-26)
-- [x] Controller Multi-Peer: sendet ImuPaket v4 an Receiver (Steuerpfad) und Bridge (Debug-Pfad) gleichzeitig (bestaetigt 2026-03-26)
-- [x] WiFi-Kanal 1 auf allen ESPs fuer ESP-NOW/WiFi-Koexistenz mit Router (bestaetigt 2026-03-26)
-- [x] Mosquitto MQTT-Broker auf Pi konfiguriert: Passwort-Auth, WebSocket-Listener auf 9001, Nginx Reverse Proxy auf /mqtt/ (bestaetigt 2026-03-26)
-- [x] MQTT MCP Server (dashboard/mcp/mqtt_mcp_server.py) mit 6 Tools fuer Claude Live-Sensorzugriff (bestaetigt 2026-03-26)
-- [x] Secret-Scanner (scripts/secret_scan.sh) mit 10 Kategorien, Pre-Commit/Pre-Push Hooks und GitHub Actions Workflow (bestaetigt 2026-03-26)
-- [x] Bidirektionale Sync-Skripte Windows/WSL ohne absolute Pfade (bestaetigt 2026-03-26)
-- [x] Live-IMU-Daten ueber kompletten Pfad validiert: Controller → ESP-NOW → Bridge → WiFi/MQTT → Pi → MCP → Claude (bestaetigt 2026-03-26)
-- [x] ImuPaket auf Protokollversion 4 angehoben: Notaus-Flag (Bit 0) im neuen `flags`-Feld, Toggle-Button an GPIO21, alle drei Firmwares aktualisiert (bestaetigt 2026-03-28)
-- [x] Notaus-Toggle-Button auf GPIO21 am Controller: jeder Tastendruck toggelt Notaus-Zustand, interner Pull-Up, 50ms Entprellung, kein externer Pull-Up noetig (bestaetigt 2026-03-28)
-- [x] RGB-LED GPIO48 auf allen drei ESPs: orange blinkend bei Notaus (hoechste Prio), rot blinkend bei Fehler, aus wenn OK (bestaetigt 2026-03-28)
-- [x] LED-Schema am Controller von blinken auf an/aus umgestellt: aus = OK, an = Problem (bestaetigt 2026-03-28)
-- [x] Notaus-Kette end-to-end validiert: Controller (Toggle-Button GPIO21) → ImuPaket v4 flags → Receiver (RGB orange) + Bridge (RGB orange, MQTT `"notaus":true/false`) (bestaetigt 2026-03-28)
-- [x] Alle Dokumentation auf GPIO21, Toggle-Button, Kanal 1 und LED-Schema an=Problem durchgezogen (bestaetigt 2026-03-28)
-- [x] Foto des aktuellen Bench-Aufbaus unter docs/photos/2026-03-28_bench_aufbau_aktuell.jpg abgelegt (2026-03-28)
-- [x] ROS 2 Jazzy Package (robotarm_description) mit URDF-Visualisierung aufgesetzt (bestaetigt 2026-04-02)
-- [x] Dual-Arm Wandmontage-URDF (robotarm_wall.urdf) mit L/R Armen erstellt (bestaetigt 2026-04-02)
-- [x] MQTT-zu-ROS2 Bridge mit Toggle-Service (/toggle_arm) implementiert (bestaetigt 2026-04-02)
-- [x] Fast-DDS Shared Memory Transport fuer WSL2-Kompatibilitaet konfiguriert (bestaetigt 2026-04-02)
-- [x] Controller: SENDE_INTERVALL von 50ms auf 5ms optimiert, Status/Kalib-Polling alle 20 Zyklen (bestaetigt 2026-04-02)
-- [x] Receiver: Zaehler-Reset bei ESP-NOW Timeout eingebaut (bestaetigt 2026-04-02)
-- [x] I2C-Kette Receiver → Arduino bench-validiert: ESP32 GPIO13/14 (SDA/SCL) → Arduino A4/A5 (TWI), Frame V1 (11 Bytes) ueber I2C statt UART (bestaetigt 2026-04-02)
-- [x] Arduino-Firmware mit 5-Servo-Steuerung: Servos dauerhaft attached bei 50Hz, ISR-minimales I2C-Design (Wire.onReceive nur Rohbytes, Verarbeitung in loop()), Slew-Rate-Limiter MAX_SCHRITT=1 (50 Grad/s) (bestaetigt 2026-04-02)
-- [x] Servo-Limits empirisch kalibriert: Base 12-139, Shoulder 35-142, Elbow 80-175, Wrist 5-177, Gripper 32-126 (bestaetigt 2026-04-02)
-- [x] I2C-Sweep-Test mit allen 5 Achsen: Schulter reduzierte Amplitude (+-80), Ellbogen reduziert (+-60), Rest volle Amplitude (bestaetigt 2026-04-02)
-- [x] OLED-Header auf Adeept-Board fuer I2C-Verbindung wiederverwendet (A4/A5 SDA/SCL), OLED ausgesteckt (bestaetigt 2026-04-02)
+- [x] Root-, Framework- und Bereichsdokumentation strukturiert
+- [x] drei BNO055 ueber PCA9548A validiert
+- [x] `ImuPaket v4` mit Notaus-Flag und Multi-Peer-ESP-NOW etabliert
+- [x] Bridge-ESP32 mit WiFi/MQTT und OTA als Debug-Infrastruktur aufgebaut
+- [x] Controller auf Lochraster/Perfboard ueberfuehrt
+- [x] aktueller Arm-Prototyp mechanisch fertig aufgebaut
+- [x] Greifer-Eingabe auf Potentiometer aus Robustheitsgruenden umgestellt
+- [x] Dashboard-3D-Modell auf aktuellen Gelenkstand gemappt
+- [x] ROS-2-Wandmontage, Live-MQTT, Recorder, Replay, Plot und Live-Monitor aufgebaut
+- [x] Debug-Bridge Controller → ESP-NOW → Bridge → MQTT → Pi end-to-end verifiziert
 
 ## Noch offen im aktuellen Schwerpunkt
 
-- [ ] Root-Dokumente, lokale Bereichsdokumente und neue Security-/Preparation-Bereiche dauerhaft synchron halten
-- [ ] konkrete `ESP-NOW`-/`ESP-IDF`-Zielbasis fuer Realbetrieb freigeben
-- [x] I2C-Grundkette `Receiver -> Arduino` bench-validieren (erledigt 2026-04-02, I2C statt UART wegen Interrupt-Kollision)
-- [ ] Bench-Protokoll auf die dokumentierte Security-Baseline mit `session_id` und Authentisierungstag anheben
-- [ ] Stock-Baseline-Test: Servo90, Unpacking, Potentiometer erledigt — Learning Mode noch offen
-- [x] ausgewaehlte Akkus und das Ladegeraet beschafft und in Betrieb (4x Molicel INR-18650-M35A + XTAR VC4SL, bestaetigt 2026-04-02)
-- [x] Dashboard-Views im bestehenden IoT Control Center auf dem Pi implementiert (Debug-Konsole, Statistiken, 3D-Simulation)
-- [x] PPS-Optimierung bei Multi-Peer ESP-NOW abgeschlossen
-- [ ] OTA Dual-Partition Rollback bench-validieren
-- [ ] Security-, Safety- und Kommunikationsfaelle in konkrete Test- und Messdokumente herunterbrechen
+- [ ] Stock-Baseline und Learning-Mode des Originalkits als Nachweis nachziehen
+- [ ] aktuelle Wiring-, Assembly- und Messdokumente fuer den realen Prototyp vervollstaendigen
+- [ ] Security-Uplift mit Session-/Auth-Pfad dokumentieren und pruefen
+- [ ] reale Safety-Faelle, Limits und Timeout-Verhalten formal in `tests/` nachziehen
+- [ ] bestaetigten Twin-Stand kontrolliert in reale Armfreigabe ueberfuehren
 
 ## Naechste sinnvolle Arbeitspakete
 
-1. Learning Mode des Adeept Stock-Kits testen und dokumentieren
-2. LED-Pfade am Receiver und Controller gegen bestaetigten Pinplan validieren
-3. IMU-Daten auf Servo-Zielwinkel mappen (echte Armbewegung statt Sweep-Test)
-4. Security-Uplift auf die bestehende I2C-Grundkette aufsetzen
-5. Wearable-Montage: Sensoren vom Breadboard an den Koerper
+1. Stock-/Learning-Mode des Originalkits dokumentieren und klar gegen den modifizierten Projektstand abgrenzen
+2. aktuelle Perfboard-, Wiring- und Assembly-Nachweise vervollstaendigen
+3. Security- und Safety-Faelle aus dem realen Steuerpfad formal beschreiben
+4. bestaetigten Digital-Twin-Stand fuer reale Bewegungsfreigabe vorbereiten
 
-## Leitende Dokumente fuer den aktuellen Stand
+## Management-Risiken
 
-- `README.md` als Einstieg
-- `CLAUDE.md` als Kurzbrief
-- `ROADMAP.md` als globale Phasenplanung
-- `PROJEKT_ABLAUFPLAN.md` als Management-Reihenfolge
-- `SECURITY_FRAMEWORK.md`, `COMMUNICATION_FRAMEWORK.md`, `SAFETY_FRAMEWORK.md` und `CALIBRATION_FRAMEWORK.md` als Systemrahmen
-- `preparation/README.md`, `security/README.md`, `hardware/README.md`, `docs/templates/README.md` und `future/README.md` als Schwerpunktbereiche
+- Wenn Root-, Bereichs- und dated Nachweisdoku auseinanderlaufen, wird der reale Stand schnell missverstaendlich.
+- Der aktuelle Twin-Stand ist belastbar fuer Debugging, aber noch keine produktive Bewegungsfreigabe.
+- Stock-Herstellerstand und modifizierter Projektpfad muessen sichtbar getrennt bleiben.
 
-## Offene Management-Risiken
-
-- Ohne konsequente Synchronisierung koennen Root-Dokumente, lokale Readmes und Roadmaps erneut auseinanderlaufen.
-- Die aktuelle `ESP-NOW`-Bench-Variante ist fuer Sensor- und Transporttests geeignet, aber noch kein freigegebener Security-Produktivpfad.
-- Servo-Limits und I2C-Kette sind bench-validiert; reale Safety-Fallbacks und IMU-zu-Servo-Mapping stehen noch aus.
-- Toolchain- und Security-Freigaben muessen sauber zwischen committed Zielbasis und lokal geflashtem Ist-Stand getrennt dokumentiert bleiben.
-
-## Pflegepflicht fuer dieses Dokument
+## Pflegepflicht
 
 - nach jedem groesseren Meilenstein aktualisieren
-- bei Phasenwechseln den Status dieser Datei und der `ROADMAP.md` gemeinsam anpassen
+- `ROADMAP.md`, `PROJEKT_ABLAUFPLAN.md` und lokale Roadmaps zusammen pruefen
 - nach jeder relevanten Aenderung `bash ./scripts/update_docs.sh` ausfuehren

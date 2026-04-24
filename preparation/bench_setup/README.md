@@ -2,26 +2,27 @@
 
 ## Zweck
 
-Dieser Ordner beschreibt die Vorbereitung des Entwicklungs- und Testarbeitsplatzes.
+Dieser Ordner beschreibt die geordnete Labor- und Prototypumgebung des Projekts.
 
 ## Aktueller Stand
 
-Die Bench-Basis ist real genutzt und teilweise validiert.
-Controller- und Receiver-Boards wurden fuer BNO055, PCA9548A, Flex-Sensor und `ESP-NOW` bereits am offenen Bench getestet; die I2C-Grundkette (Receiver → Arduino) ist bench-validiert (bestaetigt 2026-04-02); LED-Validierung und Lasttests am realen Roboterarm sind noch offen. Buzzer wurde als Projektentscheidung gestrichen.
+Der reine offene Breadboard-Stand ist historisch.
+Aktiv ist jetzt ein Prototyp mit fertigem Armaufbau, Controller auf Lochraster-/Perfboard und verifiziertem Debugpfad zu Dashboard und ROS.
 
-## Inhalt
+Historische Bench-Erkenntnisse bleiben wichtig fuer Teiltests, aber der Arbeitsstand ist heute:
 
-- Stromversorgungs- und Verkabelungsdisziplin
-- Reihenfolge fuer sichere Teiltests
-- Trennung von Entwicklungsgeraeten, Testaufbau und spaeterem Zielbetrieb
-- Bench-Reihenfolge vom Sensorpfad ueber Funk bis zur I2C-/Servo-Integration
+- Controller mit drei IMUs und Potentiometer als Greifer-Eingabe
+- Receiver->Arduino-I2C aktiv
+- Bridge->Pi->Dashboard/ROS verifiziert
 
 ## Regeln
 
-- Bench-Aufbau und Realbetrieb nicht vermischen
-- unsaubere Ad-hoc-Verkabelung spaeter in `docs/` und `hardware/verkabelung/` nachvollziehbar machen
-- Bench-Ergebnisse muessen als echte Nachweise in Doku, Messwerten oder Testdokumenten wieder auftauchen
+- Bench- und Prototypzustand sauber trennen.
+- Historische Testverkabelung nicht mit dem aktuellen Perfboard-Stand verwechseln.
+- Messungen und neue Beobachtungen gehoeren in dated Nachweise unter `docs/measurement_logs/`.
 
 ## Schnittstellen/Abhaengigkeiten
 
-- verweist auf `../../hardware/bringup/`, `../../tests/` und `../../docs/templates/`
+- `../../hardware/bringup/README.md`
+- `../../hardware/electronics/`
+- `../../tests/`

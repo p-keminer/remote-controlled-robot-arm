@@ -2,39 +2,40 @@
 
 ## Zweck
 
-Dieser Ordner enthaelt die gesamte Laufzeitlogik fuer Controller, Receiver, Servoausfuehrung und die Debug-Bridge.
+Dieser Ordner enthaelt die Laufzeitlogik fuer Controller, Receiver, Servoausfuehrung und Debug-Bridge.
 
 ## Aktueller Stand
 
-Controller, Receiver und Bridge sind als Bench-Firmware vorhanden und bench-validiert.
-Controller sendet ImuPaket v4 (59 Bytes, mit flags-Bitfeld) per ESP-NOW an Receiver (Steuerpfad) und Bridge (Debug-Pfad) gleichzeitig.
-Notaus-Toggle-Button am Controller (GPIO21) propagiert das Notaus-Flag per ImuPaket an alle Peers.
-LED-Schema ist invertiert: aus = OK, an = Problem. RGB auf GPIO48: orange blinkend bei Notaus, rot blinkend bei Fehler, aus wenn OK.
-I2C-Kette Receiver → Arduino ist bench-validiert: Frame V1 (11 Bytes) ueber I2C (ESP32 GPIO13/14 → Arduino A4/A5), alle 5 Servos bei 50Hz, ISR-minimales Design.
-Security-Uplift und finale Trennung der Laufzeitpfade sind noch offen.
-Firmware-Archive frueherer Versionen liegen unter `espnow_imu_v1/`, `espnow_imu_v2/`, `espnow_receiver_v1/`, `espnow_receiver_v2/`.
+Die Firmwarebasis ist fuer den aktuellen Prototyp real im Einsatz:
+
+- Controller liest drei IMUs ueber PCA9548A und die Greifer-Eingabe ueber ein Potentiometer auf GPIO1
+- Controller sendet `ImuPaket v4` gleichzeitig an Receiver und Bridge
+- Receiver uebergibt die validierten Gelenkziele per I2C an das Arduino-Armboard
+- Arduino fuehrt Limits, Slew-Rate und Timeout-Neutralverhalten aus
+- Bridge speist den verifizierten Debugpfad zu Pi, Dashboard und ROS
+
+Der Debugpfad ist end-to-end bestaetigt.
+Offen bleiben der eigentliche Security-Uplift, formale Safety-Freigaben und weitere Langzeithaertung.
 
 ## Inhalt
 
-- `esp32_controller/` fuer Wearable-Sensorik, Vorverarbeitung und Funksendung (Multi-Peer: Receiver + Bridge)
-- `esp32_receiver/` fuer Funkempfang, Validierung und I2C-Uebergabe an Arduino (Steuerpfad)
-- `esp32_bridge/` fuer Debug-Beobachtung per ESP-NOW-Mitlesen und MQTT-Weiterleitung an Pi (Entwicklungswerkzeug)
-- `arduino_arm/` fuer direkte Servoansteuerung, Limits und Rampen
-- `I2C_FRAME_V1.md` fuer das minimale Frame-Format zwischen Receiver und Arduino (11 Bytes, I2C-Transport)
-- `SERVO_UART_DESIGNENTSCHEIDUNGEN.md` fuer Designentscheidungen zu Servo-Steuerung, Timing und I2C-Migration
-- `espnow_imu_v1/`, `espnow_imu_v2/` — archivierte Controller-Firmware-Versionen
-- `espnow_receiver_v1/`, `espnow_receiver_v2/` — archivierte Receiver-Firmware-Versionen
+- `esp32_controller/` fuer Wearable-Sensorik, Referenzlogik und Paketbildung
+- `esp32_receiver/` fuer den steuerrelevanten ESP-NOW- und I2C-Pfad
+- `esp32_bridge/` fuer den rein lesenden Debugpfad per MQTT
+- `arduino_arm/` fuer Limits, Rampen und Servoausfuehrung
+- `I2C_FRAME_V1.md` fuer das Receiver->Arduino-Frame
+- `SERVO_UART_DESIGNENTSCHEIDUNGEN.md` fuer historische Entwurfsentscheidungen
+- archivierte Altstaende unter `espnow_*`
 
 ## Regeln
 
-- keine Sensor-, Funk- oder Servologik stillschweigend zwischen den Teilbereichen vermischen
-- die Bridge darf nicht in den Steuerpfad (Receiver → Arduino) eingreifen; der Steuerpfad muss ohne Bridge funktionieren
-- Protokollaenderungen immer in `COMMUNICATION_FRAMEWORK.md` dokumentieren
-- Limits und Neutralverhalten immer auch mit `SAFETY_FRAMEWORK.md` und `calibration/` abstimmen
-- Controller und Receiver setzen WiFi-Kanal 1 explizit per esp_wifi_set_channel(); die Bridge bezieht den Kanal vom Router per WiFi.begin()
+- Steuerpfad und Debugpfad bleiben getrennt.
+- `f` bleibt im Protokoll als Greifer-Prozentwert erhalten, auch wenn die Eingabe inzwischen vom Potentiometer stammt.
+- Sicherheits- oder Protokollaenderungen muessen in den Framework-Dokumenten gespiegelt werden.
+- Reale Zugangsdaten, MACs und lokale Secrets gehoeren nur in gitignorierte lokale Dateien.
 
 ## Schnittstellen/Abhaengigkeiten
 
-- bezieht Kommunikationsregeln aus `../COMMUNICATION_FRAMEWORK.md`
-- bezieht Kalibrier- und Grenzwerte aus `../CALIBRATION_FRAMEWORK.md` und `../calibration/`
-- bezieht Sicherheitsanforderungen aus `../SAFETY_FRAMEWORK.md`
+- folgt `../COMMUNICATION_FRAMEWORK.md`
+- folgt `../CALIBRATION_FRAMEWORK.md` und `../calibration/`
+- folgt `../SAFETY_FRAMEWORK.md` und `../security/`

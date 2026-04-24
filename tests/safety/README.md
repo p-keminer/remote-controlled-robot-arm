@@ -2,26 +2,14 @@
 
 ## Zweck
 
-Dieser Ordner ist fuer sicherheitsrelevante Test- und Freigabeszenarien vorgesehen.
+Dieser Ordner sammelt sicherheitsrelevante Bewegungs- und Fehlerfalltests.
 
 ## Aktueller Stand
 
-Die Struktur ist vorbereitet.
-Konkrete Grenz-, Timeout- und Stoppszenarien folgen mit der Inbetriebnahme.
-
-## Inhalt
-
-- Grenzwertpruefungen fuer Servolimits
-- Timeout- und Watchdog-Szenarien
-- Neutralpositions- und Stopverhalten
-- spaetere Freigabe- oder Totmann-Tests
+Der Prototyp bewegt sich und ist gemappt, aber die formale Safety-Freigabe steht weiterhin aus.
+Genau deshalb bleiben Safety-Nachweise ein eigener offener Bereich.
 
 ## Regeln
 
-- sicherheitsrelevante Faelle so dokumentieren, dass Vorbedingung, Ausloeser und erwartete Reaktion klar sind
-- fehlgeschlagene oder riskante Beobachtungen duerfen nicht nur in lockeren Notizen verbleiben
-
-## Schnittstellen/Abhaengigkeiten
-
-- richtet sich nach `SAFETY_FRAMEWORK.md`
-- nutzt Grenzwerte aus `calibration/servo_limits/` und Messdaten aus `docs/measurement_logs/`
+- Grenzfaelle, Timeout und Notaus werden dated und reproduzierbar dokumentiert.
+- Ein sauberer Twin ersetzt keine Safety-Freigabe.

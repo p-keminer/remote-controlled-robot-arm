@@ -1,8 +1,8 @@
 # Dokumentationsindex
 
-Erzeugt am: 2026-04-03 06:47:21 CEST
+Erzeugt am: 2026-04-24 08:21:13 CEST
 
-## Gesammelte Dokumente
+## Markdown-Dokumente
 
 - [.claude/commands/doc-sync.md](snapshot/.claude/commands/doc-sync.md)
 - [.claude/skills/doc-sync/SKILL.md](snapshot/.claude/skills/doc-sync/SKILL.md)
@@ -28,13 +28,17 @@ Erzeugt am: 2026-04-03 06:47:21 CEST
 - [calibration/ROADMAP.md](snapshot/calibration/ROADMAP.md)
 - [calibration/flex_sensor/MESSWERTE.md](snapshot/calibration/flex_sensor/MESSWERTE.md)
 - [calibration/flex_sensor/README.md](snapshot/calibration/flex_sensor/README.md)
+- [calibration/gripper_input/2026-04-23_potentiometer_arbeitsstand.md](snapshot/calibration/gripper_input/2026-04-23_potentiometer_arbeitsstand.md)
+- [calibration/gripper_input/README.md](snapshot/calibration/gripper_input/README.md)
 - [calibration/imu/README.md](snapshot/calibration/imu/README.md)
+- [calibration/reference_poses/2026-04-23_neutralpose_arm_haengend.md](snapshot/calibration/reference_poses/2026-04-23_neutralpose_arm_haengend.md)
 - [calibration/reference_poses/README.md](snapshot/calibration/reference_poses/README.md)
 - [calibration/servo_limits/README.md](snapshot/calibration/servo_limits/README.md)
 - [dashboard/DASHBOARD_CONCEPT.md](snapshot/dashboard/DASHBOARD_CONCEPT.md)
 - [dashboard/README.md](snapshot/dashboard/README.md)
 - [dashboard/ROADMAP.md](snapshot/dashboard/ROADMAP.md)
 - [docs/ASSEMBLY_LOG_2026-03-24.md](snapshot/docs/ASSEMBLY_LOG_2026-03-24.md)
+- [docs/ASSEMBLY_LOG_2026-04-24.md](snapshot/docs/ASSEMBLY_LOG_2026-04-24.md)
 - [docs/BENCH_TEST_I2C_CHAIN_2026-04-02.md](snapshot/docs/BENCH_TEST_I2C_CHAIN_2026-04-02.md)
 - [docs/FIRST_POWER_ON_CHECKLIST.md](snapshot/docs/FIRST_POWER_ON_CHECKLIST.md)
 - [docs/HARDWARE_INVENTORY.md](snapshot/docs/HARDWARE_INVENTORY.md)
@@ -42,8 +46,12 @@ Erzeugt am: 2026-04-03 06:47:21 CEST
 - [docs/ROADMAP.md](snapshot/docs/ROADMAP.md)
 - [docs/SENSOR_MOUNTING_RECORD.md](snapshot/docs/SENSOR_MOUNTING_RECORD.md)
 - [docs/WIRING_LOG_2026-04-02.md](snapshot/docs/WIRING_LOG_2026-04-02.md)
+- [docs/WIRING_LOG_2026-04-24.md](snapshot/docs/WIRING_LOG_2026-04-24.md)
+- [docs/measurement_logs/2026-04-24_debug_bridge_und_twin_mapping.md](snapshot/docs/measurement_logs/2026-04-24_debug_bridge_und_twin_mapping.md)
+- [docs/measurement_logs/2026-04-24_doku_sync_audit_checkliste.md](snapshot/docs/measurement_logs/2026-04-24_doku_sync_audit_checkliste.md)
 - [docs/measurement_logs/README.md](snapshot/docs/measurement_logs/README.md)
 - [docs/photos/README.md](snapshot/docs/photos/README.md)
+- [docs/photos/readme/README.md](snapshot/docs/photos/readme/README.md)
 - [docs/session_notes/README.md](snapshot/docs/session_notes/README.md)
 - [docs/templates/ASSEMBLY_LOG_TEMPLATE.md](snapshot/docs/templates/ASSEMBLY_LOG_TEMPLATE.md)
 - [docs/templates/BENCH_TEST_RECORD_TEMPLATE.md](snapshot/docs/templates/BENCH_TEST_RECORD_TEMPLATE.md)
@@ -113,3 +121,12 @@ Erzeugt am: 2026-04-03 06:47:21 CEST
 - [tests/latency/README.md](snapshot/tests/latency/README.md)
 - [tests/safety/README.md](snapshot/tests/safety/README.md)
 - [tests/security/README.md](snapshot/tests/security/README.md)
+
+## Gespiegelte Medien
+
+- [docs/photos/readme/20260423_213652000-ios.gif](snapshot/docs/photos/readme/20260423_213652000-ios.gif)
+- [docs/photos/readme/ros-2.gif](snapshot/docs/photos/readme/ros-2.gif)
+- [dashboard/web/screenshots/01_live_daten.png](snapshot/dashboard/web/screenshots/01_live_daten.png)
+- [dashboard/web/screenshots/02_statistiken.png](snapshot/dashboard/web/screenshots/02_statistiken.png)
+- [dashboard/web/screenshots/03_3d_modell.png](snapshot/dashboard/web/screenshots/03_3d_modell.png)
+- [dashboard/web/screenshots/04_debug_konsole.png](snapshot/dashboard/web/screenshots/04_debug_konsole.png)

@@ -4,176 +4,52 @@ Dieses Dokument beschreibt den uebergeordneten Ablaufplan fuer das gesamte Robot
 
 ## Phase 1 - Dokumentationsfundament
 
-### Arbeitspaket 1.1 - Projektstruktur
-
-- [x] Root-Dokumente fuer Regeln, Architektur, Frameworks und Sicherheit anlegen
-- [x] relevante Arbeitsordner mit `README.md` strukturieren
-- [x] lokale `ROADMAP.md`-Dateien fuer groessere Teilprojekte anlegen
-- [x] generierten Dokumentationsordner und Snapshot-Logik vorbereiten
-
-### Arbeitspaket 1.2 - Arbeitsablaeufe
-
-- [x] `docs/` als manuelle Projektarbeitsdokumentation festlegen
-- [x] `documentation/` als generierten Verwaltungsordner festlegen
-- [x] WSL-faehiges Skript fuer Dokumentationsupdates anlegen
-- [ ] lokale und globale Roadmaps im Alltag synchron halten
-
-### Arbeitspaket 1.3 - Projektmanagement und Regelpraezisierung
-
-- [x] `PROJEKT_ABLAUFPLAN.md` als roter Faden fuer alle Projektphasen anlegen
-- [x] `PROJEKT_FORTSCHRITT.md` fuer den laufenden Managementstand anlegen
-- [x] Regeln fuer Modularitaet, Abstraktion, Skalierbarkeit und Hardware-Portabilitaet nachschaerfen
-- [x] Pflegepflicht fuer Doku-Updates nach groesseren Schritten explizit festziehen
-- [x] Quellenpflicht fuer Forschungs- und Entscheidungsdokumente projektweit festschreiben
+- [x] Root-Dokumente, Frameworks und Bereichs-READMEs aufgebaut
+- [x] `documentation/` als generierten Snapshot eingefuehrt
+- [ ] Root-, Bereichs- und Nachweisdoku dauerhaft synchron halten
 
 ## Phase 2 - Security-Grundlage
 
-### Arbeitspaket 2.1 - Sicherheitsrahmen
-
-- [x] `SECURITY_FRAMEWORK.md` als Root-Dokument einfuehren
-- [x] `security/` mit Bedrohungsmodell, Kommunikations- und Provisioning-Regeln anlegen
-- [x] `ESP-NOW` als lokalen v1-Funkpfad ohne WLAN dokumentieren
-- [x] lokale Secret- und Geraetedaten per `.gitignore` und `security/local/` absichern
-
-### Arbeitspaket 2.2 - Security-Nachweisbasis
-
-- [x] `tests/security/` als eigenen Nachweisbereich einfuehren
-- [x] advisory-basierte `ESP-NOW`-Schwachstellen, bekannte Grenzen und erste Gegenmassnahmen dokumentieren
-- [ ] Security-Szenarien spaeter in konkrete Testfaelle herunterbrechen
-- [ ] konkrete `ESP-NOW`- bzw. `ESP-IDF`-Stack-Version vor Realbetrieb gegen bekannte Advisories freigeben
+- [x] `security/` als eigenen Bereich eingefuehrt
+- [x] Advisory-Lage fuer `ESP-NOW` und Debug-Pfade dokumentiert
+- [ ] Produktivfreigabe fuer reale Stack-Basis, Session-Bezug und Authentisierungstag nachziehen
 
 ## Phase 3 - Vorbereitung und Toolchain
 
-### Arbeitspaket 3.1 - Entwicklungsbasis
+- [x] Arduino IDE als Hauptumgebung und PlatformIO als Fallback dokumentiert
+- [x] Custom-Board `esp32:esp32:robotic_arm_s3n16r8` als verbindlichen Flash-Pfad festgezogen
+- [ ] lokale Ist-Staende und committed Zielbasis weiter sauber trennen
 
-- [x] `preparation/` als eigenen Bereich fuer Vorbedingungen und Setup anlegen
-- [x] Arduino IDE als Hauptumgebung und PlatformIO als lokalen Fallback dokumentieren
-- [x] ESP32-Umgebung, Bench und Readiness als Checklistenbereiche strukturieren
-- [x] reale Installations- und Verifikationsschritte nachgezogen — Arduino IDE 3.3.7, ESP32 Core 3.3.7, boards.local.txt fuer N16R8 und PlatformIO als Gegencheck dokumentiert und bench-validiert (bestaetigt 2026-03-22)
+## Phase 4 - Hardware und Prototyp
 
-### Arbeitspaket 3.2 - Vorbereitungsfreigabe
+- [x] Adeept-Basis, Elektronik- und Bringup-Doku aufgebaut
+- [x] Controller auf Lochraster/Perfboard ueberfuehrt
+- [x] aktueller Arm-Prototyp mechanisch fertig aufgebaut
+- [ ] Stock-Baseline und Learning-Mode des Originalkits sauber nachweisen
+- [ ] aktuelle Verkabelungs-, Assembly- und BOM-Nachweise weiter nachziehen
 
-- [x] Toolchain-Bereitschaft gegen Dokumentation geprueft — Arduino IDE 3.3.7 als Hauptumgebung und PlatformIO als Fallback einsatzbereit (bestaetigt 2026-03-22)
-- [ ] Bench-Vorbedingungen und Sicherheitsfreigaben konkretisieren
-- [x] Readiness vor erster Hardware- oder Firmwarearbeit dokumentiert und erreicht (bestaetigt 2026-03-22)
+## Phase 5 - Sensorik und Kommunikation
 
-## Phase 4 - Hardware-Readiness und Dokumentationsvorlagen
+- [x] drei BNO055 ueber PCA9548A validiert
+- [x] `ImuPaket v4`, Notaus, Multi-Peer und Bridge-Pfad validiert
+- [x] Receiver → Arduino per I2C validiert
+- [x] Greifer-Eingabe auf Potentiometer aus Robustheitsgruenden umgestellt
+- [ ] Security-Uplift fuer den realen Produktivpfad aufsetzen
 
-### Arbeitspaket 4.1 - Hardwaredokumentation
+## Phase 6 - Kalibrierung und Digital Twin
 
-- [x] `hardware/assembly/` und `hardware/bringup/` als neue Unterbereiche einfuehren
-- [x] Inventar-, Aufbau-, Verkabelungs- und Einschaltvorlagen unter `docs/templates/` anlegen
-- [x] Elektronikbereich fuer ESP-Integration, Breadboardpfad, Lochrasterpfad, Pinmapping und Debugsignale dokumentieren
-- [x] konkrete Produktbasis des vorhandenen Adeept-Arms mit offizieller Package- und Stromversorgungsbasis dokumentieren
-- [x] offiziellen Adeept-V4.0-Download mit Tutorial-PDFs, Originalcode und Schaltplan ins Repo uebernehmen und auswerten
-- [ ] reale Stueckliste, Verkabelung und Aufbauabweichungen spaeter nachziehen
+- [x] Referenzpose fuer den herunterhaengenden Arm dokumentiert
+- [x] Dashboard- und ROS-Twin auf denselben Gelenkstand gemappt
+- [x] ROS-Recorder, Replay, Plot und Live-Monitor aufgebaut
+- [ ] Mapping kontrolliert von der Simulationsfreigabe in die reale Armfreigabe ueberfuehren
 
-### Arbeitspaket 4.2 - Nachweisstruktur
+## Phase 7 - Reale Armfreigabe
 
-- [ ] Hardware-Inventar gegen realen Materialstand dokumentieren
-- [ ] offiziellen Stock-Baseline-Test des originalen Adeept-Arms vor Umbauten dokumentieren
-- [x] Adeept 5-DOF Roboterarm mechanisch im Stock-Zustand aufgebaut — Fotos unter docs/photos/ (bestaetigt 2026-03-24)
-- [ ] Aufbauablauf und Bringup-Reihenfolge mit echten Nachweisen fuellen
-- [ ] Sensormontage und erste Stromtests sauber protokollieren
-- [ ] Arbeitsstand `5 aktive Servos + 1 Reserve/Testservo` am realen Kit bestaetigen und gegen echten Aufbau dokumentieren
-- [x] Akku- und Ladegeraet-Auswahl fuer den ersten Projektstand dokumentieren — `4x Molicel INR-18650-M35A` ohne Loetfahne plus `1x XTAR VC4SL` als Beschaffungsbasis festgelegt
-- [ ] reale Beschaffung, Batteriefach-Passung und Strompfad fuer reale Servo-Bewegung gegen den aufgebauten Arm bestaetigen
-- [x] Boardrevision, Pinmapping und Debugkonzept auf echter Bench-Hardware validiert — v1.0, RGB auf GPIO48, GPIO35/36/37 intern belegt, GPIO8/9 I2C bestaetigt, GPIO1 ADC1 bestaetigt (bestaetigt 2026-03-22)
+- [ ] Safety-Faelle, Timeout, Limits und Notaus fuer reale Bewegungen formal nachweisen
+- [ ] reale Bewegungsfreigabe des Arms auf Basis des bestaetigten Twin-Stands dokumentieren
+- [ ] Dauerlauf-, Latenz- und Integrationsnachweise systematisch sammeln
 
-## Phase 5 - Architektur und Portabilitaetsfundament
+## Phase 8 - Zukunftsausbau
 
-### Arbeitspaket 5.1 - Schnittstellenklarheit
-
-- [ ] Hardware-Abstraktionspunkte fuer Sensorik, Transport und Servoausgabe festziehen
-- [ ] Konfigurations- und Kalibrierdaten sauber von harter Laufzeitlogik trennen
-- [ ] Erweiterbarkeit auf andere Hardwarepfade fachlich vorbereiten
-
-## Phase 6 - Sensorvalidierung
-
-### Arbeitspaket 6.1 - IMU-Basis
-
-- [x] einzelne BNO055 am Controller lesen — I2C-Scan, Adresse 0x29 (ADR=3V3), SDA GPIO8 / SCL GPIO9, Euler-Winkel stabil, Gyro-Kalibrierung 3/3 (bestaetigt 2026-03-22)
-- [x] PCA9548A-Kanalumschaltung fuer mehrere IMUs testen — Mux 0x70, Kanal 0 und 1 einzeln und sequenziell umschalten (bestaetigt 2026-03-22)
-- [x] gleichzeitiges Auslesen aller benoetigten IMUs validieren — zwei BNO055 ueber Kanal 0 und 1, beide stabil, Sys/Gyro/Accel 3/3 (bestaetigt 2026-03-22)
-- [x] dritten BNO055 ueber Mux-Kanal 2 anbinden und als dritte Segmentquelle bench-validieren — alle drei Sensoren liefern live Euler-Daten ueber ESP-NOW, Kalibrierungspersistenz im NVS (bestaetigt 2026-03-26)
-- [ ] Rohdaten fuer definierte Referenzbewegungen systematisch dokumentieren
-
-### Arbeitspaket 6.2 - Flex-Sensor-Basis
-
-- [x] ADC-Pfad fuer den Flex-Sensor auslesen — GPIO1 ADC1, Spannungsteiler 10kOhm Pull-Down (bestaetigt 2026-03-22)
-- [x] Rohwerte fuer gestreckte und gebeugte Fingerhaltung erfassen — gerade=1108, maximal gebogen=940, Bereich 168 Counts (bestaetigt 2026-03-22)
-- [x] Messnotizen und erste Kalibrierfenster dokumentiert — `calibration/flex_sensor/MESSWERTE.md`, Formel biegung_prozent hinterlegt (bestaetigt 2026-03-22)
-
-## Phase 7 - Kalibrierung und Mapping
-
-### Arbeitspaket 7.1 - Referenzsystem
-
-- [ ] Nullpunkt-Prozedur fuer IMUs festlegen
-- [ ] Referenzpose fuer den Start sauber dokumentieren
-- [ ] Achsinvertierungen und Segmentzuordnung pro Sensor pruefen
-- [x] Persistenzstrategie fuer Kalibrierdaten festlegen — BNO055-Offsets werden im ESP32-NVS gespeichert und beim Boot geladen, Einzelkalibrierung per CAL0/CAL1/CAL2 (bestaetigt 2026-03-26)
-
-### Arbeitspaket 7.2 - Gelenkwinkel
-
-- [ ] relative Winkel zwischen den Segmenten berechnen
-- [ ] Mapping auf Servo-Zielwinkel mit Grenzen dokumentieren
-- [ ] Flex-Sensor-Mapping fuer den Greifer definieren
-- [ ] Kalibrierergebnisse in den dafuer vorgesehenen Ordnern ablegen
-
-## Phase 8 - Kommunikation, Servoausfuehrung und Safety
-
-### Arbeitspaket 8.1 - Kommunikationskette
-
-- [x] Peer-Setup und Adressverwaltung definiert — Unicast ESP-NOW, MAC in gitignorierter `peer_config.local.h`, Template committed (bestaetigt 2026-03-22)
-- [x] Bench-Paketlayout v1 mit zwei IMUs abgeschlossen — historisch, abgeloest durch ImuPaket v3 (2026-03-26)
-- [x] minimalen UART-Frame v1 zwischen Receiver und Arduino dokumentieren — festes Binaerformat mit Startbytes, Version, Sequenz, Flags, 5 Achs-Sollwerten und CRC8
-- [x] Bench-Variante auf dritten IMU erweitert — ImuPaket v3 mit drei Sensoren und KalibStatus, Protokollversion 3 (bestaetigt 2026-03-26)
-- [x] ImuPaket v4 mit Notaus-Flag (Bit 0 im `flags`-Feld), Toggle-Button an GPIO21, alle drei Firmwares aktualisiert (bestaetigt 2026-03-28)
-- [x] Controller SENDE_INTERVALL von 50ms auf 5ms optimiert, Status/Kalib-Polling alle 20 Zyklen (bestaetigt 2026-04-02)
-- [x] Receiver Zaehler-Reset bei ESP-NOW Timeout eingebaut (bestaetigt 2026-04-02)
-- [x] I2C-Grundkette Receiver → Arduino aufgebaut und validiert — Frame V1 ueber I2C (GPIO13/14 → A4/A5), alle 5 Servos bei 50Hz (bestaetigt 2026-04-02)
-- [ ] Kommunikationsrahmen danach von der Bench-Variante auf die dokumentierte Security-Baseline mit `session_id`, applikationsseitigem Authentisierungstag und Advisory-gepruefter Stack-Basis anheben
-
-### Arbeitspaket 8.2 - Servoebene
-
-- [x] Servoinitialisierung fuer alle 5 Achsen umgesetzt — Base D9, Gripper D6, Wrist D5, Elbow D3, Shoulder D11 (bestaetigt 2026-04-02)
-- [x] Gelenklimits pro Servo ausgemessen und dokumentiert — Base 12-139, Shoulder 35-142, Elbow 80-175, Wrist 5-177, Gripper 32-126 (bestaetigt 2026-04-02)
-- [x] Slew-Rate-Limiter eingebaut — MAX_SCHRITT=1 bei 50Hz = 50 Grad/s (bestaetigt 2026-04-02)
-- [x] Neutralposition fuer Fehlerfaelle festgelegt — Mittelwert (MIN+MAX)/2, Timeout 1s (bestaetigt 2026-04-02)
-
-## Phase 9 - Integration, Latenz und Hardware-Verstetigung
-
-### Arbeitspaket 9.1 - Gesamtsystem
-
-- [ ] Ende-zu-Ende-Datenpfad mit allen Komponenten pruefen
-- [ ] Mappingfehler, Achsendreher und Totzonen abstimmen
-- [ ] Dauerlauftests mit Messnotizen dokumentieren
-
-### Arbeitspaket 9.2 - Hardware-Verstetigung
-
-- [ ] Sensorbefestigung und Kabelfuehrung fuer den Arm dokumentieren
-- [ ] Receiver und Arduino am Arm ordentlich integrieren
-- [ ] Stromversorgung, Befestigung und Entlastung finalisieren
-
-## Phase 10 - Zukunftsausbau nach dem Grundsystem
-
-### Arbeitspaket 10.0 - ROS2-Visualisierung und Bridge
-
-- [x] ROS 2 Jazzy Package (robotarm_description) mit URDF-Visualisierung aufgesetzt (bestaetigt 2026-04-02)
-- [x] Dual-Arm Wandmontage-URDF (robotarm_wall.urdf) mit L/R Armen erstellt (bestaetigt 2026-04-02)
-- [x] MQTT-zu-ROS2 Bridge mit Toggle-Service (/toggle_arm) implementiert (bestaetigt 2026-04-02)
-- [x] Fast-DDS Shared Memory Transport fuer WSL2-Kompatibilitaet konfiguriert (bestaetigt 2026-04-02)
-- [ ] Live-MQTT-Sensordaten an ROS2-Visualisierung anbinden und validieren
-- [ ] Dual-Arm URDF gegen reale IMU-Daten testen
-
-### Arbeitspaket 10.1 - Mobile Plattform und Teleoperation
-
-- [ ] fahrbaren oder bewegbaren Untergrund fuer das Gesamtsystem planen
-- [ ] Dashboard-, Handy-App- und Controller-Steuerung fuer Fahrzeug und Roboterarm konzipieren
-- [ ] Kamerasicht fuer das Gesamtsystem integrierbar vorbereiten
-
-### Arbeitspaket 10.2 - Uebertragbare Aktuatorabstraktion
-
-- [ ] Zwischenschicht zwischen Bewegungsinterpretation und direkter Servoausgabe definieren
-- [ ] Aktuatoradapter fuer andere Servo- oder Robotiksysteme vorbereiten
-- [ ] Zukunftsausbau unter `future/` dokumentieren und spaeter in aktive Bereiche ueberfuehren
+- [ ] mobile Plattform, Controller-/Dashboard-Ausbau und Kamerasicht nur als echte Zukunftsthemen weiterfuehren
+- [ ] Aktuatorabstraktion spaeter als eigenen Architekturpfad ausarbeiten

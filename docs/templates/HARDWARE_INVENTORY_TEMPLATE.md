@@ -21,7 +21,8 @@
 | AD002 Servo (Reserve erwartet) | 1 laut Produktseite und Stock-Testbasis |  |  |  |
 | BNO055 IMUs |  |  |  |  |
 | PCA9548A |  |  |  |  |
-| Flex-Sensor |  |  |  |  |
+| Greifer-Eingabe (aktiv) |  |  |  |  |
+| Perfboard / Lochraster |  |  |  |  |
 | Battery Holder |  |  |  |  |
 | Micro USB Cable |  |  |  |  |
 | Square Bearing Turntable |  |  |  |  |
@@ -33,6 +34,7 @@
 - Stromversorgung:
 - 18650 Zellen / Akku-Status:
 - Montage- und Befestigungsmaterial:
+- Bauteiltausch / Ersatzteile:
 
 ## Offene Punkte
 

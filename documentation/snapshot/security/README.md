@@ -2,32 +2,34 @@
 
 ## Zweck
 
-Dieser Ordner enthaelt die Security-Dokumentation des Projekts.
-Hier werden Angriffsmodell, Kommunikationshaertung, Schnittstellenregeln und Provisioning-Grundsaetze dokumentiert.
+Dieser Ordner beschreibt die Sicherheits- und Debugabgrenzung des Projekts.
 
 ## Aktueller Stand
 
-Die Security-Basis wird in dieser Ausbaustufe erstmals als eigener Projektbereich aufgebaut.
-Der Schwerpunkt liegt auf lokaler ESP-NOW- und I2C-Sicherheit, nicht auf WLAN- oder Cloud-Infrastruktur.
-Bekannte ESP-NOW-Schwachstellen, Advisory-Lage und frueh mitzudenkende Haertungsmassnahmen werden jetzt als eigener Dokumentationsstrang nachgezogen.
+Die wichtigste aktuelle Sicherheitsgrenze lautet:
+
+- Steuerpfad: `Controller -> Receiver -> Arduino -> Servos`
+- Debugpfad: `Controller -> Bridge -> MQTT -> Pi -> Dashboard/ROS`
+
+Der Debugpfad ist aktiv und verifiziert, bleibt aber ausdruecklich ausserhalb jeder Produktivfreigabe.
+Der eigentliche Security-Uplift fuer den Produktivpfad ist noch offen.
 
 ## Inhalt
 
-- `THREAT_MODEL.md` fuer Assets, Angreifer und Missbrauchspfade
-- `COMMUNICATION_SECURITY.md` fuer ESP-NOW- und I2C-Sicherheitsregeln
-- `INTERFACE_SECURITY_PLAN.md` fuer Debug-, Service- und serielle Schnittstellen
-- `PROVISIONING_AND_DEBUG_RULES.md` fuer Secret-Umgang, Pairing und Servicepraxis
-- `local/` fuer nicht-repotaugliche lokale Secret-, Peer- und Geraetedaten
+- `COMMUNICATION_SECURITY.md` fuer Funk-, I2C- und Pfadgrenzen
+- `INTERFACE_SECURITY_PLAN.md` fuer Service- und Debugschnittstellen
+- `PROVISIONING_AND_DEBUG_RULES.md` fuer Secrets und lokale Konfiguration
+- `THREAT_MODEL.md` fuer Angreifer und Missbrauchspfade
+- `local/` fuer gitignorierte Echtwerte
 
 ## Regeln
 
-- `Security` ist von `Safety` getrennt zu behandeln
-- v1 wird auf `ESP-NOW` ohne WLAN ausgelegt
-- echte Secrets, produktive IDs oder sicherheitskritische Echtwerte gehoeren nicht ins Repository
-- lokale Sensitivdaten gehoeren nur in `security/local/` und muessen durch `.gitignore` blockiert sein
-- sicherheitsrelevante Entscheidungen muessen in Root-Dokumente und betroffene Teilbereiche gespiegelt werden
+- WiFi/MQTT wird als Debugpfad behandelt, nicht als Bewegungsfreigabe.
+- lokale Echtwerte gehoeren nur in `security/local/`
+- Security und Safety bleiben getrennt
 
 ## Schnittstellen/Abhaengigkeiten
 
-- richtet sich nach `../SECURITY_FRAMEWORK.md`
-- arbeitet eng mit `../COMMUNICATION_FRAMEWORK.md`, `../SAFETY_FRAMEWORK.md` und `../tests/` zusammen
+- `../COMMUNICATION_FRAMEWORK.md`
+- `../tests/security/`
+- `../tests/safety/`

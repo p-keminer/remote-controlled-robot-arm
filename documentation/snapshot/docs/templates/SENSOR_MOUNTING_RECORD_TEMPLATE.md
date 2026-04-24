@@ -5,8 +5,9 @@
 - Datum:
 - Bearbeiter:
 - Aufbauzustand:
+- Referenzpose:
 
-| Sensor | Koerper- oder Aufbauposition | Orientierung | Befestigung | Besonderheiten |
+| Sensor / Eingabe | Koerper- oder Aufbauposition | Orientierung / Kanal | Befestigung | Besonderheiten |
 | --- | --- | --- | --- | --- |
 |  |  |  |  |  |
 
@@ -17,6 +18,7 @@
 ## Relevanz fuer Kalibrierung
 
 - 
+- Historischer oder aktiver Pfad:
 
 ## Verweis auf Fotos
 

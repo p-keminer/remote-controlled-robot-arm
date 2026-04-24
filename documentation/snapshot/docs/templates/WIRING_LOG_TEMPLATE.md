@@ -5,6 +5,7 @@
 - Datum:
 - Bearbeiter:
 - Aufbauzustand:
+- Schaltplanversion:
 
 ## Verbindung
 
@@ -21,6 +22,7 @@
 ## Risiko- oder Fehlerhinweise
 
 - 
+- Historischer oder aktiver Stand:
 
 ## Nachweise
 

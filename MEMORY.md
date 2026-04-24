@@ -6,20 +6,23 @@ Beim Sitzungsstart oder nach Kontextkomprimierung ist dieses Dokument zu lesen.
 
 ---
 
-## Projektstand (Stand 2026-04-02)
+## Projektstand (Stand 2026-04-24)
 
 - Toolchain vollstaendig eingerichtet: Arduino IDE 3.3.7 + boards.local.txt als Hauptumgebung, PlatformIO als lokaler Fallback und Gegencheck
-- ESP-NOW Unicast laeuft: Controller → Receiver per MAC, ImuPaket v4 mit drei IMUs, Kalibrierungsstatus und NVS-Persistenz (bestaetigt 2026-03-26)
-- BNO055 validiert: drei Sensoren (Oberarm/Unterarm/Hand) ueber PCA9548A-Mux Kanaele 0/1/2, Kalibrierungsoffsets persistent im NVS
+- ESP-NOW Unicast laeuft: Controller → Receiver per MAC, ImuPaket v4 mit drei IMUs, Kalibrierungsstatus und NVS-Persistenz
+- BNO055 validiert: drei Sensoren ueber PCA9548A-Mux Kanaele 0/1/2, aktuelle Segmentzuordnung S0=Hand/Wrist, S1=Unterarm, S2=Oberarm
 - Einzelkalibrierungsmodus per Serial: CAL0/CAL1/CAL2, RECAL, STOP
-- Flex-Sensor validiert: GPIO1 ADC1, Spannungsteiler 10kOhm Pull-Down, gerade=1108, maximal gebogen=940, Live-Plausibilitaetspruefung (200-3800)
-- LED-Debugging bench-validiert: Controller Ampelsystem (Gruen Hand, Gelb Unterarm, Rot Oberarm, Blau COMMS, Weiss FAULT), Receiver (Gruen LINK, Blau I2C, Gelb FAULT), alle 100 Ohm
-- Live-Sensorausfallerkennung fuer IMUs und Flex-Sensor mit automatischer Wiederherstellung
-- Adeept 5-DOF Roboterarm mechanisch im Stock-Zustand aufgebaut (bestaetigt 2026-03-24, Fotos unter docs/photos/)
+- Greifer-Eingabe aktuell ueber Potentiometer auf `GPIO1` im 2-Draht-Aufbau mit bestehendem 10k-Pull-Down; Arbeitsanker offen `1935`, geschlossen `3020`
+- Live-Sensorausfallerkennung fuer IMUs und Greifer-Eingabe mit automatischer Wiederherstellung
+- LED-Debugging im realen Aufbau bestaetigt: Controller GPIO4=Blau (S2/Oberarm), GPIO5=Rot (S1/Unterarm), GPIO6=Weiss (S0/Hand/Wrist), GPIO7=Gruen (COMMS), GPIO10=separate FAULT-LED; Receiver GPIO4=Gruen (I2C), GPIO5=Blau (ESP-NOW/LINK), GPIO48=RGB (FAULT/Notaus)
+- Debug-Bridge end-to-end verifiziert: Controller → ESP-NOW → Bridge → MQTT → Pi → Dashboard / MCP / ROS
+- Dashboard- und ROS-Digital-Twin laufen auf demselben Mapping-Stand; ROS unterstuetzt Wandmontage, Recorder, Replay, Plot, Live-Monitor und `target_arm`
+- Controller auf Lochraster/Perfboard ueberfuehrt; aktueller Arm-Prototyp mechanisch fertig aufgebaut
+- I2C-Kette Receiver → Arduino bleibt der reale Steuerpfad; Security-Uplift und reale Safety-Freigabe sind noch offen
 - MACs dokumentiert in `security/local/device_identities.local.txt` (gitignoriert)
 - Akku-/Lade-Arbeitsstand festgelegt: `4x Molicel INR-18650-M35A` ohne Loetfahne + `1x XTAR VC4SL`
-- Stock-Funktionsentscheidung: OLED uebernehmen, Potentiometer als Fallback, Learning/Action Memory uebernehmen, Processing vorerst als Referenz-/Fallbackpfad behalten
-- Naechste Schritte: LED-Pfade validieren (Buzzer gestrichen), Security-Uplift, IMU-zu-Servo-Mapping, Wearable-Montage
+- Stock-Funktionsentscheidung: OLED uebernehmen, Potentiometer als Fallback behalten, Learning/Action Memory uebernehmen, Processing vorerst als Referenz-/Fallbackpfad behalten
+- Naechste Schritte: reale Safety-/Security-Freigabe, Stock-/Learning-Mode sauber dokumentieren, Mapping vom bestaetigten Digital Twin kontrolliert in die reale Armfreigabe ueberfuehren
 
 ---
 
@@ -31,7 +34,7 @@ Beim Sitzungsstart oder nach Kontextkomprimierung ist dieses Dokument zu lesen.
 - Anzahl: 4 Boards (2 aktiv, 2 Reserve)
 - BNO055: GY-BNO055 Clone (Senzooe, Amazon B0D2J5PY29) — kein Adafruit-Breakout
 - I2C-Mux: PCA9548A (ca. 3–4 Module)
-- Flex-Sensor: vorhanden, auf GPIO1 getestet
+- Aktuelle Greifer-Eingabe: 10k-Potentiometer auf GPIO1, 2-Draht-Aufbau mit bestehendem 10k-Pull-Down
 
 ---
 

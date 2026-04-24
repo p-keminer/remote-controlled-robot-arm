@@ -1,194 +1,76 @@
 # Schematic Current
 
-Aktueller Bench-Aufbau — Stand 2026-04-02.
-Nur bestaetigte und getestete Verbindungen. Geplante aber noch nicht getestete Pfade sind als `(geplant)` markiert.
+Aktueller Elektronikstand des Prototyps, Stand 2026-04-24.
 
-**LED-Schema:** Invertiert — aus = OK, an = Problem. RGB auf GPIO48 als FAULT auf allen ESPs.
+## Einordnung
 
-## Controller-Seite
+Dieses Dokument beschreibt den aktuellen Arbeitsstand des Projekts.
+Historische Breadboard-Varianten bleiben unter `PROTO_BREADBOARD_PLAN.md` dokumentiert, sind aber nicht mehr die aktive Zielbeschreibung.
 
-```
-3.3V ──────────────────────────────────────┐
-                                           │
-GND ────────────────────────────────────┐  │
-                                        │  │
-ESP32-S3-WROOM-1-N16R8                  │  │
-┌─────────────────────┐                 │  │
-│                     │                 │  │
-│  GPIO8  (SDA) ──────┼─────────── SDA ─┤  │
-│  GPIO9  (SCL) ──────┼─────────── SCL ─┤  ├── PCA9548A (0x70)
-│                     │            RST ─┼──┘  │
-│                     │     A0/A1/A2 ───┼─────┘(alle GND)
-│                     │                 │
-│                     │           SD0 ──┼──── SDA ─┐
-│                     │           SC0 ──┼──── SCL ─┤── BNO055 #0 (0x29, Kanal 0) — Oberarm
-│                     │                 │     VIN ──┤── 3.3V
-│                     │                 │     GND ──┘
-│                     │                 │
-│                     │           SD1 ──┼──── SDA ─┐
-│                     │           SC1 ──┼──── SCL ─┤── BNO055 #1 (0x29, Kanal 1) — Unterarm
-│                     │                 │     VIN ──┤── 3.3V
-│                     │                 │     GND ──┘
-│                     │                 │
-│                     │           SD2 ──┼──── SDA ─┐
-│                     │           SC2 ──┼──── SCL ─┤── BNO055 #2 (0x29, Kanal 2) — Hand/Wrist
-│                     │                 │     VIN ──┤── 3.3V
-│                     │                 │     GND ──┘
-│                     │
-│  GPIO1  (ADC1) ─────┼──┬── Flex-Sensor-Ende ── 3.3V
-│                     │  │
-│                     │  └── 10kOhm ── GND
-│                     │
-│  GPIO4  ────────────┼── LED Gruen (Hand S2)    + 100 Ohm ── GND  [leuchtet bei Problem]
-│  GPIO5  ────────────┼── LED Gelb (Unterarm S1) + 100 Ohm ── GND  [leuchtet bei Problem]
-│  GPIO6  ────────────┼── LED Rot  (Oberarm S0)  + 100 Ohm ── GND  [leuchtet bei Problem]
-│  GPIO7  ────────────┼── LED Blau (COMMS)       + 100 Ohm ── GND  [leuchtet bei Problem]
-│  GPIO10 ────────────┼── LED Weiss (FAULT)      + 100 Ohm ── GND  [leuchtet bei Fehler]
-│  GPIO21 ────────────┼── Toggle-Button ── GND  (Notaus, INPUT_PULLUP, Toggle-Notaus)
-│  GPIO48 ────────────┼── LED RGB onboard (FAULT/NOTAUS)             [rot/orange blinkt]
-│                     │
-│  WiFi (intern) ─────┼──)) ESP-NOW Kanal 1 → Receiver + Bridge
-│                     │
-│  USB-C ─────────────┼── PC (Flash / Serial Monitor)
-└─────────────────────┘
-```
+## Controller
 
-## Receiver-Seite
+| Signal | Pin | Aktuelle Funktion |
+| --- | --- | --- |
+| I2C SDA | GPIO8 | PCA9548A und BNO055 |
+| I2C SCL | GPIO9 | PCA9548A und BNO055 |
+| ADC / Greifer | GPIO1 | Potentiometer als Greifer-Eingabe |
+| LED S2 | GPIO4 | Oberarm-Status |
+| LED S1 | GPIO5 | Unterarm-Status |
+| LED S0 | GPIO6 | Hand-/Wrist-Status |
+| COMMS LED | GPIO7 | ESP-NOW-/Kommunikationsstatus |
+| FAULT LED | GPIO10 | Fehleranzeige |
+| Notaus-Button | GPIO21 | Toggle-Notaus |
+| RGB | GPIO48 | Fehler-/Notausanzeige |
 
-```
-ESP32-S3-WROOM-1-N16R8
-┌─────────────────────┐
-│                     │
-│  WiFi (intern) ─────┼──)) ESP-NOW Kanal 1 ← Controller
-│                     │
-│  GPIO4  ────────────┼── LED Gruen (I2C)        + 100 Ohm ── GND  [leuchtet bei I2C-Aktivitaet]
-│  GPIO5  ────────────┼── LED Blau (ESP-NOW)     + 100 Ohm ── GND  [blinkt bei Timeout]
-│  GPIO48 ────────────┼── LED RGB onboard (FAULT)                   [rot blinkt bei Fehler]
-│  GPIO13 (SDA) ──────┼── I2C SDA ── Arduino A4 (SDA)  [Wire Master, 100kHz]
-│  GPIO14 (SCL) ──────┼── I2C SCL ── Arduino A5 (SCL)  [Slave 0x42]
-│                     │
-│         Arduino ATmega328P (Adeept Board)
-│         ├── D9  ── Servo Base     (12°-139°)
-│         ├── D6  ── Servo Gripper  (32°-126°)
-│         ├── D5  ── Servo Wrist    (5°-177°)
-│         ├── D3  ── Servo Elbow    (80°-175°)
-│         └── D11 ── Servo Shoulder (35°-142°)
-│                     │
-│  USB-C ─────────────┼── PC (Flash / Serial Monitor)
-└─────────────────────┘
-```
+Sensorzuordnung:
 
-## Bridge-Seite (Entwicklungswerkzeug)
+- Kanal 0 = Hand/Wrist
+- Kanal 1 = Unterarm
+- Kanal 2 = Oberarm
 
-```
-ESP32-S3-WROOM-1-N16R8
-┌─────────────────────┐
-│                     │
-│  WiFi (intern, STA) ┼──)) WiFi zu Router auf Kanal 1
-│  ESP-NOW (intern) ──┼──)) ESP-NOW Kanal 1 ← Controller
-│                     │
-│  GPIO4  ────────────┼── LED Gruen (WiFi)       + 100 Ohm ── GND  [blinkt wenn getrennt]
-│  GPIO5  ────────────┼── LED Blau (ESP-NOW)     + 100 Ohm ── GND  [blinkt bei Timeout]
-│  GPIO7  ────────────┼── LED Weiss (MQTT)       + 100 Ohm ── GND  [blinkt wenn getrennt]
-│  GPIO48 ────────────┼── LED RGB onboard (FAULT)                   [rot blinkt bei Fehler]
-│                     │
-│  USB-C ─────────────┼── PC (Flash / ArduinoOTA)
-└─────────────────────┘
+## Greifer-Eingabe
 
-         │ MQTT (WiFi)
-         ▼
-    Mosquitto (Pi Zero 2W, Port 1883)
-         │
-    ┌────┼────┐
-    │    │    │
- Dashboard  MCP   api.php
- (Browser)  (Claude)
-```
+Der aktuelle Prototyp nutzt ein 10k-Potentiometer aus Robustheitsgruenden.
+Die Greifer-Eingabe liegt auf GPIO1.
+Im Protokoll bleibt das Feld `f` als Greifer-Prozentwert erhalten.
 
-## Datenfluss
+## Receiver
 
-```
-BNO055 #0 (Oberarm) ──┐
-                       │
-BNO055 #1 (Unterarm) ─┼── I2C ── PCA9548A ── I2C ── ESP32-S3 (Controller)
-                       │                                    │
-BNO055 #2 (Hand) ─────┘                                    │ ADC
-                                                    Flex-Sensor
-                                                            │
-                                             ┌── GPIO4  Gruen  (S2 Problem)
-                                             ├── GPIO5  Gelb   (S1 Problem)
-                                             ├── GPIO6  Rot    (S0 Problem)
-                                             ├── GPIO7  Blau   (COMMS Problem)
-                                             ├── GPIO10 Weiss  (FAULT LED)
-                                             ├── GPIO48 RGB    (FAULT)
-                                             │
-                                       ESP-NOW (Kanal 1, Unicast, ImuPaket v4)
-                                             │
-                                    ┌────────┴────────┐
-                                    │                 │
-                           ESP32-S3 (Receiver)   ESP32-S3 (Bridge)
-                                    │                 │
-                     ┌── GPIO4  Gruen  (I2C)     ┌── GPIO4  Gruen  (WiFi)
-                     ├── GPIO5  Blau   (ESP-NOW) ├── GPIO5  Blau   (ESP-NOW)
-                     ├── GPIO48 RGB    (FAULT)   ├── GPIO7  Weiss  (MQTT)
-                     │                           ├── GPIO48 RGB    (FAULT)
-               I2C (GPIO13/14, 50Hz)             │
-                     │                      MQTT (WiFi)
-              Arduino ATmega328P                 │
-               (5 Servos PWM)            Mosquitto (Pi)
-```
+| Signal | Pin | Aktuelle Funktion |
+| --- | --- | --- |
+| I2C SDA | GPIO13 | zum Arduino A4 |
+| I2C SCL | GPIO14 | zum Arduino A5 |
+| LED I2C | GPIO4 | I2C-/Statusanzeige |
+| LED LINK | GPIO5 | ESP-NOW-/Linkanzeige |
+| RGB | GPIO48 | Fehler-/Notausanzeige |
 
-## WiFi-Kanal-Alignment
+## Arduino-Armboard
 
-Alle drei ESPs muessen auf dem gleichen WiFi-Kanal laufen fuer ESP-NOW/WiFi-Koexistenz:
+Der Arduino bleibt fuer die Servoausfuehrung zustaendig.
+Der Receiver uebergibt `Frame V1` per I2C an den Arduino-Slave `0x42`.
 
-- **Router:** Kanal 1
-- **Controller:** ESP-NOW auf Kanal 1 (per `esp_wifi_set_channel(1)`)
-- **Receiver:** ESP-NOW auf Kanal 1 (per `esp_wifi_set_channel(1)`)
-- **Bridge:** WiFi STA + ESP-NOW Empfang auf Kanal 1 (automatisch durch WiFi-Verbindung zum Router)
+Servozuordnung:
 
-## Paketstatus
+- D9 = Base
+- D11 = Shoulder
+- D3 = Elbow
+- D5 = Wrist
+- D6 = Gripper
 
-- ESP-NOW Paketformat: `ImuPaket v4` (siehe `COMMUNICATION_FRAMEWORK.md`)
-- Inhalt: 3x Euler-Daten (H/R/P), 3x Kalibrierungsstatus (S/G/A/M), Flex-Prozent, Flags (Bit 0 = Notaus)
-- Pruefsumme: XOR, `__attribute__((packed))`
-- Frische-Check: Frame-Zaehler
-- Sendeintervall: 5ms (200Hz), I2C-Frame an Arduino: 50Hz (20ms Loop)
-- Kalibrierungsoffsets: persistent im ESP32-NVS, automatisches Laden beim Boot
+## Bridge
 
-## LED-Verhalten (invertiert: aus = OK, an = Problem)
+| Signal | Pin | Aktuelle Funktion |
+| --- | --- | --- |
+| LED WiFi | GPIO4 | WiFi-Status |
+| LED LINK | GPIO5 | ESP-NOW-Status |
+| LED MQTT | GPIO7 | MQTT-Status |
+| RGB | GPIO48 | Fehler-/Notausanzeige |
 
-### Controller
-- IMU-LEDs (Gruen/Gelb/Rot): blinken wenn Sensor NICHT bereit oder NICHT kalibriert
-- COMMS (Blau): blinkt wenn ESP-NOW Send fehlschlaegt
-- FAULT (RGB orange): blinkt bei Notaus (hoechste Prioritaet)
-- FAULT (RGB rot): blinkt bei IMU-Ausfall oder Flex-Sensor-Ausfall (Live-Erkennung im Betrieb)
-- Beim Boot: alle LEDs blitzen kurz auf (Starttest)
-- Im Kalibrierungsmodus (CAL0/1/2): jeweilige Sensor-LED blinkt
+Die Bridge bleibt rein lesend und speist den verifizierten Debugpfad zu Pi, Dashboard und ROS.
 
-### Receiver
-- I2C (Gruen): leuchtet bei I2C-Frame-Aktivitaet zum Arduino
-- ESP-NOW (Blau): blinkt bei Empfangs-Timeout (>2s)
-- NOTAUS (RGB orange): blinkt bei empfangenem Notaus-Flag (hoechste Prioritaet)
-- FAULT (RGB rot): blinkt bei Validierungsfehler oder Timeout
-- Beim Boot: alle LEDs blitzen kurz auf (Starttest)
+## Aktive Hardwareform
 
-### Bridge
-- WiFi (Gruen): blinkt wenn WiFi getrennt
-- ESP-NOW (Blau): blinkt wenn kein Paket seit 2s
-- MQTT (Weiss): blinkt wenn MQTT getrennt
-- NOTAUS (RGB orange): blinkt bei empfangenem Notaus-Flag (hoechste Prioritaet)
-- FAULT (RGB): orange blinkend bei Notaus (hoechste Prio), rot blinkend bei Fehler, aus wenn OK
-- Beim Boot: alle LEDs blitzen kurz auf (Starttest)
-
-## Kabelfuehrung bei Wearable-Montage
-
-- **I2C (Controller → Mux → IMUs):** bis 1m bei 100kHz unkritisch (~75pF Bus-Kapazitaet, Limit 400pF). Verdrillte Paare (SDA+GND, SCL+GND) empfohlen. Nicht neben Servokabeln verlegen.
-- **Flex-Sensor (analog, GPIO1):** empfindlicher als I2C wegen kleinem Messfenster (168 Counts). Abgeschirmtes Kabel oder Signal+GND eng zusammen fuehren. Bei Rauschen >20 Counts: Softwarefilter oder 100nF am ADC-Pin.
-- **25 cm Kabellaenge** (Controller am Koerper → Oberarm-IMU) ist fuer beide Signaltypen unkritisch.
-
-## Sensorausfallerkennung (Live)
-
-- IMU: `getSystemStatus()` wird jeden Loop-Durchgang geprueft; Ausfall wird sofort erkannt und gemeldet
-- Flex-Sensor: ADC-Wert wird auf plausiblen Bereich (200-3800) geprueft
-- Wiederherstellung: Sensoren werden automatisch re-initialisiert wenn sie wieder erreichbar sind
+- Controller: Lochraster-/Perfboard-Prototyp
+- Receiver: projektiver Steuerknoten am Arm
+- Bridge: separater Debugknoten
+- Arm: aufgebauter Prototyp mit gemapptem Twin

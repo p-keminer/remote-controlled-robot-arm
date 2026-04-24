@@ -5,6 +5,7 @@
 - Datum:
 - Bearbeiter:
 - Teilabschnitt:
+- Buildzustand:
 
 ## Ausgangslage
 
@@ -24,6 +25,7 @@
 ## Abweichungen vom geplanten Ablauf
 
 - 
+- Bauteiltausch oder Rework:
 
 ## Naechste Schritte
 
