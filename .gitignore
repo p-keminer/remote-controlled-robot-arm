@@ -40,6 +40,7 @@ __pycache__/
 /firmware/**/peer_config.local.*
 /firmware/**/packet_auth.local.*
 /firmware/**/wifi_config.local.*
+/firmware/test_gpio15/
 
 # Lokale Dashboard- und MCP-Konfigurationen
 /dashboard/mcp/*.local.*
@@ -56,3 +57,9 @@ scripts/*.local.sh
 /official_downloads/raw/*.tar
 /official_downloads/raw/*.tar.gz
 /official_downloads/raw/*.tgz
+
+# Lokale Experimente im entpackten Herstellerpaket
+/official_downloads/extracted/**/Code/partial_90/
+/official_downloads/extracted/**/Code/potentio_debug/
+/official_downloads/extracted/**/Code/rx_test/
+/official_downloads/extracted/**/Code/shoulder_*/
