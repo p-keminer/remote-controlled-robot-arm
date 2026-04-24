@@ -960,10 +960,62 @@
 
     function deg2rad(d) { return d * Math.PI / 180; }
 
+    // Wearable-Referenzpose vom 2026-04-23: Arm entspannt herunterhaengend.
+    // Diese Pose dient als Nullpunkt fuer die 3D-Abbildung im Dashboard.
+    var REFERENCE_POSE = {
+        s0: { h: 255.0, r: -5.5, p: 65.8 },  // Hand/Wrist
+        s1: { h: 260.3, r: -10.7, p: 86.0 }, // Unterarm
+        s2: { h: 280.8, r: 13.2, p: 88.9 }   // Oberarm
+    };
+
+    var REFERENCE_REL = {
+        elbowHeading: ((REFERENCE_POSE.s1.h - REFERENCE_POSE.s2.h + 540) % 360) - 180,
+        wristTwist: relativeWristTwistDeg(REFERENCE_POSE.s0, REFERENCE_POSE.s1)
+    };
+
+    // Im 3D-Modell bedeutet Schulter = 0 rad "Arm aufrecht".
+    // Die menschliche Referenzpose ist aber "Arm haengt herunter".
+    // Deshalb behandeln wir die Referenzpose als fast voll abgesenkte Schulter.
+    var HUMAN_ARM_DOWN_SHOULDER_DEG = 78.0;
+    var BASE_LIFT_ROLL_COEFF = 1.0;
+    var BASE_LIFT_HEADING_COEFF = 0.0;
+    var BASE_LIFT_MIN = 0.0;
+    var BASE_LIFT_MAX = 100.0;
+    var SHOULDER_HEADING_COEFF = 1.0;
+    var SHOULDER_PITCH_COEFF = 0.0;
+    var SHOULDER_INPUT_MIN = 0.0;
+    var SHOULDER_INPUT_MAX = 60.0;
+    var ELBOW_INPUT_MIN = 0.0;
+    var ELBOW_INPUT_MAX = 45.0;
+    var WRIST_RESPONSE_GAIN = 1.0;
+
+    // Stufenweises Freischalten fuer das Mapping:
+    // Aktueller Schritt: Greifer, Ellbogen und Handgelenk aktiv.
+    // Ellbogen wieder ueber relative Heading-Differenz, damit die Beugung
+    // auf die Links-/Rechtsbewegung des Unterarms reagiert.
+    // Handgelenk bleibt auf der relativen Heading-Differenz von S0 zu S1.
+    var ENABLE_BASE = true;
+    var ENABLE_SHOULDER = true;
+    var ENABLE_ELBOW = true;
+    var ENABLE_WRIST = true;
+    var ENABLE_GRIPPER = true;
+    var ENABLE_COLLISION_SOLVER = false; // Dashboard-Debug: reines Mapping ohne Kollisions-Nachregelung
+
+    // Dashboard-Greiferfenster:
+    // Der Controller liefert aktuell im Live-Betrieb keinen vollen 0..100%-Hub,
+    // sondern bewegt sich eher in einem engeren Bereich. Diesen Bereich mappen
+    // wir hier auf den vollen Greiferweg, damit die Visualisierung nicht träge
+    // wirkt.
+    var GRIPPER_INPUT_MIN = 0.0;
+    var GRIPPER_INPUT_MAX = 100.0;
+    var GRIPPER_FILTER_ALPHA = 0.22;
+    var GRIPPER_ANGLE_DEADBAND = 0.025;
+    var gripperFilteredAngle = null;
+
     var JOINT_LIMITS = {
         base:     { min: deg2rad(-90), max: deg2rad(90) },
         shoulder: { min: deg2rad(-5),  max: deg2rad(80) },    // +X = nach vorne, kaum nach hinten
-        elbow:    { min: deg2rad(-5),  max: deg2rad(85) },    // +X = nach vorne/unten
+        elbow:    { min: deg2rad(-12), max: deg2rad(120) },   // +X = nach vorne/unten
         wrist:    { min: deg2rad(-90), max: deg2rad(90) },
         gripper:  { min: 0.0,          max: 0.6 }
     };
@@ -973,27 +1025,129 @@
         return Math.max(lim.min, Math.min(lim.max, value));
     }
 
+    function normalizeHeadingDelta(currentDeg, referenceDeg) {
+        var delta = currentDeg - referenceDeg;
+        while (delta > 180) delta -= 360;
+        while (delta < -180) delta += 360;
+        return delta;
+    }
+
+    function mapLinear(value, inMin, inMax, outMin, outMax) {
+        if (inMax === inMin) return outMin;
+        return outMin + ((value - inMin) / (inMax - inMin)) * (outMax - outMin);
+    }
+
+    function sensorQuaternion(sensor) {
+        var euler = new THREE.Euler(
+            deg2rad(sensor.r),
+            deg2rad(sensor.p),
+            deg2rad(sensor.h),
+            'XYZ'
+        );
+        var q = new THREE.Quaternion();
+        q.setFromEuler(euler);
+        return q;
+    }
+
+    function relativeSensorEulerDeg(sensor, referenceSensor, order) {
+        var qSensor = sensorQuaternion(sensor);
+        var qReference = sensorQuaternion(referenceSensor);
+        var qRel = qReference.clone().invert().multiply(qSensor);
+        var relEuler = new THREE.Euler().setFromQuaternion(qRel, order || 'XYZ');
+        return {
+            x: THREE.MathUtils.radToDeg(relEuler.x),
+            y: THREE.MathUtils.radToDeg(relEuler.y),
+            z: THREE.MathUtils.radToDeg(relEuler.z)
+        };
+    }
+
+    function relativeWristTwistDeg(handSensor, forearmSensor) {
+        var qHand = sensorQuaternion(handSensor);
+        var qForearm = sensorQuaternion(forearmSensor);
+        var qRel = qForearm.clone().invert().multiply(qHand);
+
+        // Swing-Twist-Zerlegung um die lokale X-Achse:
+        // so bleibt die Handgelenk-Drehung stabil, auch wenn andere
+        // relative Rotationen zwischen Hand und Unterarm mitlaufen.
+        var twist = new THREE.Quaternion(qRel.x, 0, 0, qRel.w).normalize();
+        var twistDeg = THREE.MathUtils.radToDeg(2 * Math.atan2(twist.x, twist.w));
+        return normalizeHeadingDelta(twistDeg, 0);
+    }
+
     function updateArmPose() {
         var imu = window._raLastImu;
         if (!imu || !imu.s || imu.s.length < 3) return;
 
+        // Virtueller Basissensor:
+        // Nur die Auf-/Ab-Bewegung des Oberarms soll die Basis treiben.
+        // Deshalb leiten wir die Basis ausschliesslich aus S2.pitch relativ
+        // zur haengenden Referenzpose ab:
+        // haengend ~= links, Brusthoehe ~= Mitte, nach oben ~= rechts.
+        var basePitchInput = Math.max(
+            BASE_LIFT_MIN,
+            Math.min(BASE_LIFT_MAX, REFERENCE_POSE.s2.p - imu.s[2].p)
+        );
+        var baseYaw = mapLinear(
+            basePitchInput,
+            BASE_LIFT_MIN,
+            BASE_LIFT_MAX,
+            THREE.MathUtils.radToDeg(JOINT_LIMITS.base.max),
+            THREE.MathUtils.radToDeg(JOINT_LIMITS.base.min)
+        );
+        var shoulderHeadingDelta = normalizeHeadingDelta(imu.s[2].h, REFERENCE_POSE.s2.h);
+        var shoulderInput = -(shoulderHeadingDelta * SHOULDER_HEADING_COEFF);
+        var shoulderPitch = mapLinear(
+            Math.max(SHOULDER_INPUT_MIN, Math.min(SHOULDER_INPUT_MAX, shoulderInput)),
+            SHOULDER_INPUT_MIN,
+            SHOULDER_INPUT_MAX,
+            0.0,
+            THREE.MathUtils.radToDeg(JOINT_LIMITS.shoulder.max)
+        );
+        var elbowHeadingRel = normalizeHeadingDelta(imu.s[1].h, imu.s[2].h);
+        var elbowInput = normalizeHeadingDelta(REFERENCE_REL.elbowHeading, elbowHeadingRel);
+        var elbowAngle = mapLinear(
+            Math.max(ELBOW_INPUT_MIN, Math.min(ELBOW_INPUT_MAX, elbowInput)),
+            ELBOW_INPUT_MIN,
+            ELBOW_INPUT_MAX,
+            0.0,
+            THREE.MathUtils.radToDeg(JOINT_LIMITS.elbow.max)
+        );
+        var wristTwistRel = relativeWristTwistDeg(imu.s[0], imu.s[1]);
+        var wristAngle = normalizeHeadingDelta(wristTwistRel, REFERENCE_REL.wristTwist) * WRIST_RESPONSE_GAIN;
+
         if (baseGroup) {
-            baseGroup.rotation.y = clampJoint(deg2rad(imu.s[2].h), 'base');
+            baseGroup.rotation.y = ENABLE_BASE
+                ? clampJoint(deg2rad(baseYaw), 'base')
+                : 0;
         }
         if (shoulderGroup) {
-            shoulderGroup.rotation.x = clampJoint(deg2rad(imu.s[2].p), 'shoulder');
+            shoulderGroup.rotation.x = ENABLE_SHOULDER
+                ? clampJoint(deg2rad(shoulderPitch), 'shoulder')
+                : 0;
         }
         if (elbowGroup) {
-            elbowGroup.rotation.x = clampJoint(deg2rad(imu.s[1].p - imu.s[2].p), 'elbow');
+            elbowGroup.rotation.x = ENABLE_ELBOW
+                ? clampJoint(deg2rad(elbowAngle), 'elbow')
+                : 0;
         }
         if (wristGroup) {
-            wristGroup.rotation.y = clampJoint(deg2rad(imu.s[0].r), 'wrist');
+            wristGroup.rotation.y = ENABLE_WRIST
+                ? clampJoint(deg2rad(wristAngle), 'wrist')
+                : 0;
         }
         if (gripperLeft && gripperRight && typeof imu.f === 'number') {
-            var flex = Math.max(0, Math.min(100, imu.f));
-            var angle = clampJoint((1 - flex / 100) * 0.6, 'gripper');
-            gripperLeft.rotation.z = angle;
-            gripperRight.rotation.z = -angle;
+            var flex = Math.max(GRIPPER_INPUT_MIN, Math.min(GRIPPER_INPUT_MAX, imu.f));
+            var flexNorm = mapLinear(flex, GRIPPER_INPUT_MIN, GRIPPER_INPUT_MAX, 0.0, 100.0);
+            var targetAngle = ENABLE_GRIPPER
+                ? clampJoint((1 - (flexNorm / 100)) * 0.6, 'gripper')
+                : 0.6;
+            if (gripperFilteredAngle === null) {
+                gripperFilteredAngle = targetAngle;
+            } else if (Math.abs(targetAngle - gripperFilteredAngle) >= GRIPPER_ANGLE_DEADBAND) {
+                gripperFilteredAngle += (targetAngle - gripperFilteredAngle) * GRIPPER_FILTER_ALPHA;
+            }
+            gripperLeft.rotation.z = gripperFilteredAngle;
+            gripperRight.rotation.z = -gripperFilteredAngle;
         }
         updateNotausVisuals(imu.notaus === true);
     }
@@ -1036,8 +1190,9 @@
         if (shoulderGroup) shoulderGroup.rotation.x = 0;
         if (elbowGroup)    elbowGroup.rotation.x   = 0;
         if (wristGroup)    wristGroup.rotation.y   = 0;
-        if (gripperLeft)   gripperLeft.rotation.z   = 0.3; // Greifer leicht offen
-        if (gripperRight)  gripperRight.rotation.z  = -0.3;
+        gripperFilteredAngle = 0.6;
+        if (gripperLeft)   gripperLeft.rotation.z   = 0.6; // Greifer offen
+        if (gripperRight)  gripperRight.rotation.z  = -0.6;
     }
 
     // ============================================================
@@ -1122,6 +1277,7 @@
     }
 
     function resolveCollisions() {
+        if (!ENABLE_COLLISION_SOLVER) return;
         if (!armRoot || !shoulderGroup || !elbowGroup) return;
 
         // Speichere gewuenschte Winkel

@@ -10,8 +10,8 @@
 
   <!-- WAND -->
   <link name="wall">
-    <visual><geometry><box size="0.30 0.005 0.30"/></geometry>
-      <origin xyz="0 0 0.15"/><material name="wall"/></visual>
+    <visual><geometry><box size="0.18 0.005 0.18"/></geometry>
+      <origin xyz="0 0 0.10"/><material name="wall"/></visual>
   </link>
 
   <!-- ======== BASE ======== -->

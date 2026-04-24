@@ -12,7 +12,14 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name + '/urdf', ['urdf/robotarm.urdf', 'urdf/robotarm_wall.urdf']),
-        ('share/' + package_name + '/launch', ['launch/display.launch.py', 'launch/view.launch.py', 'launch/view_wall.launch.py']),
+        ('share/' + package_name + '/launch', [
+            'launch/debug_wall.launch.py',
+            'launch/display.launch.py',
+            'launch/display_wall.launch.py',
+            'launch/replay_wall.launch.py',
+            'launch/view.launch.py',
+            'launch/view_wall.launch.py',
+        ]),
         ('share/' + package_name + '/config', ['config/display.rviz', 'config/display_wall.rviz']),
         ('share/' + package_name + '/meshes', glob.glob('meshes/*.stl')),
     ],
@@ -29,6 +36,10 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'debug_plot = robotarm_description.debug_plot:main',
+            'debug_recorder = robotarm_description.debug_recorder:main',
+            'imu_replayer = robotarm_description.imu_replayer:main',
+            'live_monitor = robotarm_description.live_monitor:main',
             'mqtt_bridge = robotarm_description.mqtt_bridge:main',
         ],
     },

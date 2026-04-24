@@ -21,12 +21,17 @@
 //   CAL2     — Einzelkalibrierung Sensor 2
 //   STOP     — Einzelkalibrierung abbrechen, Normalbetrieb
 //
+// Aktuelle Segmentzuordnung (Stand 2026-04-22):
+//   S0 = Hand/Wrist (Mux-Kanal 0)
+//   S1 = Unterarm   (Mux-Kanal 1)
+//   S2 = Oberarm    (Mux-Kanal 2)
+//
 // LED-Debugging (alle mit 100 Ohm Vorwiderstand):
-//   GPIO4  Gruen  — Hand/Wrist-IMU (S2) kalibriert
-//   GPIO5  Gelb   — Unterarm-IMU (S1) kalibriert
-//   GPIO6  Rot    — Oberarm-IMU (S0) kalibriert
-//   GPIO7  Blau   — COMMS (blinkt bei erfolgreichem Senden)
-//   GPIO10 Weiss  — FAULT (leuchtet bei Fehler)
+//   GPIO4  Blau   — Oberarm-IMU (S2)
+//   GPIO5  Rot    — Unterarm-IMU (S1)
+//   GPIO6  Weiss  — Hand/Wrist-IMU (S0)
+//   GPIO7  Gruen  — COMMS
+//   GPIO10 ?      — FAULT (externe Farbe separat pruefen)
 //
 // Notaus-Schalter (GPIO21):
 //   Toggle-Button nach GND mit internem Pull-Up.
@@ -48,19 +53,32 @@
 #define NOTAUS_ENTPRELL   50    // ms Entprellzeit
 
 #define FLEX_PIN          1
-#define FLEX_GERADE       1108
-#define FLEX_GEBOGEN      940
+// Poti-Arbeitsstand 2026-04-23:
+// Der defekte Flex-Sensor wird temporaer durch einen 10k-Poti ersetzt.
+// Verdrahtung im aktuellen 2-Draht-Aufbau:
+//   bestehende 3.3V-Leitung          -> aeusserer Poti-Pin
+//   bestehende ADC-/Teiler-Leitung   -> mittlerer Poti-Pin (Wischer)
+//   10k Pull-Down gegen GND bleibt auf dem Controller bestehen
+//
+// Im aktuellen Live-Aufbau wurde gemessen:
+//   offen / Ruhelage  ~= 1935 ADC
+//   geschlossen / zu  ~= 3020 ADC
+// OFFEN/Ruhelage soll 0% liefern, ZU soll Richtung 100% gehen.
+#define FLEX_GERADE       1935
+#define FLEX_GEBOGEN      3020
+#define FLEX_FILTER_ALPHA  0.18f
+#define FLEX_RAW_DEADBAND   2.0f
 
 #define KALIB_SCHWELLE_GYRO  3
 #define KALIB_SCHWELLE_ACCEL 2
 #define KALIB_SCHWELLE_MAG   2
 
-// LED-Pins: Ampelsystem Hand(gruen)->Unterarm(gelb)->Oberarm(rot)
-#define LED_HAND          4   // Gruen  — S2 Hand/Wrist
-#define LED_UNTERARM      5   // Gelb   — S1 Unterarm
-#define LED_OBERARM       6   // Rot    — S0 Oberarm
-#define LED_COMMS         7   // Blau   — Kommunikation
-#define LED_FAULT        10   // Weiss  — Fehler
+// LED-Pins: historische Namen beibehalten, reale Farben/Zuordnung siehe Header oben
+#define LED_HAND          4   // GPIO4  — reale externe LED: Blau   — S2 Oberarm
+#define LED_UNTERARM      5   // GPIO5  — reale externe LED: Rot    — S1 Unterarm
+#define LED_OBERARM       6   // GPIO6  — reale externe LED: Weiss  — S0 Hand/Wrist
+#define LED_COMMS         7   // GPIO7  — reale externe LED: Gruen  — Kommunikation
+#define LED_FAULT        10   // GPIO10 — externe FAULT-LED, Farbe separat pruefen
 #define RGB_PIN          48   // Interne RGB-LED
 #define RGB_ANZAHL        1
 
@@ -68,7 +86,7 @@
 #define FLAG_NOTAUS       (1 << 0)   // Bit 0: Notaus aktiv
 // Bits 1-7: reserviert fuer spaetere Erweiterung (Sensor-Gueltigkeit, Auth, etc.)
 
-// Zuordnung: LED-Pin pro Sensor-Index (S0=Oberarm, S1=Unterarm, S2=Hand)
+// Zuordnung: LED-Pin pro Sensor-Index (S0=Hand/Wrist, S1=Unterarm, S2=Oberarm)
 Adafruit_NeoPixel rgb(RGB_ANZAHL, RGB_PIN, NEO_GRB + NEO_KHZ800);
 
 static const uint8_t led_sensor_pin[ANZAHL_SENSOREN] = {
@@ -113,6 +131,8 @@ static bool sensor_bereit[ANZAHL_SENSOREN] = {false, false, false};
 static bool letzter_tx_ok = false;
 static bool fehler_aktiv = false;
 static bool flex_bereit = true;
+static bool flex_filter_initialisiert = false;
+static float flex_roh_gefiltert = 0.0f;
 #if BRIDGE_AKTIV
 static bool bridge_registriert = false;
 #endif
@@ -400,22 +420,82 @@ void setup() {
 #endif
 
     analogReadResolution(12);
-    Serial.println("Bereit. Befehle: CAL0/CAL1/CAL2, STOP, RECAL");
+    Serial.println("Bereit. Befehle: CAL0/CAL1/CAL2, STOP, RECAL, FLEXRAW, FLEXSTAT");
 }
 
-// Flex-Sensor: plausible ADC-Werte liegen zwischen FLEX_GEBOGEN und FLEX_GERADE
-// mit Toleranz. Werte nahe 0 oder 4095 deuten auf abgezogenen Sensor.
+// Poti/Flex-Ersatz: Werte nahe 0 deuten weiter auf Kabel-/Sensorproblem.
+// Der 2-Draht-Poti darf am offenen Ende aber sauber bis an den ADC-Maximalwert
+// laufen, deshalb ist die Obergrenze hier bewusst hoch.
 #define FLEX_MIN_PLAUSIBEL  200
-#define FLEX_MAX_PLAUSIBEL 3800
+#define FLEX_MAX_PLAUSIBEL 4095
 
-float flex_lesen() {
+uint16_t flex_roh_lesen() {
     uint32_t summe = 0;
     for (uint8_t i = 0; i < 16; i++) summe += analogRead(FLEX_PIN);
-    uint16_t rohwert = summe / 16;
+    return summe / 16;
+}
 
-    if (rohwert < FLEX_MIN_PLAUSIBEL || rohwert > FLEX_MAX_PLAUSIBEL) {
+bool flex_rohwert_plausibel(uint16_t rohwert) {
+    return rohwert >= FLEX_MIN_PLAUSIBEL && rohwert <= FLEX_MAX_PLAUSIBEL;
+}
+
+float flex_prozent_aus_rohwert(uint16_t rohwert) {
+    float prozent = (float)(FLEX_GERADE - rohwert) / (FLEX_GERADE - FLEX_GEBOGEN) * 100.0f;
+    if (prozent < 0.0f)   prozent = 0.0f;
+    if (prozent > 100.0f) prozent = 100.0f;
+    return prozent;
+}
+
+float flex_roh_filtern(uint16_t rohwert) {
+    if (!flex_filter_initialisiert) {
+        flex_roh_gefiltert = (float)rohwert;
+        flex_filter_initialisiert = true;
+        return flex_roh_gefiltert;
+    }
+
+    float delta = (float)rohwert - flex_roh_gefiltert;
+    float abs_delta = (delta < 0.0f) ? -delta : delta;
+
+    if (abs_delta < FLEX_RAW_DEADBAND) {
+        return flex_roh_gefiltert;
+    }
+
+    flex_roh_gefiltert += delta * FLEX_FILTER_ALPHA;
+    return flex_roh_gefiltert;
+}
+
+void flex_statistik_ausgeben() {
+    const uint16_t samples = 200;
+    uint16_t min_roh = 4095;
+    uint16_t max_roh = 0;
+    uint32_t sum_roh = 0;
+
+    for (uint16_t i = 0; i < samples; i++) {
+        uint16_t rohwert = flex_roh_lesen();
+        if (rohwert < min_roh) min_roh = rohwert;
+        if (rohwert > max_roh) max_roh = rohwert;
+        sum_roh += rohwert;
+        delay(5);
+    }
+
+    float avg_roh = (float)sum_roh / samples;
+    Serial.printf(
+        "[FLEX] ADC min=%u avg=%.1f max=%u | Prozent min=%.1f avg=%.1f max=%.1f | Gerade=%d Gebogen=%d\n",
+        min_roh, avg_roh, max_roh,
+        flex_prozent_aus_rohwert(min_roh),
+        flex_prozent_aus_rohwert((uint16_t)(avg_roh + 0.5f)),
+        flex_prozent_aus_rohwert(max_roh),
+        FLEX_GERADE, FLEX_GEBOGEN
+    );
+}
+
+float flex_lesen() {
+    uint16_t rohwert = flex_roh_lesen();
+
+    if (!flex_rohwert_plausibel(rohwert)) {
         if (flex_bereit) {
             flex_bereit = false;
+            flex_filter_initialisiert = false;
             Serial.printf("[FAULT] Flex-Sensor unplausibel (ADC=%d)\n", rohwert);
         }
         return -1.0f;  // Signalwert: Sensor nicht verfuegbar
@@ -426,10 +506,8 @@ float flex_lesen() {
         Serial.printf("[RECOVER] Flex-Sensor wieder plausibel (ADC=%d)\n", rohwert);
     }
 
-    float prozent = (float)(FLEX_GERADE - rohwert) / (FLEX_GERADE - FLEX_GEBOGEN) * 100.0f;
-    if (prozent < 0.0f)   prozent = 0.0f;
-    if (prozent > 100.0f) prozent = 100.0f;
-    return prozent;
+    float rohwert_gefiltert = flex_roh_filtern(rohwert);
+    return flex_prozent_aus_rohwert((uint16_t)(rohwert_gefiltert + 0.5f));
 }
 
 void serial_pruefen() {
@@ -438,7 +516,19 @@ void serial_pruefen() {
     String eingabe = Serial.readStringUntil('\n');
     eingabe.trim();
 
-    if (eingabe == "RECAL") {
+    if (eingabe == "FLEXRAW") {
+        uint16_t rohwert = flex_roh_lesen();
+        Serial.printf(
+            "[FLEX] ADC=%u plausibel=%s -> %.1f%% | Gerade=%d Gebogen=%d\n",
+            rohwert,
+            flex_rohwert_plausibel(rohwert) ? "ja" : "nein",
+            flex_prozent_aus_rohwert(rohwert),
+            FLEX_GERADE,
+            FLEX_GEBOGEN
+        );
+    } else if (eingabe == "FLEXSTAT") {
+        flex_statistik_ausgeben();
+    } else if (eingabe == "RECAL") {
         kalib_alle_loeschen();
         kalib_einzeln = -1;
     } else if (eingabe == "CAL0" || eingabe == "CAL1" || eingabe == "CAL2") {

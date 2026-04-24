@@ -12,6 +12,9 @@ Thumbs.db
 build/
 out/
 .pio/
+__pycache__/
+*.pyc
+*.pyo
 
 # Lokale Umgebungs- und Secret-Dateien
 .env

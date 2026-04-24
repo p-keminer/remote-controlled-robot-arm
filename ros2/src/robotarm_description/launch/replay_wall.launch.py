@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 """
-Launch-File: URDF in RViz2 mit Live-MQTT-Daten anzeigen.
-
-Startet:
-  1. robot_state_publisher (URDF -> TF)
-  2. mqtt_bridge (MQTT -> /joint_states)
-  3. rviz2 (Visualisierung)
+Launch-File: Wand-URDF in RViz2 mit Replay aus aufgezeichneten IMU-Daten.
 """
 
 import os
@@ -18,16 +13,16 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    urdf_file = os.path.join(pkg_dir, 'urdf', 'robotarm.urdf')
+    urdf_file = os.path.join(pkg_dir, 'urdf', 'robotarm_wall.urdf')
 
     with open(urdf_file, 'r', encoding='utf-8') as file_handle:
         robot_description = file_handle.read()
 
     return LaunchDescription([
-        DeclareLaunchArgument('mqtt_host', default_value='localhost'),
-        DeclareLaunchArgument('mqtt_port', default_value='1883'),
-        DeclareLaunchArgument('mqtt_user', default_value='mcp_reader'),
-        DeclareLaunchArgument('mqtt_pass', default_value=''),
+        DeclareLaunchArgument('input_file', default_value=''),
+        DeclareLaunchArgument('rate', default_value='1.0'),
+        DeclareLaunchArgument('loop', default_value='false'),
+        DeclareLaunchArgument('target_arm', default_value='both'),
         Node(
             package='robot_state_publisher',
             executable='robot_state_publisher',
@@ -37,13 +32,15 @@ def generate_launch_description():
         ),
         Node(
             package='robotarm_description',
-            executable='mqtt_bridge',
-            name='mqtt_bridge',
+            executable='imu_replayer',
+            name='imu_replayer',
             parameters=[{
-                'mqtt_host': LaunchConfiguration('mqtt_host'),
-                'mqtt_port': LaunchConfiguration('mqtt_port'),
-                'mqtt_user': LaunchConfiguration('mqtt_user'),
-                'mqtt_pass': LaunchConfiguration('mqtt_pass'),
+                'input_file': LaunchConfiguration('input_file'),
+                'rate': LaunchConfiguration('rate'),
+                'loop': LaunchConfiguration('loop'),
+                'target_arm': LaunchConfiguration('target_arm'),
+                'wall_mode': True,
+                'publish_debug': True,
             }],
             output='screen',
         ),
@@ -51,7 +48,7 @@ def generate_launch_description():
             package='rviz2',
             executable='rviz2',
             name='rviz2',
-            arguments=['-d', os.path.join(pkg_dir, 'config', 'display.rviz')],
+            arguments=['-d', os.path.join(pkg_dir, 'config', 'display_wall.rviz')],
             output='screen',
         ),
     ])
