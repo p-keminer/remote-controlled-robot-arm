@@ -1,0 +1,13 @@
+#!/bin/bash
+# sync_config.local.sh.template
+# Vorlage fuer lokale Sync-Konfiguration.
+# Kopiere diese Datei als sync_config.local.sh und trage deine lokalen Pfade ein.
+# sync_config.local.sh ist per .gitignore geblockt und darf NICHT eingecheckt werden.
+#
+# Beide Pfade muessen mit / enden.
+
+# WSL-Pfad zum Repo-Root
+WSL_REPO="/home/BENUTZER/projekte/5doof_robotarm/"
+
+# Windows-Pfad zum Repo-Root (aus WSL-Sicht via /mnt/)
+WIN_REPO="/mnt/c/Users/BENUTZER/OneDrive/Desktop/Projekte/5doof_robotarm/"

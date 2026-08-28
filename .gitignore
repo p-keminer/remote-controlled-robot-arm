@@ -1,0 +1,67 @@
+# Betriebssystem und Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Claude Code lokale Einstellungen (enthalten Permissions mit Secrets/IPs/Passwoertern)
+.claude/
+.claude/settings.local.json
+.claude/*.local.*
+
+# Build- und Tooling-Artefakte
+build/
+out/
+.pio/
+__pycache__/
+*.pyc
+*.pyo
+
+# Lokale Umgebungs- und Secret-Dateien
+.env
+.env.local
+.env.*.local
+
+# Lokale Sicherheits- und Geraetedaten
+/security/local/*.local.*
+/security/local/*.key
+/security/local/*.pem
+/security/local/*.crt
+/security/local/*.cer
+/security/local/*.der
+/security/local/*.p12
+/security/local/*.pfx
+/security/local/*.bin
+/security/local/*.json
+/security/local/*.csv
+/security/local/*.local.md
+
+# Lokale Firmware-Konfigurationen
+/firmware/**/credentials.local.*
+/firmware/**/device_identity.local.*
+/firmware/**/peer_config.local.*
+/firmware/**/packet_auth.local.*
+/firmware/**/wifi_config.local.*
+/firmware/test_gpio15/
+
+# Lokale Dashboard- und MCP-Konfigurationen
+/dashboard/mcp/*.local.*
+/dashboard/mcp/.env
+
+# Lokale Skript-Konfigurationen (enthalten nutzerspezifische Pfade)
+scripts/sync_config.local.sh
+scripts/*.local.sh
+
+# Externe Roharchive nicht im Git-Verlauf halten
+/official_downloads/raw/*.zip
+/official_downloads/raw/*.7z
+/official_downloads/raw/*.rar
+/official_downloads/raw/*.tar
+/official_downloads/raw/*.tar.gz
+/official_downloads/raw/*.tgz
+
+# Lokale Experimente im entpackten Herstellerpaket
+/official_downloads/extracted/**/Code/partial_90/
+/official_downloads/extracted/**/Code/potentio_debug/
+/official_downloads/extracted/**/Code/rx_test/
+/official_downloads/extracted/**/Code/shoulder_*/
